@@ -1,5 +1,5 @@
 // -   Project: scalajs-nglite (https://github.com/jokade/scalajs-nglite)
-// Description: Macro implementations for Module
+// Description: Macro-based enhancements for Angular controllers, etc
 //
 // Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
@@ -10,8 +10,11 @@ import biz.enef.angular.ScopeController
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
-protected[angular] class ModuleImpl(val c: Context) {
+protected[angular] class ControllerMacros(val c: Context) {
   import c.universe._
+
+  // include runtime log messages if true
+  lazy val runtimeLogging = c.settings.exists( _ == "biz.enef.angular.runtimeLogging" )
 
   private def printCode(tree: Tree) = c.info( c.enclosingPosition, showCode(tree), true )
 
@@ -30,17 +33,26 @@ protected[angular] class ModuleImpl(val c: Context) {
 
   def controllerOfWithName[T: c.WeakTypeTag](name: c.Expr[String]) = {
     val controllerType = weakTypeOf[T]
-    createScopeController(controllerType,name.tree)
+    if( controllerType <:< scopeController)
+      createScopeController(controllerType, q"$name")
+    else
+      createController(controllerType, q"name")
   }
 
 
 
-  private def createScopeController(controllerType: Type, name: Tree) = {
+  private def createScopeController(ct: Type, name: Tree) = {
     val module = c.prefix
-    val ctrlDef = createControllerDefinition(controllerType)
+    val ctrlDef = createControllerProxy(ct)
+
+    val debug =
+      if(runtimeLogging)
+        q"""global.console.debug("Created ScopeController "+$name, ctrl.asInstanceOf[js.Dynamic])"""
+      else q"()"
+
     val constructor =
       q"""js.Array[Any]("$$scope",
-          ((scope:js.Dynamic) => {$ctrlDef;new Ctrl(scope)}):js.Function)"""
+          ((scope:js.Dynamic) => {$ctrlDef;val ctrl = new Ctrl(scope);$debug;ctrl}):js.Function)"""
 
     val tree =
       q"""{import scala.scalajs.js
@@ -51,17 +63,24 @@ protected[angular] class ModuleImpl(val c: Context) {
     tree
   }
 
-  private def createController(controllerType: Type, name: Tree) = {
+  private def createController(ct: Type, name: Tree) = {
     val module = c.prefix
-    val ctrlDef = createControllerDefinition(controllerType)
+    val ctrlDef = createControllerProxy(ct)
+
+    // print debug information at runtime if runtimeLogging==true
+
+    val debug =
+      if(runtimeLogging)
+        q"""global.console.debug("Created Controller "+$name, ctrl.asInstanceOf[js.Dynamic], "with scope:", scope)"""
+      else q"()"
+
     val constructor =
       q"""js.Array[Any]("$$scope",
           ((scope:js.Dynamic,parentScope:js.Dynamic) => {
             $ctrlDef
             val ctrl = new Ctrl(parentScope)
-            ..${copyMembers(controllerType)}
-            global.ctrl = ctrl.asInstanceOf[js.Dynamic]
-            global.scope = scope
+            ..${copyMembers(ct)}
+            $debug
           }):js.ThisFunction)"""
 
 
@@ -69,14 +88,14 @@ protected[angular] class ModuleImpl(val c: Context) {
       q"""{import scala.scalajs.js
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
-           module}"""
+           }"""
     printCode( tree )
     tree
   }
 
-  private def createControllerDefinition(controllerType: Type) = {
-    copyMembers(controllerType)
-    val tree = q"""class Ctrl(override val dynamicScope: js.Dynamic) extends $controllerType"""
+  private def createControllerProxy(ct: Type) = {
+    copyMembers(ct)
+    val tree = q"""class Ctrl(override val dynamicScope: js.Dynamic) extends $ct"""
     tree
   }
 
