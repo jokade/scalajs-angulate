@@ -7,6 +7,7 @@ package biz.enef
 
 import biz.enef.angular.Module.RichModule
 
+import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
 import scala.language.implicitConversions
 import scala.scalajs.js

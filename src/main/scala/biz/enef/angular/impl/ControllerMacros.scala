@@ -5,11 +5,12 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
-import biz.enef.angular.ScopeController
+import biz.enef.angular.{Named, ScopeController}
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
+// TODO: understand Scala macros and clean up this hacked mess ...
 protected[angular] class ControllerMacros(val c: Context) {
   import c.universe._
 
@@ -20,6 +21,7 @@ protected[angular] class ControllerMacros(val c: Context) {
 
   /* type definitions */
   val scopeController = typeOf[ScopeController[_]]
+  val namedAnnotation = typeOf[Named]
 
 
   def controllerOf[T: c.WeakTypeTag] = {
@@ -68,7 +70,7 @@ protected[angular] class ControllerMacros(val c: Context) {
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
            module}"""
-    printCode( tree )
+    //printCode( tree )
     tree
   }
 
@@ -102,14 +104,15 @@ protected[angular] class ControllerMacros(val c: Context) {
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
           }"""
-    //printCode( tree )
+    printCode( tree )
     tree
   }
 
 
   private def createControllerProxy(ct: Type) = {
     val constructor = ct.decls.filter( _.isConstructor ).collect{ case m: MethodSymbol => m}.head
-    val deps = constructor.paramLists.head.map( p => p.name.toString )
+    //val deps = constructor.paramLists.head.map( p => p.name.toString )
+    val deps = getDINames(constructor)
     val (params,args) = makeArgsList(constructor)
     val tree = q"""class CtrlProxy(override val dynamicScope: js.Dynamic) extends $ct(..$args)"""
     (tree,params,deps)
@@ -150,6 +153,16 @@ protected[angular] class ControllerMacros(val c: Context) {
       val name = TermName(c.freshName("x"))
       (q"$name: ${p.typeSignature}", q"$name")
     }).unzip
+  }
+
+  private def getDINames(f: MethodSymbol) = {
+    f.paramLists.head.map{ p=>
+      p.annotations.find( _.tree.tpe =:= namedAnnotation ).map { a =>
+        val name = a.tree.children.tail.head.toString
+        // TODO: that's ludicrous... what is thr right way to unquote the string???
+        name.substring(1,name.length-1)
+      }.getOrElse(p.name.toString)
+    }
   }
 
 }
