@@ -59,8 +59,9 @@ protected[angular] class ModuleImpl(val c: Context) {
           ((scope:js.Dynamic,parentScope:js.Dynamic) => {
             $ctrlDef
             val ctrl = new Ctrl(parentScope)
-            ..${copyProperties(controllerType)}
+            ..${copyMembers(controllerType)}
             global.ctrl = ctrl.asInstanceOf[js.Dynamic]
+            global.scope = scope
           }):js.ThisFunction)"""
 
 
@@ -74,13 +75,14 @@ protected[angular] class ModuleImpl(val c: Context) {
   }
 
   private def createControllerDefinition(controllerType: Type) = {
-    copyProperties(controllerType)
+    copyMembers(controllerType)
     val tree = q"""class Ctrl(override val dynamicScope: js.Dynamic) extends $controllerType"""
     tree
   }
 
-  private def copyProperties(ct: Type) = {
+  private def copyMembers(ct: Type) = {
     val props = ct.decls.filter( p => p.isPublic && p.isMethod && !p.isConstructor).map( _.asMethod )
+    val funcs = props.filter( p => !(p.isGetter||p.isSetter) )
     val getters = props.filter(_.isGetter)
     val setters = props.filter(_.isSetter).map{ s=>
       val name = s.name.toString
@@ -88,7 +90,7 @@ protected[angular] class ModuleImpl(val c: Context) {
       getterName -> s
     }.toMap
 
-    getters map { getter =>
+    (getters map { getter =>
       val getterName = getter.name.toString
       val setterOption = setters.get(getterName).map{ setter =>
         val setterType = setter.paramLists.head.head.typeSignature
@@ -99,7 +101,19 @@ protected[angular] class ModuleImpl(val c: Context) {
       setterOption.getOrElse {
         q"""global.Object.defineProperty(scope,$getterName,literal(get = ()=>ctrl.$getter))"""
       }
-    }
+    }) ++
+    (funcs map { func =>
+      val funcName = func.name.toString
+      val (params,args) = makeArgsList(func)
+      q"""global.Object.defineProperty(scope,$funcName,literal(value = (..$params) => ctrl.$func(..$args)))"""
+    })
+  }
+
+  private def makeArgsList(f: MethodSymbol) = {
+    f.paramLists.head.map( p => {
+      val name = TermName(c.freshName("x"))
+      (q"$name: ${p.typeSignature}", q"$name")
+    }).unzip
   }
 
 }
