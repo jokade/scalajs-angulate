@@ -1,13 +1,26 @@
 scalajs-nglite
 ==============
 
-A lighweight macro-based ScalaJS binding for AngularJS
+A lighweight macro-based ScalaJS binding for AngularJS.
 
+Introduction
+------------
+**scalajs-nglite** is a small library to simplify the development of [AngularJS](http://angularjs.org/) applications in pure [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
 
-## How to Use
+*  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
+*  macros to allow defining controllers (and directives) in a more natural style compared to direct use of the API
+
+There is currently no enhanced support for defining Angular services, since Scala singleton objects are a straightforward replacement for these in most instances. 
+
+This project is at the very early stage of development (no release yet), and especially the semantics of the macro-based enhancements are subject to frequent changes.
+
+scalajs-nglite was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which currently provides a more complete Scala.js binding for Angular.
+
+How to Use
+----------
 
 ### SBT Settings
-Add the following line to your ```sbt``` build definition:
+Add the following lines to your ```sbt``` build definition:
 
 ```scala
 resolvers += "karchedon" at "http://maven.karchedon.de"
