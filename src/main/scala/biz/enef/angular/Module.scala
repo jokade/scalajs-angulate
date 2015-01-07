@@ -36,7 +36,7 @@ object Module {
      *
      * @tparam T Controller class
      */
-    def controllerOf[T<:Controller[_]] : RichModule = macro impl.ModuleImpl.controllerOf[T]
+    def controllerOf[T<:Controller] : RichModule = macro impl.ModuleImpl.controllerOf[T]
 
     /**
      * Registers the specified controller using an explicitly given controller name.
@@ -44,7 +44,7 @@ object Module {
      * @param name The controller name
      * @tparam T Controller class
      */
-    def controllerOf[T<:Controller[_]](name: String) : RichModule = macro impl.ModuleImpl.controllerOfWithName[T]
+    def controllerOf[T<:Controller](name: String) : RichModule = macro impl.ModuleImpl.controllerOfWithName[T]
 
   }
 }

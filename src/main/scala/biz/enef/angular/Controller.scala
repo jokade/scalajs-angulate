@@ -8,8 +8,12 @@ package biz.enef.angular
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSName
 
-trait Controller[T<:Scope] {
+trait Controller {
   def dynamicScope: js.Dynamic = ???
-  def scope: T = this.dynamicScope.asInstanceOf[T]
+  lazy val scope: Scope = this.dynamicScope.asInstanceOf[Scope]
+}
+
+trait ScopeController[T<:Scope] extends Controller {
+  override lazy val scope: T = this.dynamicScope.asInstanceOf[T]
 }
 

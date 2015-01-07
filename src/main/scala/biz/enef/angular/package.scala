@@ -14,4 +14,5 @@ import scala.scalajs.js
 package object angular {
 
   implicit def module2RichModule(m: Module) : RichModule = m.asInstanceOf[RichModule]
+
 }

@@ -5,12 +5,10 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
-import biz.enef.angular.Module
-import biz.enef.angular.Module.RichModule
+import biz.enef.angular.ScopeController
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
-import scala.scalajs.js
 
 protected[angular] class ModuleImpl(val c: Context) {
   import c.universe._
@@ -18,36 +16,90 @@ protected[angular] class ModuleImpl(val c: Context) {
   private def printCode(tree: Tree) = c.info( c.enclosingPosition, showCode(tree), true )
 
   /* type definitions */
-  val jsDynamic  = typeOf[js.Dynamic]
-  val jsFunction = typeOf[js.Function]
+  val scopeController = typeOf[ScopeController[_]]
+
 
   def controllerOf[T: c.WeakTypeTag] = {
     val controllerType = weakTypeOf[T]
     val name = controllerType.toString
-    createController(controllerType, q"$name")
+    if( controllerType <:< scopeController)
+      createScopeController(controllerType, q"$name")
+    else
+      createController(controllerType, q"$name")
   }
 
   def controllerOfWithName[T: c.WeakTypeTag](name: c.Expr[String]) = {
     val controllerType = weakTypeOf[T]
-    createController(controllerType,name.tree)
+    createScopeController(controllerType,name.tree)
+  }
+
+
+
+  private def createScopeController(controllerType: Type, name: Tree) = {
+    val module = c.prefix
+    val ctrlDef = createControllerDefinition(controllerType)
+    val constructor =
+      q"""js.Array[Any]("$$scope",
+          ((scope:js.Dynamic) => {$ctrlDef;new Ctrl(scope)}):js.Function)"""
+
+    val tree =
+      q"""{import scala.scalajs.js
+           import js.Dynamic.{global,literal}
+           $module.controller($name,$constructor)
+           module}"""
+    //printCode( tree )
+    tree
   }
 
   private def createController(controllerType: Type, name: Tree) = {
     val module = c.prefix
-    // extend controller class
-    val extd =
-      q"""class Ctrl(override val dynamicScope: $jsDynamic) extends $controllerType {
-
-          }"""
+    val ctrlDef = createControllerDefinition(controllerType)
     val constructor =
-      q"""scala.scalajs.js.Array[Any]("$$scope",
-          ((scope:$jsDynamic) => {$extd;new Ctrl(scope)}):$jsFunction)"""
+      q"""js.Array[Any]("$$scope",
+          ((scope:js.Dynamic,parentScope:js.Dynamic) => {
+            $ctrlDef
+            val ctrl = new Ctrl(parentScope)
+            ..${copyProperties(controllerType)}
+            global.ctrl = ctrl.asInstanceOf[js.Dynamic]
+          }):js.ThisFunction)"""
 
-    val tree = q"$module.controller($name,$constructor);module"
+
+    val tree =
+      q"""{import scala.scalajs.js
+           import js.Dynamic.{global,literal}
+           $module.controller($name,$constructor)
+           module}"""
     printCode( tree )
     tree
   }
 
-  private def createConstructor(fn: Tree) = q"js.Array[Any]( $fn )"
+  private def createControllerDefinition(controllerType: Type) = {
+    copyProperties(controllerType)
+    val tree = q"""class Ctrl(override val dynamicScope: js.Dynamic) extends $controllerType"""
+    tree
+  }
+
+  private def copyProperties(ct: Type) = {
+    val props = ct.decls.filter( p => p.isPublic && p.isMethod && !p.isConstructor).map( _.asMethod )
+    val getters = props.filter(_.isGetter)
+    val setters = props.filter(_.isSetter).map{ s=>
+      val name = s.name.toString
+      val getterName = name.substring(0,name.length-4)
+      getterName -> s
+    }.toMap
+
+    getters map { getter =>
+      val getterName = getter.name.toString
+      val setterOption = setters.get(getterName).map{ setter =>
+        val setterType = setter.paramLists.head.head.typeSignature
+        q"""global.Object.defineProperty(scope,$getterName,
+              literal(get = ()=>ctrl.$getter,
+                      set = (v:$setterType) => ctrl.$getter = v))"""
+      }
+      setterOption.getOrElse {
+        q"""global.Object.defineProperty(scope,$getterName,literal(get = ()=>ctrl.$getter))"""
+      }
+    }
+  }
 
 }
