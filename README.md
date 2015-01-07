@@ -40,6 +40,40 @@ module.controller(CounterCtrl)
 
 ### Defining Controllers
 
+#### "Plain" Scala Controllers (with `as` syntax)
+Plain Scala `Controller`s export all public `var`s, `val`s and `def`s into the controller scope.
+Definition of custom `Scope` types or dynamic access via `dynamicScope` are not required.
+Instantiation of the controller in the template requires the new AngularJS `as` syntax.
+
+```scala
+object App {
+  
+  val module Angular.module("counter", Nil)
+  module.controllerOf[CounterCtrl]
+  
+  class CounterCtrl extends Controller {
+    var count = 0
+    
+    def inc() = count += 1
+    
+    def dec() = count -= 1
+  }
+}
+```
+```html
+<html ng-app="counter">
+  <body>
+  <div ng-controller="App.CounterCtrl as ctrl">
+  Count: {{ctrl.count}} <button ng-click="ctrl.inc()">+</button> <button ng-click="ctrl.dec()">&ndash;</button>
+  </div>
+  
+  <!-- ... -->
+  
+  </body>
+</html>
+```
+
+
 #### Controllers with explicit Scope ("old-style" AngularJS controllers)
 ```scala
 object App {
@@ -85,38 +119,17 @@ object App {
 </html>
 ```
 
-#### "Plain" Scala Controllers (with `as` syntax)
-Plain Scala `Controller`s export all public `var`s, `val`s and `def`s into the controller scope.
-Definition of custom `Scope` types or dynamic access via `dynamicScope` are not required.
-Instantiation of the controller in the template requires the new AngularJS `as` syntax.
+
+### Dependency Injection
+scalajs-nglite supports constructor dependency injection of Angular services:
 
 ```scala
-object App {
-  
-  val module Angular.module("counter", Nil)
-  module.controllerOf[CounterCtrl]
-  
-  class CounterCtrl extends Controller {
-    var count = 0
-    
-    def inc() = count += 1
-    
-    def dec() = count -= 1
-  }
+class DataCtrl($http: HttpService) extends Controller {
+  /* ... */
 }
 ```
-```html
-<html ng-app="counter">
-  <body>
-  <div ng-controller="App.CounterCtrl as ctrl">
-  Count: {{ctrl.count}} <button ng-click="ctrl.inc()">+</button> <button ng-click="ctrl.dec()">&ndash;</button>
-  </div>
-  
-  <!-- ... -->
-  
-  </body>
-</html>
-```
+the Angular `$http` service will be injected during Controller instantion; no annotations or additional traits are required, as long as the parameter name in the constructor matches the name of the service to be injected (don't worry about JS minification, the macro translates the constructor into a String-based DI array).
+
 
 License
 -------
