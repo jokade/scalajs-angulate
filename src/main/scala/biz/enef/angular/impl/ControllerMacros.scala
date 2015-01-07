@@ -1,5 +1,5 @@
 // -   Project: scalajs-nglite (https://github.com/jokade/scalajs-nglite)
-// Description: Macro-based enhancements for Angular controllers, etc
+// Description: Macro-based enhancements for Angular controllers
 //
 // Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
@@ -43,7 +43,11 @@ protected[angular] class ControllerMacros(val c: Context) {
 
   private def createScopeController(ct: Type, name: Tree) = {
     val module = c.prefix
-    val ctrlDef = createControllerProxy(ct)
+
+    // ctrlDef: definition of the controller proxy class
+    // ctrlDeps: the list of dependencies required by the controller constructor
+    // ctrlDepNames: list with names of the dependencies to be injected
+    val (ctrlDef,ctrlDeps,ctrlDepNames) = createControllerProxy(ct)
 
     val debug =
       if(runtimeLogging)
@@ -51,53 +55,66 @@ protected[angular] class ControllerMacros(val c: Context) {
       else q"()"
 
     val constructor =
-      q"""js.Array[Any]("$$scope",
-          ((scope:js.Dynamic) => {$ctrlDef;val ctrl = new Ctrl(scope);$debug;ctrl}):js.Function)"""
+      q"""js.Array[Any]("$$scope",..$ctrlDepNames,
+          ((scope:js.Dynamic, ..$ctrlDeps) => {
+            $ctrlDef
+            val ctrl = new CtrlProxy(scope)
+            $debug
+            ctrl
+          }):js.Function)"""
 
     val tree =
       q"""{import scala.scalajs.js
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
            module}"""
-    //printCode( tree )
+    printCode( tree )
     tree
   }
 
   private def createController(ct: Type, name: Tree) = {
     val module = c.prefix
-    val ctrlDef = createControllerProxy(ct)
+
+    // ctrlDef: definition of the controller proxy class
+    // ctrlDeps: the list of dependencies required by the controller constructor
+    // ctrlDepNames: list with names of the dependencies to be injected
+    val (ctrlDef,ctrlDeps,ctrlDepNames) = createControllerProxy(ct)
 
     // print debug information at runtime if runtimeLogging==true
-
     val debug =
       if(runtimeLogging)
         q"""global.console.debug("Created Controller "+$name, ctrl.asInstanceOf[js.Dynamic], "with scope:", scope)"""
       else q"()"
 
+    // AngularJS controller construction array
     val constructor =
-      q"""js.Array[Any]("$$scope",
-          ((scope:js.Dynamic,parentScope:js.Dynamic) => {
+      q"""js.Array[Any]("$$scope",..$ctrlDepNames,
+          ((scope:js.Dynamic,parentScope:js.Dynamic, ..$ctrlDeps) => {
             $ctrlDef
-            val ctrl = new Ctrl(parentScope)
+            val ctrl = new CtrlProxy(parentScope)
             ..${copyMembers(ct)}
             $debug
           }):js.ThisFunction)"""
 
-
+    // controller registration
     val tree =
       q"""{import scala.scalajs.js
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
-           }"""
-    printCode( tree )
+          }"""
+    //printCode( tree )
     tree
   }
 
+
   private def createControllerProxy(ct: Type) = {
-    copyMembers(ct)
-    val tree = q"""class Ctrl(override val dynamicScope: js.Dynamic) extends $ct"""
-    tree
+    val constructor = ct.decls.filter( _.isConstructor ).collect{ case m: MethodSymbol => m}.head
+    val deps = constructor.paramLists.head.map( p => p.name.toString )
+    val (params,args) = makeArgsList(constructor)
+    val tree = q"""class CtrlProxy(override val dynamicScope: js.Dynamic) extends $ct(..$args)"""
+    (tree,params,deps)
   }
+
 
   private def copyMembers(ct: Type) = {
     val props = ct.decls.filter( p => p.isPublic && p.isMethod && !p.isConstructor).map( _.asMethod )
