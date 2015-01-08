@@ -11,15 +11,14 @@ import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
 // TODO: understand Scala macros and clean up this hacked mess ...
-protected[angular] class ControllerMacros(val c: Context) {
+protected[angular] class ControllerMacros(val c: Context) extends MacroBase {
   import c.universe._
 
-  // for debugging purposes
-  private val showCode = false
-  private def printCode(tree: Tree) = c.info( c.enclosingPosition, showCode(tree), true )
+  // print generated code to console during compilation
+  private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.ControllerMacros.debug" )
 
   // include runtime log messages if true
-  lazy val runtimeLogging = c.settings.exists( _ == "biz.enef.angular.runtimeLogging" )
+  private lazy val runtimeLogging = c.settings.exists( _ == "biz.enef.angular.runtimeLogging" )
 
 
   /* type definitions */
@@ -73,7 +72,8 @@ protected[angular] class ControllerMacros(val c: Context) {
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
            module}"""
-    if(showCode) printCode( tree )
+
+    if(logCode) printCode( tree )
     tree
   }
 
@@ -108,8 +108,7 @@ protected[angular] class ControllerMacros(val c: Context) {
            $module.controller($name,$constructor)
           }"""
 
-    if(showCode) printCode( tree )
-
+    if(logCode) printCode( tree )
     tree
   }
 
