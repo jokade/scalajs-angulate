@@ -26,25 +26,25 @@ trait Module  extends js.Object {
   def controller(name: String, constructor: js.Function) : Module
 
   def controller(name: String, constructor: js.Array[Any]) : Module
+
+  /**
+   * Registers the specified controller using the fully qualified class as the name of the controller.
+   *
+   * @note This is a scalajs-nglite enhancement
+   *
+   * @tparam T Controller class
+   */
+  def controllerOf[T<:Controller] : Module = macro impl.ControllerMacros.controllerOf[T]
+
+  /**
+   * Registers the specified controller using an explicitly given controller name.
+   *
+   * @note This is a scalajs-nglite enhancement
+   *
+   * @param name The controller name
+   * @tparam T Controller class
+   */
+  def controllerOf[T<:Controller](name: String) : Module = macro impl.ControllerMacros.controllerOfWithName[T]
+
 }
 
-object Module {
-
-  trait RichModule extends Module {
-    /**
-     * Registers the specified controller using the fully qualified class as the name of the controller.
-     *
-     * @tparam T Controller class
-     */
-    def controllerOf[T<:Controller] : RichModule = macro impl.ControllerMacros.controllerOf[T]
-
-    /**
-     * Registers the specified controller using an explicitly given controller name.
-     *
-     * @param name The controller name
-     * @tparam T Controller class
-     */
-    def controllerOf[T<:Controller](name: String) : RichModule = macro impl.ControllerMacros.controllerOfWithName[T]
-
-  }
-}

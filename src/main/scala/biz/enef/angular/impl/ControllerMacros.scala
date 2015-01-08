@@ -38,7 +38,7 @@ protected[angular] class ControllerMacros(val c: Context) {
     if( controllerType <:< scopeController)
       createScopeController(controllerType, q"$name")
     else
-      createController(controllerType, q"name")
+      createController(controllerType, q"$name")
   }
 
 

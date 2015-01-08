@@ -14,4 +14,4 @@ libraryDependencies in ThisBuild ++= Seq(
   "org.scala-lang" % "scala-reflect" % "2.11.2"
 )
 
-publishTo in ThisBuild := Some( Resolver.sftp("repo", "karchedon.de", "maven.karchedon.de/") )
+publishTo in ThisBuild := Some( Resolver.sftp("repo", "karchedon.de", "/www/htdocs/w00be83c/maven.karchedon.de") )
