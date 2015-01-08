@@ -45,21 +45,18 @@ Definition of custom `Scope` types or dynamic access via `dynamicScope` are not 
 Instantiation of the controller in the template requires the new AngularJS `as` syntax.
 
 ```scala
-object App {
+val module Angular.module("counter", Nil)
+module.controllerOf[CounterCtrl]
   
-  val module Angular.module("counter", Nil)
-  module.controllerOf[CounterCtrl]
-  
-  class CounterCtrl extends Controller {
-    var count = 0
+class CounterCtrl extends Controller {
+  var count = 0
     
-    def inc() = count += 1
+  def inc() = count += 1
     
-    def dec() = count -= 1
+  def dec() = count -= 1
     
-    // private properties and functions are not exported to the controller scope
-    private def foo() : Unit = ...
-  }
+  // private properties and functions are not exported to the controller scope
+  private def foo() : Unit = ...
 }
 ```
 ```html
@@ -79,34 +76,31 @@ The controller scope can be accessed via the `scope` or `dynamicScope`properties
 
 #### Controllers with explicit Scope ("old-style" AngularJS controllers)
 ```scala
-object App {
+val module Angular.module("counter", Nil)
+module.controllerOf[CounterCtrl]
   
-  val module Angular.module("counter", Nil)
-  module.controllerOf[CounterCtrl]
-  
-  /* Option A: using an explicitly defined Scope type */
-  trait CounterScope extends Scope {
-    var count : Int = ???
-    var inc : js.Function = ???
-    var dec : js.Function = ???
-  }
+/* Option A: using an explicitly defined Scope type */
+trait CounterScope extends Scope {
+  var count : Int = ???
+  var inc : js.Function = ???
+  var dec : js.Function = ???
+}
 
-  class CounterCtrl extends ScopeController[CounterScope] {
-    scope.count = 0
+class CounterCtrl extends ScopeController[CounterScope] {
+  scope.count = 0
   
-    scope.inc = () => scope.count += 1
+  scope.inc = () => scope.count += 1
   
-    scope.dec = () => scope.count -= 1
-  }
+  scope.dec = () => scope.count -= 1
+}
   
-  /* Option B: without explicit Scope type (using dynamicScope instead) */
-  class DynamicCounterCtrl extends ScopeController[Scope] {
-    dynamicScope.count = 0
+/* Option B: without explicit Scope type (using dynamicScope instead) */
+class DynamicCounterCtrl extends ScopeController[Scope] {
+  dynamicScope.count = 0
     
-    dynamicScope.inc = () => scope.count += 1
+  dynamicScope.inc = () => scope.count += 1
     
-    dynamicScope.dec = () => scope.count -= 1
-  }
+  dynamicScope.dec = () => scope.count -= 1
 }
 ```
 ```html
@@ -165,6 +159,34 @@ class UserCtrl(userService: UserService) extends Controller {
 ```
 If no explicit service name is provided to `serviceOf[Service]`, then the class name will be used as service name,
 __with the first letter in lower case__ (to support derivation of dependencies from argument names, which begin with a lower case letter by convention).
+
+
+### Directives
+There is some basic support for defining Directives:
+```scala
+class HelloUser($animate: AnimationService) extends Directive {
+  val restrict = "E"
+  
+  val template = """<div>Hello {{user}}><div>"""
+  // -- or --
+  // def template(element,attrs) = ...
+  // -- or --
+  // val templateUrl = "/url"
+  // -- or --
+  // def templateUrl(element,attrs) = ...
+  
+  val isolateScope = js.Dictionary( "user" -> "@" )
+  // -- or --
+  // scope = true
+  
+  postLink(scope: Scope, element: js.Dynamic, attrs: js.Dynamic, controller: js.Dynamic) = ...
+}
+
+// defines the directive under the name "helloUser"
+module.directiveOf[HelloUser]
+// -- or --
+// module.directiveOf[HelloUser]("sayHello")
+```
 
 License
 -------
