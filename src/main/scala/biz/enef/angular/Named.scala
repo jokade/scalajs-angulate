@@ -13,4 +13,4 @@ import scala.annotation.StaticAnnotation
  * @param name
  */
 @annotation.meta.param
-case class Named(name: String) extends StaticAnnotation
+case class named(name: String) extends StaticAnnotation

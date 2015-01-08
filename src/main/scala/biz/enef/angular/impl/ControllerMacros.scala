@@ -5,7 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
-import biz.enef.angular.{Named, ScopeController}
+import biz.enef.angular.{named, ScopeController}
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
@@ -21,7 +21,7 @@ protected[angular] class ControllerMacros(val c: Context) {
 
   /* type definitions */
   val scopeController = typeOf[ScopeController[_]]
-  val namedAnnotation = typeOf[Named]
+  val namedAnnotation = typeOf[named]
 
 
   def controllerOf[T: c.WeakTypeTag] = {
