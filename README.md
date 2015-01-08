@@ -39,7 +39,7 @@ module.controllerOf[UserCtrl]
 
 ### Defining Controllers
 
-#### "Plain" Scala Controllers (with `as` syntax)
+#### Plain Class Controllers (used with controller `as` syntax)
 Plain Scala `Controller`s export all public `var`s, `val`s and `def`s into the controller scope.
 Definition of custom `Scope` types or dynamic access via `dynamicScope` are not required.
 Instantiation of the controller in the template requires the new AngularJS `as` syntax.
@@ -56,6 +56,9 @@ object App {
     def inc() = count += 1
     
     def dec() = count -= 1
+    
+    // private properties and functions are not exported to the controller scope
+    private def foo() : Unit = ...
   }
 }
 ```
@@ -71,6 +74,7 @@ object App {
   </body>
 </html>
 ```
+The controller scope can be accessed via the `scope` or `dynamicScope`properties from within the controller class.
 
 
 #### Controllers with explicit Scope ("old-style" AngularJS controllers)
