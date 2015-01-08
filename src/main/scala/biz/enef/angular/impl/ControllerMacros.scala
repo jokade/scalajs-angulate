@@ -23,7 +23,6 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase {
 
   /* type definitions */
   val scopeController = typeOf[ScopeController[_]]
-  val namedAnnotation = typeOf[named]
 
 
   def controllerOf[T: c.WeakTypeTag] = {
@@ -152,21 +151,5 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase {
     })
   }
 
-  private def makeArgsList(f: MethodSymbol) = {
-    f.paramLists.head.map( p => {
-      val name = TermName(c.freshName("x"))
-      (q"$name: ${p.typeSignature}", q"$name")
-    }).unzip
-  }
-
-  private def getDINames(f: MethodSymbol) = {
-    f.paramLists.head.map{ p=>
-      p.annotations.find( _.tree.tpe =:= namedAnnotation ).map { a =>
-        val name = a.tree.children.tail.head.toString
-        // TODO: that's ludicrous... what is thr right way to unquote the string???
-        name.substring(1,name.length-1)
-      }.getOrElse(p.name.toString)
-    }
-  }
 
 }

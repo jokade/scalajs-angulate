@@ -28,6 +28,17 @@ trait Module  extends js.Object {
   def controller(name: String, constructor: js.Array[Any]) : Module
 
   /**
+   * Register a service factory.
+   *
+   * @param name
+   * @param constructor
+   * @return
+   */
+  def factory(name: String, constructor: js.Function) : Module
+
+  def factory(name: String, constructor: js.Array[Any]) : Module
+
+  /**
    * Registers the specified controller using the fully qualified class as the name of the controller.
    *
    * @note This is a scalajs-angulate enhancement
@@ -46,5 +57,24 @@ trait Module  extends js.Object {
    */
   def controllerOf[T<:Controller](name: String) : Module = macro impl.ControllerMacros.controllerOfWithName[T]
 
+  /**
+   * Registers the specified class as Angular service.
+   * The class name is used as the name of the service, with the __first letter in lower case__.
+   *
+   * @note This is a scalajs-angulate enhancement
+   *
+   * @tparam T
+   * @return
+   */
+  def serviceOf[T<:Service] : Module = macro impl.ServiceMacros.serviceOf[T]
+
+  /**
+   * Registers the specified class as Angular service using the explicitly given service name.
+   *
+   * @param name
+   * @tparam T
+   * @return
+   */
+  def serviceOf[T<:Service](name: String) : Module = macro impl.ServiceMacros.serviceOfWithName[T]
 }
 
