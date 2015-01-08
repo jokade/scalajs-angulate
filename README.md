@@ -124,15 +124,17 @@ object App {
 scalajs-angulate supports constructor dependency injection of Angular services:
 
 ```scala
-class DataCtrl($http: HttpService) extends Controller {
+class UserCtrl($http: HttpService) extends Controller {
   /* ... */
+  
+  $http.get("/rest/users").onSuccess{ res => ... }
 }
 ```
 the Angular `$http` service will be injected during Controller instantion; no annotations or additional traits are required, as long as the parameter name in the constructor matches the name of the service to be injected (don't worry about JS minification, the macro translates the constructor into a String-based DI array).
 
 If you cannot or don't want to use the service name as parameter name, you can define the service to be injected explicitly with the `@named` annotation:
 ```scala
-class DataCtrl(@named("$http") httpService: HttpService) extends Controller {
+class UserCtrl(@named("$http") httpService: HttpService) extends Controller {
   /* ... */
 }
 ```
