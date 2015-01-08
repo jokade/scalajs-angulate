@@ -8,9 +8,7 @@ Introduction
 **scalajs-angulate** is a small library to simplify the development of [AngularJS](http://angularjs.org/) applications in [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
 
 *  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
-*  macros to allow defining controllers (and directives) in a more natural style compared to direct use of the API
-
-There is currently no enhanced support for defining Angular services, since Scala singleton objects are a straightforward replacement for these in most instances. 
+*  macros to allow defining controllers, service and directives) in a more natural style compared to direct use of the API
 
 This project is at the very early stage of development (no release yet), and especially the semantics of the macro-based enhancements are subject to frequent changes.
 
@@ -35,12 +33,13 @@ import biz.enef.angular._
 
 val module = Angular.module("app", Seq("ui.bootstrap"))
 
-module.controller(CounterCtrl)
+module.serviceOf[UserService]
+module.controllerOf[UserCtrl]
 ```
 
 ### Defining Controllers
 
-#### "Plain" Scala Controllers (with `as` syntax)
+#### Plain Class Controllers (used with controller `as` syntax)
 Plain Scala `Controller`s export all public `var`s, `val`s and `def`s into the controller scope.
 Definition of custom `Scope` types or dynamic access via `dynamicScope` are not required.
 Instantiation of the controller in the template requires the new AngularJS `as` syntax.
@@ -57,6 +56,9 @@ object App {
     def inc() = count += 1
     
     def dec() = count -= 1
+    
+    // private properties and functions are not exported to the controller scope
+    private def foo() : Unit = ...
   }
 }
 ```
@@ -72,6 +74,7 @@ object App {
   </body>
 </html>
 ```
+The controller scope can be accessed via the `scope` or `dynamicScope`properties from within the controller class.
 
 
 #### Controllers with explicit Scope ("old-style" AngularJS controllers)
@@ -138,6 +141,30 @@ class UserCtrl(@named("$http") httpService: HttpService) extends Controller {
   /* ... */
 }
 ```
+
+### Services
+Services can be implemented as plain classes extending the `Service` trait. As with controllers,
+constructor based dependency injection is supported:
+```scala
+class UserService($http: HttpService) extends Service {
+  def getUsers() : js.Array[User] = $http.get("/rest/users/").onSuccess( ... )
+}
+
+// registers the service with the name 'userService'
+module.serviceOf[UserService]
+
+// -- or --
+
+// registers the service with the name 'users'
+module.serviceOf[UserService]("Users")
+
+
+class UserCtrl(userService: UserService) extends Controller {
+  /* ... */
+}
+```
+If no explicit service name is provided to `serviceOf[Service]`, then the class name will be used as service name,
+__with the first letter in lower case__ (to support derivation of dependencies from argument names, which begin with a lower case letter by convention).
 
 License
 -------
