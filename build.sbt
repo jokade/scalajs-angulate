@@ -1,4 +1,4 @@
-name := "scalajs-nglite"
+name := "scalajs-angulate"
 
 organization in ThisBuild := "biz.enef"
 

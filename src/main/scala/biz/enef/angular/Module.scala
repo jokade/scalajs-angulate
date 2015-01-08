@@ -1,4 +1,4 @@
-// -   Project: scalajs-nglite (https://github.com/jokade/scalajs-nglite)
+// -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description:
 //
 // Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
@@ -30,7 +30,7 @@ trait Module  extends js.Object {
   /**
    * Registers the specified controller using the fully qualified class as the name of the controller.
    *
-   * @note This is a scalajs-nglite enhancement
+   * @note This is a scalajs-angulate enhancement
    *
    * @tparam T Controller class
    */
@@ -39,7 +39,7 @@ trait Module  extends js.Object {
   /**
    * Registers the specified controller using an explicitly given controller name.
    *
-   * @note This is a scalajs-nglite enhancement
+   * @note This is a scalajs-angulate enhancement
    *
    * @param name The controller name
    * @tparam T Controller class

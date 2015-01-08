@@ -1,7 +1,7 @@
-// -   Project: salajs-nglite (https://github.com/jokade/scalajs-nglite)
+// -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: API for Angular $httpProvider
 //
-// Adopted from https://github.com/greencatsoft/scalajs-angular .. angularjs/core/Http.scala
+// Based on https://github.com/greencatsoft/scalajs-angular .. angularjs/core/Http.scala
 //
 // Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
@@ -46,11 +46,7 @@ trait HttpPromise extends js.Object {
   def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type
   def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type
   def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type
-  def onComplete() : Unit = macro HttpMacros.onCompleteImpl
+
+  def onSuccess(pf: PartialFunction[Any,Any]) : Unit = macro impl.HttpPromiseMacros.onSuccess
 }
 
-class HttpMacros(val c: whitebox.Context) {
-  import c.universe._
-
-  def onCompleteImpl() = q"()"
-}

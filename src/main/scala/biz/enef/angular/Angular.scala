@@ -1,4 +1,4 @@
-// -   Project: scalajs-nglite (https://github.com/jokade/scalajs-nglite)
+// -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description:
 //
 // Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>

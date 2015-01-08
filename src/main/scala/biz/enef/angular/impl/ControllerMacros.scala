@@ -1,4 +1,4 @@
-// -   Project: scalajs-nglite (https://github.com/jokade/scalajs-nglite)
+// -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Macro-based enhancements for Angular controllers
 //
 // Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
@@ -14,10 +14,13 @@ import scala.reflect.macros.blackbox.Context
 protected[angular] class ControllerMacros(val c: Context) {
   import c.universe._
 
+  // for debugging purposes
+  private val showCode = false
+  private def printCode(tree: Tree) = c.info( c.enclosingPosition, showCode(tree), true )
+
   // include runtime log messages if true
   lazy val runtimeLogging = c.settings.exists( _ == "biz.enef.angular.runtimeLogging" )
 
-  private def printCode(tree: Tree) = c.info( c.enclosingPosition, showCode(tree), true )
 
   /* type definitions */
   val scopeController = typeOf[ScopeController[_]]
@@ -70,7 +73,7 @@ protected[angular] class ControllerMacros(val c: Context) {
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
            module}"""
-    //printCode( tree )
+    if(showCode) printCode( tree )
     tree
   }
 
@@ -104,7 +107,9 @@ protected[angular] class ControllerMacros(val c: Context) {
            import js.Dynamic.{global,literal}
            $module.controller($name,$constructor)
           }"""
-    printCode( tree )
+
+    if(showCode) printCode( tree )
+
     tree
   }
 
