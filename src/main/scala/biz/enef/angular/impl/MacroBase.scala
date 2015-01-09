@@ -61,5 +61,18 @@ protected[angular] abstract class MacroBase {
     q"""js.Array[Any](..$deps, ((..$params) => new $ct(..$args)):js.Function)"""
   }
 
+
   def getConstructor(ct: Type) = ct.decls.filter( _.isConstructor ).collect{ case m: MethodSymbol => m}.head
+
+  // TODO: support DI name annotations
+  def createDIArray(t: c.Tree) = {
+    val (m,params) = t match {
+      case q"(..$params) => $body" => (t,params)
+      case q"{(..$params) => $body}" => (t.children.head,params)
+    }
+
+    val diNames = params.map(_.name.toString)
+    q"js.Array[Any](..$diNames, $m:js.Function)"
+  }
+
 }
