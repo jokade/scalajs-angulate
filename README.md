@@ -1,7 +1,5 @@
-scalajs-angulate
-================
-
-A lighweight macro-based ScalaJS binding for AngularJS.
+Enhanced Scala.js Bindings for AngularJS
+========================================
 
 Introduction
 ------------
