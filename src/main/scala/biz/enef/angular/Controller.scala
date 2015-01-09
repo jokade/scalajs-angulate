@@ -8,12 +8,16 @@ package biz.enef.angular
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSName
 
-trait Controller {
-  def dynamicScope: js.Dynamic = ???
-  lazy val scope: Scope = this.dynamicScope.asInstanceOf[Scope]
-}
+sealed trait NGController
 
-trait ScopeController[T<:Scope] extends Controller {
-  override lazy val scope: T = this.dynamicScope.asInstanceOf[T]
-}
+/**
+ * Marks a class as AngularJS controller, to be used with the "controllerAs" syntax.
+ *
+ * All public `val`s, `var`s and `def`s defined in the controller class will be exported
+ * to the controller scope.
+ */
+trait Controller extends NGController
+
+
+trait ScopeController extends NGController
 
