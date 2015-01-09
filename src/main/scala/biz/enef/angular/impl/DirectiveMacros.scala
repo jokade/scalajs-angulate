@@ -19,10 +19,14 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
   def directiveOf[T: c.WeakTypeTag] = {
     val directiveType = weakTypeOf[T]
-    val name = directiveType.toString.split('.').last
+    val name = directiveType.toString.split('.').last.replaceFirst("Directive$","")
     createDirective(directiveType, q"${name.head.toLower+name.tail}")
   }
 
+  def directiveOfWithName[T: c.WeakTypeTag](name: c.Tree) = {
+    val directiveType = weakTypeOf[T]
+    createDirective(directiveType, q"${name}")
+  }
 
   private def createDirective(ct: c.Type, name: c.Tree) = {
     val module = c.prefix

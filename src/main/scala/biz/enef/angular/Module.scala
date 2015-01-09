@@ -253,11 +253,33 @@ trait Module  extends js.Object {
   /**
    * Registers the specified class as Angular service using the explicitly given service name.
    *
+   * @note This is a scalajs-angulate enhancement
+   *
    * @param name The service name
    * @tparam T Service class
    */
   def serviceOf[T<:Service](name: String) : Module = macro impl.ServiceMacros.serviceOfWithName[T]
 
+  /**
+   * Registers the specified class as Angular directive.
+   * The name of the directive will be the name of the class, with the first letter in lower case and
+   * without the suffix 'Directive'.
+   *
+   * @note This is a scalajs-angulate enhancement
+   *
+   * @tparam T Class defining the directive
+   */
   def directiveOf[T<:Directive] : Module = macro impl.DirectiveMacros.directiveOf[T]
+
+  /**
+   * Registers the specified class as Angular directive under the given name.
+   *
+   * @note This is a scalajs-angulate enhancement
+   *
+   * @param name The name of the directive
+   * @tparam T Class defining the directive
+   */
+  def directiveOf[T<:Directive](name: String) : Module = macro impl.DirectiveMacros.directiveOfWithName[T]
+
 }
 
