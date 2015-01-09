@@ -1,7 +1,5 @@
-scalajs-angulate
-================
-
-A lighweight macro-based ScalaJS binding for AngularJS.
+Enhanced Scala.js Bindings for AngularJS
+========================================
 
 Introduction
 ------------
@@ -13,6 +11,8 @@ Introduction
 This project is at the very early stage of development (no release yet), and especially the semantics of the macro-based enhancements are subject to frequent changes.
 
 scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which currently provides a more complete Scala.js binding for Angular.
+
+_NOTE: the handling of controllers has recently changed_
 
 How to Use
 ----------
@@ -35,14 +35,20 @@ val module = Angular.module("app", Seq("ui.bootstrap"))
 
 module.serviceOf[UserService]
 module.controllerOf[UserCtrl]
+module.directiveOf[UserDirective]
 ```
 
-### Defining Controllers
+### Controllers
+scalajs-angulate provides macros to allow using plain scala classes as Angular controllers.
+Two flavors are currently supported:
+*  [Body Scope controllers](#body-scope-controllers), extending `Controller`
+*  [Controllers with explicit scope](#controllers-with-explicit-scope), extending `ScopeController`
 
-#### Plain Class Controllers (used with controller `as` syntax)
-Plain Scala `Controller`s export all public `var`s, `val`s and `def`s into the controller scope.
-Definition of custom `Scope` types or dynamic access via `dynamicScope` are not required.
-Instantiation of the controller in the template requires the new AngularJS `as` syntax.
+Both flavors support constructor [dependency injection](#dependency-injection).
+
+#### Body Scope Controllers
+Classes extending extending `Controller` export all their public `var`s, `val`s and `def`s into the controller scope.
+Definition of custom `Scope` types is not required. However, instantiation of the controller in the template requires the new AngularJS `as` syntax:
 
 ```scala
 val module Angular.module("counter", Nil)
@@ -71,36 +77,43 @@ class CounterCtrl extends Controller {
   </body>
 </html>
 ```
-The controller scope can be accessed via the `scope` or `dynamicScope`properties from within the controller class.
 
+If you need access to the AngularJS `$scope` object, just inject it into the constructor:
+```scala
+class Ctrl($scope: Scope) extends Controller {
+  $scope.$watch( /* ... */ )
+}
+```
 
-#### Controllers with explicit Scope ("old-style" AngularJS controllers)
+#### Controllers with explicit Scope
+Class extending `ScopeController` are "old-style" AngularJS controllers, where the scope available in the template must be injected explicitly:
+
 ```scala
 val module Angular.module("counter", Nil)
 module.controllerOf[CounterCtrl]
   
-/* Option A: using an explicitly defined Scope type */
+/* Option A: using a custom defined Scope type */
 trait CounterScope extends Scope {
   var count : Int = ???
   var inc : js.Function = ???
   var dec : js.Function = ???
 }
 
-class CounterCtrl extends ScopeController[CounterScope] {
-  scope.count = 0
+class CounterCtrl($scope: CounterScope) extends ScopeController {
+  $scope.count = 0
   
-  scope.inc = () => scope.count += 1
+  $scope.inc = () => $scope.count += 1
   
-  scope.dec = () => scope.count -= 1
+  $scope.dec = () => $scope.count -= 1
 }
   
-/* Option B: without explicit Scope type (using dynamicScope instead) */
-class DynamicCounterCtrl extends ScopeController[Scope] {
-  dynamicScope.count = 0
+/* Option B: without explicit Scope type (using js.Dynamic instead) */
+class DynamicCounterCtrl($scope: js.Dynamic) extends ScopeController {
+  $scope.count = 0
     
-  dynamicScope.inc = () => scope.count += 1
+  $scope.inc = () => $scope.count += 1
     
-  dynamicScope.dec = () => scope.count -= 1
+  $scope.dec = () => $scope.count -= 1
 }
 ```
 ```html
@@ -118,7 +131,7 @@ class DynamicCounterCtrl extends ScopeController[Scope] {
 
 
 ### Dependency Injection
-scalajs-angulate supports constructor dependency injection of Angular services:
+scalajs-angulate supports constructor dependency injection of Angular services into controllers, services and directives:
 
 ```scala
 class UserCtrl($http: HttpService) extends Controller {
@@ -164,28 +177,31 @@ __with the first letter in lower case__ (to support derivation of dependencies f
 ### Directives
 There is some basic support for defining Directives:
 ```scala
-class HelloUser($animate: AnimationService) extends Directive {
-  val restrict = "E"
+class HelloUserDirective($animate: AnimationService) extends Directive {
+  override val restrict = "E"
   
-  val template = """<div>Hello {{user}}><div>"""
+  override val template = """<div>Hello {{user}}><div>"""
   // -- or --
-  // def template(element,attrs) = ...
+  // override def template(element,attrs) = ...
   // -- or --
-  // val templateUrl = "/url"
+  // override val templateUrl = "/url"
   // -- or --
-  // def templateUrl(element,attrs) = ...
+  // override def templateUrl(element,attrs) = ...
   
-  val isolateScope = js.Dictionary( "user" -> "@" )
+  override val isolateScope = js.Dictionary( "user" -> "@" )
   // -- or --
-  // scope = true
+  // override val scope = true
   
-  postLink(scope: Scope, element: js.Dynamic, attrs: js.Dynamic, controller: js.Dynamic) = ...
+  override def postLink(scope: Scope,
+                        element: js.Dynamic,
+                        attrs: js.Dynamic,
+                        controller: js.Dynamic) = ...
 }
 
 // defines the directive under the name "helloUser"
-module.directiveOf[HelloUser]
+module.directiveOf[HelloUserDirective]
 // -- or --
-// module.directiveOf[HelloUser]("sayHello")
+// module.directiveOf[HelloUserDirective]("sayHello")
 ```
 
 License

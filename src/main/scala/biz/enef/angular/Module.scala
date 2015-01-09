@@ -228,7 +228,7 @@ trait Module  extends js.Object {
    *
    * @tparam T Controller class
    */
-  def controllerOf[T<:Controller] : Module = macro impl.ControllerMacros.controllerOf[T]
+  def controllerOf[T<:NGController] : Module = macro impl.ControllerMacros.controllerOf[T]
 
   /**
    * Registers the specified controller using an explicitly given controller name.
@@ -238,7 +238,7 @@ trait Module  extends js.Object {
    * @param name The controller name
    * @tparam T Controller class
    */
-  def controllerOf[T<:Controller](name: String) : Module = macro impl.ControllerMacros.controllerOfWithName[T]
+  def controllerOf[T<:NGController](name: String) : Module = macro impl.ControllerMacros.controllerOfWithName[T]
 
   /**
    * Registers the specified class as Angular service.
