@@ -47,4 +47,19 @@ protected[angular] abstract class MacroBase {
     }
   }
 
+  /**
+   * Creates a AngularJS constructor array for the specified type.
+   *
+   * @note the returned tree requires `js.Array` to be in scope
+   *
+   * @param ct class type
+   */
+  def createDIArray(ct: Type) = {
+    val m = getConstructor(ct)
+    val deps = getDINames(m)
+    val (params,args) = makeArgsList(m)
+    q"""js.Array[Any](..$deps, ((..$params) => new $ct(..$args)):js.Function)"""
+  }
+
+  def getConstructor(ct: Type) = ct.decls.filter( _.isConstructor ).collect{ case m: MethodSymbol => m}.head
 }

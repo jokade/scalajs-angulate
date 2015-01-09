@@ -22,7 +22,7 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase {
 
 
   /* type definitions */
-  val scopeController = typeOf[ScopeController[_]]
+  val scopeController = typeOf[ScopeController]
 
 
   def controllerOf[T: c.WeakTypeTag] = {
@@ -45,59 +45,48 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase {
 
 
   private def createScopeController(ct: Type, name: Tree) = {
-    val module = c.prefix
-
-    // ctrlDef: definition of the controller proxy class
-    // ctrlDeps: the list of dependencies required by the controller constructor
-    // ctrlDepNames: list with names of the dependencies to be injected
-    val (ctrlDef,ctrlDeps,ctrlDepNames) = createControllerProxy(ct)
-
+    // print debug information at runtime if runtimeLogging==true
     val debug =
       if(runtimeLogging)
-        q"""global.console.debug("Created ScopeController "+$name, ctrl.asInstanceOf[js.Dynamic])"""
+        q"""global.console.debug("Created Controller "+$name, ctrl.asInstanceOf[js.Dynamic])"""
       else q"()"
 
-    val constructor =
-      q"""js.Array[Any]("$$scope",..$ctrlDepNames,
-          ((scope:js.Dynamic, ..$ctrlDeps) => {
-            $ctrlDef
-            val ctrl = new CtrlProxy(scope)
-            $debug
-            ctrl
-          }):js.Function)"""
+    val postConstruction = q"""$debug"""
 
-    val tree =
-      q"""{import scala.scalajs.js
-           import js.Dynamic.{global,literal}
-           $module.controller($name,$constructor)
-           module}"""
-
-    if(logCode) printCode( tree )
-    tree
+    createControllerTree(ct,name,postConstruction)
   }
 
+
   private def createController(ct: Type, name: Tree) = {
-    val module = c.prefix
-
-    // ctrlDef: definition of the controller proxy class
-    // ctrlDeps: the list of dependencies required by the controller constructor
-    // ctrlDepNames: list with names of the dependencies to be injected
-    val (ctrlDef,ctrlDeps,ctrlDepNames) = createControllerProxy(ct)
-
     // print debug information at runtime if runtimeLogging==true
     val debug =
       if(runtimeLogging)
         q"""global.console.debug("Created Controller "+$name, ctrl.asInstanceOf[js.Dynamic], "with scope:", scope)"""
       else q"()"
 
+    val postConstruction = q"""..${copyMembers(ct)}
+                               $debug"""
+
+    createControllerTree(ct,name,postConstruction)
+  }
+
+
+  private def createControllerTree(ct: Type, name: c.Tree, postConstruction: c.Tree = q"") = {
+    val module = c.prefix
+    // ctrlDeps: the list of dependencies required by the controller constructor
+    // ctrlArgs: list of arguments required by the controller constructor
+    // ctrlDepNames: list with names of the dependencies to be injected
+    val cm = getConstructor(ct)
+    val (ctrlDeps,ctrlArgs) = makeArgsList(cm)
+    val ctrlDepNames = getDINames(cm)
+
+
     // AngularJS controller construction array
     val constructor =
       q"""js.Array[Any]("$$scope",..$ctrlDepNames,
           ((scope:js.Dynamic,parentScope:js.Dynamic, ..$ctrlDeps) => {
-            $ctrlDef
-            val ctrl = new CtrlProxy(parentScope)
-            ..${copyMembers(ct)}
-            $debug
+            val ctrl = new $ct(..$ctrlArgs)
+            $postConstruction
           }):js.ThisFunction)"""
 
     // controller registration
@@ -109,16 +98,7 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase {
 
     if(logCode) printCode( tree )
     tree
-  }
 
-
-  private def createControllerProxy(ct: Type) = {
-    val constructor = ct.decls.filter( _.isConstructor ).collect{ case m: MethodSymbol => m}.head
-    //val deps = constructor.paramLists.head.map( p => p.name.toString )
-    val deps = getDINames(constructor)
-    val (params,args) = makeArgsList(constructor)
-    val tree = q"""class CtrlProxy(override val dynamicScope: js.Dynamic) extends $ct(..$args)"""
-    (tree,params,deps)
   }
 
 
