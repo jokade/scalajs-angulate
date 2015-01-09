@@ -177,28 +177,31 @@ __with the first letter in lower case__ (to support derivation of dependencies f
 ### Directives
 There is some basic support for defining Directives:
 ```scala
-class HelloUser($animate: AnimationService) extends Directive {
-  val restrict = "E"
+class HelloUserDirective($animate: AnimationService) extends Directive {
+  override val restrict = "E"
   
-  val template = """<div>Hello {{user}}><div>"""
+  override val template = """<div>Hello {{user}}><div>"""
   // -- or --
-  // def template(element,attrs) = ...
+  // override def template(element,attrs) = ...
   // -- or --
-  // val templateUrl = "/url"
+  // override val templateUrl = "/url"
   // -- or --
-  // def templateUrl(element,attrs) = ...
+  // override def templateUrl(element,attrs) = ...
   
-  val isolateScope = js.Dictionary( "user" -> "@" )
+  override val isolateScope = js.Dictionary( "user" -> "@" )
   // -- or --
-  // scope = true
+  // override val scope = true
   
-  postLink(scope: Scope, element: js.Dynamic, attrs: js.Dynamic, controller: js.Dynamic) = ...
+  override def postLink(scope: Scope,
+                        element: js.Dynamic,
+                        attrs: js.Dynamic,
+                        controller: js.Dynamic) = ...
 }
 
 // defines the directive under the name "helloUser"
-module.directiveOf[HelloUser]
+module.directiveOf[HelloUserDirective]
 // -- or --
-// module.directiveOf[HelloUser]("sayHello")
+// module.directiveOf[HelloUserDirective]("sayHello")
 ```
 
 License
