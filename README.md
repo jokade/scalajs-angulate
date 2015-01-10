@@ -26,6 +26,8 @@ resolvers += "karchedon" at "http://maven.karchedon.de"
 libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.1-SNAPSHOT"
 ```
 
+scalajs-angulate supports Scala.js `0.5.x` and `0.6.0-M3`.
+
 ### Defining a Module
 
 ```scala
