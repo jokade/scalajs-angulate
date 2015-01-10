@@ -253,11 +253,40 @@ trait Module  extends js.Object {
   /**
    * Registers the specified class as Angular service using the explicitly given service name.
    *
+   * @note This is a scalajs-angulate enhancement
+   *
    * @param name The service name
    * @tparam T Service class
    */
   def serviceOf[T<:Service](name: String) : Module = macro impl.ServiceMacros.serviceOfWithName[T]
 
+  /**
+   * Registers the specified class as Angular directive.
+   * The name of the directive will be the name of the class, with the first letter in lower case and
+   * without the suffix 'Directive'.
+   *
+   * @note This is a scalajs-angulate enhancement
+   *
+   * @tparam T Class defining the directive
+   */
   def directiveOf[T<:Directive] : Module = macro impl.DirectiveMacros.directiveOf[T]
+
+  /**
+   * Registers the specified class as Angular directive under the given name.
+   *
+   * @note This is a scalajs-angulate enhancement
+   *
+   * @param name The name of the directive
+   * @tparam T Class defining the directive
+   */
+  def directiveOf[T<:Directive](name: String) : Module = macro impl.DirectiveMacros.directiveOfWithName[T]
+
+  def config(f: Function0[Any]) : Module =  macro impl.ModuleMacros.config
+  def config(f: Function1[Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function2[Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function3[Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function4[Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function5[Nothing,Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
+
 }
 
