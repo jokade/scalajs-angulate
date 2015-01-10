@@ -154,7 +154,7 @@ Services can be implemented as plain classes extending the `Service` trait. As w
 constructor based dependency injection is supported:
 ```scala
 class UserService($http: HttpService) extends Service {
-  def getUsers() : js.Array[User] = $http.get("/rest/users/").onSuccess( ... )
+  def getUsers() : HttpPromise = $http.get("/rest/users/")
 }
 
 // registers the service with the name 'userService'
