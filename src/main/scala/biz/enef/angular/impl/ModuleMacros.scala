@@ -21,4 +21,11 @@ protected[angular] class ModuleMacros(val c: blackbox.Context) extends MacroBase
     tree
   }
 
+  def run(f: c.Tree) = {
+    val tree = q"${c.prefix}.run( ${createFunctionDIArray(f)} )"
+
+    if(logCode) printCode(tree)
+
+    tree
+  }
 }

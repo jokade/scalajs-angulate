@@ -288,5 +288,12 @@ trait Module  extends js.Object {
   def config(f: Function4[Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
   def config(f: Function5[Nothing,Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
 
+  def run(f: Function0[Any]) : Module =  macro impl.ModuleMacros.run
+  def run(f: Function1[Nothing,Any]) : Module = macro impl.ModuleMacros.run
+  def run(f: Function2[Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.run
+  def run(f: Function3[Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.run
+  def run(f: Function4[Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.run
+  def run(f: Function5[Nothing,Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.run
+
 }
 
