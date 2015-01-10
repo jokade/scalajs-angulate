@@ -14,8 +14,8 @@ lazy val root = project.in(file(".")).
       "org.scala-lang" % "scala-reflect" % scalaVersion.value
     ),
     publishTo := { Some( Resolver.sftp("repo", "karchedon.de", "/www/htdocs/w00be83c/maven.karchedon.de") ) }
-  )
-  //settings(scalaJSSettings:_*)
+  ).
+  enablePlugins(ScalaJSPlugin)
 
 val angulateDebugFlags = Seq(
   "runtimeLogging",
