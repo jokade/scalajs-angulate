@@ -30,12 +30,18 @@ libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.1-SNAPSHOT"
 
 ```scala
 import biz.enef.angular._
+import biz.enef.angular.ext.{Route, RouteProvider}
 
 val module = Angular.module("app", Seq("ui.bootstrap"))
 
 module.serviceOf[UserService]
 module.controllerOf[UserCtrl]
 module.directiveOf[UserDirective]
+module.config( ($routeProvider:RouteProvider) => {
+  $routeProvider.
+    when("/user/:id", Route( templateUrl = "/tpl/userDetails.html" )).
+    otherwise( Route( redirectTo = "/" ) )
+})
 ```
 
 ### Controllers
@@ -47,8 +53,8 @@ Two flavors are currently supported:
 Both flavors support constructor [dependency injection](#dependency-injection).
 
 #### Body Scope Controllers
-Classes extending extending `Controller` export all their public `var`s, `val`s and `def`s into the controller scope.
-Definition of custom `Scope` types is not required. However, instantiation of the controller in the template requires the new AngularJS `as` syntax:
+Classes extending `Controller` export all their public `var`s, `val`s and `def`s into the controller scope.
+Defining a custom `Scope` type is not required. However, instantiating the controller in the template requires the new AngularJS `as` syntax:
 
 ```scala
 val module Angular.module("counter", Nil)
