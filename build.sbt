@@ -17,9 +17,19 @@ lazy val root = project.in(file(".")).
   ).
   settings(scalaJSSettings:_*)
 
+val angulateDebugFlags = Seq(
+  "runtimeLogging",
+  "ModuleMacros.debug"
+  //"ControllerMacros.debug"
+  //"DirectiveMacros.debug"
+  //"ServiceMacros.debug"
+//  "HttpPromiseMacros.debug"
+).map( f => s"-Xmacro-settings:biz.enef.angular.$f" )
+
 lazy val tests = project.
   dependsOn(root).
   settings(commonSettings: _*).
   settings(
-    publish := {}
+    publish := {},
+    scalacOptions ++= angulateDebugFlags
   )

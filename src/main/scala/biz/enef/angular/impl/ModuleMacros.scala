@@ -13,10 +13,8 @@ protected[angular] class ModuleMacros(val c: blackbox.Context) extends MacroBase
   // print generated code to console during compilation
   private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.ModuleMacros.debug" )
 
-  //def withConfig0(f: c.Tree) = withConfig(f)
-
-  def withConfig(f: c.Tree) = {
-    val tree = q"${c.prefix}.config( ${createDIArray(f)} )"
+  def config(f: c.Tree) = {
+    val tree = q"${c.prefix}.config( ${createFunctionDIArray(f)} )"
 
     if(logCode) printCode(tree)
 

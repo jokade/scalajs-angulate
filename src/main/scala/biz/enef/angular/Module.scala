@@ -281,12 +281,12 @@ trait Module  extends js.Object {
    */
   def directiveOf[T<:Directive](name: String) : Module = macro impl.DirectiveMacros.directiveOfWithName[T]
 
-  def withConfig(f: Function0[Any]) : Module =  macro impl.ModuleMacros.withConfig
-  def withConfig(f: Function1[Nothing,Any]) : Module = macro impl.ModuleMacros.withConfig
-  def withConfig(f: Function2[Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.withConfig
-  def withConfig(f: Function3[Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.withConfig
-  def withConfig(f: Function4[Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.withConfig
-  def withConfig(f: Function5[Nothing,Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.withConfig
+  def config(f: Function0[Any]) : Module =  macro impl.ModuleMacros.config
+  def config(f: Function1[Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function2[Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function3[Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function4[Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
+  def config(f: Function5[Nothing,Nothing,Nothing,Nothing,Nothing,Any]) : Module = macro impl.ModuleMacros.config
 
 }
 
