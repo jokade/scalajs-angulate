@@ -27,19 +27,21 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   lazy val tHttpError = typeOf[HttpError]
   lazy val tFailure = q"scala.util.Failure"
   lazy val tSuccess = q"scala.util.Success"
+  lazy val tAny = q"scalajs.js.Any"
 
   def onSuccess(f: c.Tree) = {
-    val tree = q"${c.prefix}.success( ($f):js.Function )"
+    val tree = q"${c.prefix}.success( ($f):scalajs.js.Function )"
 
     if(logCode) printCode(tree)
     tree
   }
 
   def onComplete(f: c.Tree) = {
-    val tree = q"""${c.prefix}.then( ((x:Any)=>$f($tSuccess(x))):js.Function1[Any,Unit],
-                                     ((msg:Any,status:Int) => $f($tFailure(new $tHttpError(msg.toString,status)))):js.Function2[Any,Int,Unit] )
-                """
-
+    val T = f.tpe.typeArgs.head.typeArgs.head
+    val tree = q"""{val fun = $f
+                    ${c.prefix}.success( ((x:$T) =>fun($tSuccess(x))) ).
+                                error( (msg:Any,status:Int)=>fun($tFailure(new $tHttpError(msg.toString,status))) )
+                   }"""
     if(logCode) printCode(tree)
     tree
   }
@@ -78,10 +80,11 @@ object HttpMacroUtils {
   def mapHttpFuture[T,U](p: HttpFuture[T], f: T=>U) : HttpFuture[U] = {
     val mapped = js.Object.create(p).asInstanceOf[HttpFuture[U]]
 
-    mapped.`then` = (success:js.Function5[U,Any,Any,Any,Any,Unit],error:js.Function,notify:js.Function) => {
+    mapped.`then` = (success:js.Function,error:js.Function,notify:js.Function) => {
       val mappedSuccess = ((data: T, status: Any, headers: Any, config: Any, statusText: Any) =>
-        success(f(data),status,headers,config,statusText)):js.Function5[T,Any,Any,Any,Any,Unit] //.asInstanceOf[Callback[T]]
+        success.asInstanceOf[js.Function5[U,js.Any,js.Any,js.Any,js.Any,Unit]].apply(f(data),status,headers,config,statusText)):js.Function5[T,Any,Any,Any,Any,Unit] //.asInstanceOf[Callback[T]]
       p.`then`(mappedSuccess,error,notify)
+      this.asInstanceOf[HttpFuture[U]]
     }
     mapped
   }

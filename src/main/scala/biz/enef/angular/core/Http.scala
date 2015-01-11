@@ -87,7 +87,7 @@ trait HttpFuture[T] extends js.Object {
   def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type
   def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type
 
-  var `then`: js.Function3[js.Function5[T,js.Any,js.Any,js.Any,js.Any,Unit],js.Function,js.Function,Unit] = ???
+  var `then`: js.Function3[js.Function,js.Function,js.Function,HttpFuture[T]] = ???
 
   //------------------------- ANGULATE ENHANCEMENTS --------------------------
   /**
