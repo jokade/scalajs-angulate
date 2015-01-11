@@ -31,34 +31,34 @@ trait Route extends js.Object {
   /**
    * Controller function that should be associated with the newly created scope or the name of a registered controller.
    */
-  var controller: js.Object = ???
+  var controller: js.Object = js.native
 
   /**
    * A controller alias name. If present the controller will be published to the scope under this name.
    */
-  var controllerAs: String = ???
+  var controllerAs: String = js.native
 
   /**
    * Value to update $$location path with and trigger route redirection.
    */
-  var redirectTo: js.Object = ???
+  var redirectTo: js.Object = js.native
 
   /**
    * An optional Map of dependencies which should be injected into the controller.
    */
-  var resolve: js.Dictionary[js.Object] = ???
+  var resolve: js.Dictionary[js.Object] = js.native
 
   /**
    * HTML template as a string or function.
    * If it is a function, it will be called with an array containing the parameters from the current route.
    */
-  var template: js.Object = ???
+  var template: js.Object = js.native
 
   /**
    * Path, or function that returns a path to an html template that should be used by ngView.
    * If it is a function, it will be called with an array containing the parameters from the current route.
    */
-  var templateUrl: js.Object = ???
+  var templateUrl: js.Object = js.native
 
 }
 

@@ -16,18 +16,18 @@ import scala.scalajs.js.UndefOr
 import scala.util.Try
 
 trait HttpService extends js.Object {
-  def get(url: String): HttpPromise = ???
-  def get(url: String, config: HttpConfig): HttpPromise = ???
-  def post(url: String): HttpPromise = ???
-  def post(url: String, data: js.Any): HttpPromise = ???
-  def post(url: String, data: js.Any, config: HttpConfig): HttpPromise = ???
-  def jsonp(url: String, config: HttpConfig): HttpPromise = ???
-  def put(url: String): HttpPromise = ???
-  def put(url: String, data: js.Any): HttpPromise = ???
-  def put(url: String, data: js.Any, config: HttpConfig): HttpPromise = ???
-  def delete(url: String): HttpPromise = ???
-  def delete(url: String, data: js.Any): HttpPromise = ???
-  def delete(url: String, data: js.Any, config: HttpConfig): HttpPromise = ???
+  def get(url: String): HttpPromise = js.native
+  def get(url: String, config: HttpConfig): HttpPromise = js.native
+  def post(url: String): HttpPromise = js.native
+  def post(url: String, data: js.Any): HttpPromise = js.native
+  def post(url: String, data: js.Any, config: HttpConfig): HttpPromise = js.native
+  def jsonp(url: String, config: HttpConfig): HttpPromise = js.native
+  def put(url: String): HttpPromise = js.native
+  def put(url: String, data: js.Any): HttpPromise = js.native
+  def put(url: String, data: js.Any, config: HttpConfig): HttpPromise = js.native
+  def delete(url: String): HttpPromise = js.native
+  def delete(url: String, data: js.Any): HttpPromise = js.native
+  def delete(url: String, data: js.Any, config: HttpConfig): HttpPromise = js.native
 }
 
 trait HttpConfig extends js.Object {
@@ -39,16 +39,16 @@ trait HttpConfig extends js.Object {
 }
 
 trait HttpPromise extends js.Object {
-  def success(callback: js.Function1[js.Any, Unit]): this.type
-  def success(callback: js.Function2[js.Any, Int, Unit]): this.type
-  def success(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type
-  def success(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type
-  def success(callback: js.Function5[js.Any, Int, js.Any, js.Any, js.Any, Unit]): this.type
-  def error(callback: js.Function1[js.Any, Unit]): this.type
-  def error(callback: js.Function2[js.Any, Int, Unit]): this.type
-  def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type
-  def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type
-  def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type
+  def success(callback: js.Function1[js.Any, Unit]): this.type = js.native
+  def success(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
+  def success(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
+  def success(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
+  def success(callback: js.Function5[js.Any, Int, js.Any, js.Any, js.Any, Unit]): this.type = js.native
+  def error(callback: js.Function1[js.Any, Unit]): this.type = js.native
+  def error(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
+  def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
+  def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
+  def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type = js.native
 
   //------------------------- ANGULATE ENHANCEMENTS --------------------------
   /**
