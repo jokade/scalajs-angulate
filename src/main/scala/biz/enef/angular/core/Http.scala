@@ -16,18 +16,18 @@ import scala.scalajs.js.UndefOr
 import scala.util.Try
 
 trait HttpService extends js.Object {
-  def get(url: String): HttpPromise = js.native
-  def get(url: String, config: HttpConfig): HttpPromise = js.native
-  def post(url: String): HttpPromise = js.native
-  def post(url: String, data: js.Any): HttpPromise = js.native
-  def post(url: String, data: js.Any, config: HttpConfig): HttpPromise = js.native
-  def jsonp(url: String, config: HttpConfig): HttpPromise = js.native
-  def put(url: String): HttpPromise = js.native
-  def put(url: String, data: js.Any): HttpPromise = js.native
-  def put(url: String, data: js.Any, config: HttpConfig): HttpPromise = js.native
-  def delete(url: String): HttpPromise = js.native
-  def delete(url: String, data: js.Any): HttpPromise = js.native
-  def delete(url: String, data: js.Any, config: HttpConfig): HttpPromise = js.native
+  def get[T](url: String): HttpFuture[T] = js.native
+  def get[T](url: String, config: HttpConfig): HttpFuture[T] = js.native
+  def post[T](url: String): HttpFuture[T] = js.native
+  def post[T](url: String, data: js.Any): HttpFuture[T] = js.native
+  def post[T](url: String, data: js.Any, config: HttpConfig): HttpFuture[T] = js.native
+  def jsonp[T](url: String, config: HttpConfig): HttpFuture[T] = js.native
+  def put[T](url: String): HttpFuture[T] = js.native
+  def put[T](url: String, data: js.Any): HttpFuture[T] = js.native
+  def put[T](url: String, data: js.Any, config: HttpConfig): HttpFuture[T] = js.native
+  def delete[T](url: String): HttpFuture[T] = js.native
+  def delete[T](url: String, data: js.Any): HttpFuture[T] = js.native
+  def delete[T](url: String, data: js.Any, config: HttpConfig): HttpFuture[T] = js.native
 }
 
 trait HttpConfig extends js.Object {
@@ -38,17 +38,21 @@ trait HttpConfig extends js.Object {
   var transformRequest: js.Array[js.Function2[js.Any, js.Any, js.Any]] = _
 }
 
-trait HttpPromise extends js.Object {
+trait HttpFuture[T] extends js.Object {
+  def success(callback: js.Function): this.type = js.native
   def success(callback: js.Function1[js.Any, Unit]): this.type = js.native
   def success(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
   def success(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
   def success(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
   def success(callback: js.Function5[js.Any, Int, js.Any, js.Any, js.Any, Unit]): this.type = js.native
+  def error(callback: js.Function): this.type = js.native
   def error(callback: js.Function1[js.Any, Unit]): this.type = js.native
   def error(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
   def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
   def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
   def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type = js.native
+
+  var `then`: js.Function3[js.Function5[T,js.Any,js.Any,js.Any,js.Any,Unit],js.Function,js.Function,Unit] = js.native
 
   //------------------------- ANGULATE ENHANCEMENTS --------------------------
   /**
@@ -65,11 +69,20 @@ trait HttpPromise extends js.Object {
 
   //def onSuccess(pf: PartialFunction[Any,Unit]) : Unit = macro impl.HttpPromiseMacros.onSuccess
 
-  def onSuccess(f: (Any)=>Unit) : this.type = macro impl.HttpPromiseMacros.onSuccess
+  def onSuccess(f: T=>Unit) : this.type = macro impl.HttpPromiseMacros.onSuccess
 
-  def onComplete(f: (Try[Any])=>Unit) : this.type = macro impl.HttpPromiseMacros.onComplete
+  def onComplete(f: (Try[T])=>Unit) : this.type = macro impl.HttpPromiseMacros.onComplete
 
   def onFailure(f: (HttpError)=>Unit) : this.type = macro impl.HttpPromiseMacros.onFailure
+
+  def map[U](f: T=>U) : HttpFuture[U] = macro impl.HttpPromiseMacros.map
+
+  /**
+   * Returns a Scala Future for this HttpFuture.
+   *
+   * @note This is a scalajs-angulate enhancement.
+   */
+  def future: Future[T] = macro impl.HttpPromiseMacros.future
 }
 
 class HttpError(msg: String, val status: Int) extends RuntimeException(msg)

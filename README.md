@@ -14,6 +14,16 @@ scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatso
 
 _NOTE: the handling of controllers has recently changed_
 
+##### Contents:
+* [SBT settings](#sbt-settings)
+* [Modules](#defining-a-module)
+* [Controllers](#controllers)
+* [Dependency Injection](#dependency-injection)
+* [Services](#services)
+* [Directives](#directives)
+
+
+
 How to Use
 ----------
 
@@ -32,9 +42,10 @@ scalajs-angulate supports Scala.js `0.5.x` and `0.6.0-M3`.
 
 ```scala
 import biz.enef.angular._
+import biz.enef.angular.core.HttpService
 import biz.enef.angular.ext.{Route, RouteProvider}
 
-val module = Angular.module("app", Seq("ui.bootstrap"))
+val module = Angular.module("app", Seq("ui.bootstrap","ngRoute"))
 
 module.serviceOf[UserService]
 module.controllerOf[UserCtrl]
@@ -44,6 +55,9 @@ module.config( ($routeProvider:RouteProvider) => {
     when("/user/:id", Route( templateUrl = "/tpl/userDetails.html" )).
     otherwise( Route( redirectTo = "/" ) )
 })
+module.run( initApp _ )
+
+def initApp($http: HttpService) = ...
 ```
 
 ### Controllers
@@ -156,6 +170,20 @@ class UserCtrl(@named("$http") httpService: HttpService) extends Controller {
   /* ... */
 }
 ```
+
+
+DI is also supported for functions passed to `Module.config()` and `Module.run()`:
+```scala
+module.config( ($routeProvider: RouteProvider) => {
+  /* ... */
+})
+
+// -- or --
+def routing($routeProvider: RouteProvider) = $routeProvider.when( /* ... */ )
+
+module.config( routing _ )
+```
+However, the `@named` annoation is not supported for function DI, i.e. the _parameter names must match the services_ to be injected for this to work.
 
 ### Services
 Services can be implemented as plain classes extending the `Service` trait. As with controllers,
