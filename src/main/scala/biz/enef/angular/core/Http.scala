@@ -16,18 +16,18 @@ import scala.scalajs.js.UndefOr
 import scala.util.Try
 
 trait HttpService extends js.Object {
-  def get(url: String): HttpPromise = ???
-  def get(url: String, config: HttpConfig): HttpPromise = ???
-  def post(url: String): HttpPromise = ???
-  def post(url: String, data: js.Any): HttpPromise = ???
-  def post(url: String, data: js.Any, config: HttpConfig): HttpPromise = ???
-  def jsonp(url: String, config: HttpConfig): HttpPromise = ???
-  def put(url: String): HttpPromise = ???
-  def put(url: String, data: js.Any): HttpPromise = ???
-  def put(url: String, data: js.Any, config: HttpConfig): HttpPromise = ???
-  def delete(url: String): HttpPromise = ???
-  def delete(url: String, data: js.Any): HttpPromise = ???
-  def delete(url: String, data: js.Any, config: HttpConfig): HttpPromise = ???
+  def get[T](url: String): HttpFuture[T] = ???
+  def get[T](url: String, config: HttpConfig): HttpFuture[T] = ???
+  def post[T](url: String): HttpFuture[T] = ???
+  def post[T](url: String, data: js.Any): HttpFuture[T] = ???
+  def post[T](url: String, data: js.Any, config: HttpConfig): HttpFuture[T] = ???
+  def jsonp[T](url: String, config: HttpConfig): HttpFuture[T] = ???
+  def put[T](url: String): HttpFuture[T] = ???
+  def put[T](url: String, data: js.Any): HttpFuture[T] = ???
+  def put[T](url: String, data: js.Any, config: HttpConfig): HttpFuture[T] = ???
+  def delete[T](url: String): HttpFuture[T] = ???
+  def delete[T](url: String, data: js.Any): HttpFuture[T] = ???
+  def delete[T](url: String, data: js.Any, config: HttpConfig): HttpFuture[T] = ???
 }
 
 trait HttpConfig extends js.Object {
@@ -38,17 +38,21 @@ trait HttpConfig extends js.Object {
   var transformRequest: js.Array[js.Function2[js.Any, js.Any, js.Any]] = _
 }
 
-trait HttpPromise extends js.Object {
+trait HttpFuture[T] extends js.Object {
+  def success(callback: js.Function): this.type
   def success(callback: js.Function1[js.Any, Unit]): this.type
   def success(callback: js.Function2[js.Any, Int, Unit]): this.type
   def success(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type
   def success(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type
   def success(callback: js.Function5[js.Any, Int, js.Any, js.Any, js.Any, Unit]): this.type
+  def error(callback: js.Function): this.type
   def error(callback: js.Function1[js.Any, Unit]): this.type
   def error(callback: js.Function2[js.Any, Int, Unit]): this.type
   def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type
   def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type
   def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type
+
+  var `then`: js.Function3[js.Function5[T,js.Any,js.Any,js.Any,js.Any,Unit],js.Function,js.Function,Unit] = ???
 
   //------------------------- ANGULATE ENHANCEMENTS --------------------------
   /**
@@ -65,13 +69,21 @@ trait HttpPromise extends js.Object {
 
   //def onSuccess(pf: PartialFunction[Any,Unit]) : Unit = macro impl.HttpPromiseMacros.onSuccess
 
-  def onSuccess(f: (Any)=>Unit) : this.type = macro impl.HttpPromiseMacros.onSuccess
+  def onSuccess(f: T=>Unit) : this.type = macro impl.HttpPromiseMacros.onSuccess
 
-  def onComplete(f: (Try[Any])=>Unit) : this.type = macro impl.HttpPromiseMacros.onComplete
+  def onComplete(f: (Try[T])=>Unit) : this.type = macro impl.HttpPromiseMacros.onComplete
 
   def onFailure(f: (HttpError)=>Unit) : this.type = macro impl.HttpPromiseMacros.onFailure
+
+  def map[U](f: T=>U) : HttpFuture[U] = macro impl.HttpPromiseMacros.map
+
+  /**
+   * Returns a Scala Future for this HttpFuture.
+   *
+   * @note This is a scalajs-angulate enhancement.
+   */
+  def future: Future[T] = macro impl.HttpPromiseMacros.future
 }
 
 class HttpError(msg: String, val status: Int) extends RuntimeException(msg)
-
 
