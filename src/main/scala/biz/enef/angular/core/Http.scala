@@ -31,11 +31,46 @@ trait HttpService extends js.Object {
 }
 
 trait HttpConfig extends js.Object {
-  var cache = false
-  var responseType = ""
-  var headers = new js.Array[js.Any]
-  var transformResponse: js.Array[js.Function2[js.Any, js.Any, js.Any]] = _
-  var transformRequest: js.Array[js.Function2[js.Any, js.Any, js.Any]] = _
+  var method: String = ???
+  var url: String = ???
+  var params : js.Dictionary[Any] = ???
+  var data : js.Any = ???
+  var headers : js.Dictionary[Any] = ???
+  var xsrfHeaderName : String = ???
+  var xsrfCookieName : String = ???
+  var transformResponse: js.Array[js.Function2[js.Any, js.Any, js.Any]] = ???
+  var transformRequest: js.Array[js.Function2[js.Any, js.Any, js.Any]] = ???
+  var cache: js.Any = ???
+  var withCredentials: Boolean = ???
+  var timeout: js.Any = ???
+  var responseType : String = ???
+}
+
+object HttpConfig {
+  import js.Dynamic.literal
+
+  def apply(params: (String,js.Any)*) : HttpConfig = literal(params= js.Dictionary(params:_*)).asInstanceOf[HttpConfig]
+
+  def apply(method: String = null,
+            url: String = null,
+            params: js.Dictionary[Any] = null,
+            data: js.Any = null,
+            headers: js.Dictionary[Any] = null,
+            xsrfHeaderName : String = null,
+            xsrfCookieName : String = null,
+            transformResponse: js.Array[js.Function2[js.Any, js.Any, js.Any]] = null,
+            transformRequest: js.Array[js.Function2[js.Any, js.Any, js.Any]] = null,
+            cache: js.Any = null,
+            withCredentials: Boolean = false,
+            timeout: js.Any = null,
+            responseType : String = null) : HttpConfig = {
+    literal(method = method, url=url, params=params, data=data, headers=headers,
+            xsrfCookieName= xsrfCookieName, xsrfHeaderName= xsrfHeaderName,
+            transformRequest=transformRequest, transformResponse=transformResponse,
+            cache=cache, withCredentials=withCredentials, timeout=timeout,
+            responseType=responseType).asInstanceOf[HttpConfig]
+  }
+
 }
 
 trait HttpFuture[T] extends js.Object {
