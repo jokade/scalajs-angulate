@@ -19,11 +19,11 @@ lazy val root = project.in(file(".")).
 
 val angulateDebugFlags = Seq(
   "runtimeLogging",
-  "ModuleMacros.debug"
+  "ModuleMacros.debug",
   //"ControllerMacros.debug"
   //"DirectiveMacros.debug"
   //"ServiceMacros.debug"
-//  "HttpPromiseMacros.debug"
+  "HttpPromiseMacros.debug"
 ).map( f => s"-Xmacro-settings:biz.enef.angular.$f" )
 
 lazy val tests = project.
