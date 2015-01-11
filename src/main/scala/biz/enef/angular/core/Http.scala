@@ -82,7 +82,7 @@ trait HttpFuture[T] extends js.Object {
    *
    * @note This is a scalajs-angulate enhancement.
    */
-  def future: Future[T] = ???
+  def future: Future[T] = macro impl.HttpPromiseMacros.future
 }
 
 class HttpError(msg: String, val status: Int) extends RuntimeException(msg)

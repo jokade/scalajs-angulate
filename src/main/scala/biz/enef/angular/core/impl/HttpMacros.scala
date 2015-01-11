@@ -63,6 +63,13 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
     tree
   }
 
+  def future = {
+    val tree = q"""(new biz.enef.angular.core.impl.HttpFutureWrapper(${c.prefix}))"""
+
+    if(logCode) printCode(tree)
+    tree
+  }
+
 }
 
 
