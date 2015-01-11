@@ -33,9 +33,9 @@ trait HttpService extends js.Object {
 trait HttpConfig extends js.Object {
   var method: String = ???
   var url: String = ???
-  var params : js.Dictionary[Any] = ???
+  var params : js.Dictionary[js.Any] = ???
   var data : js.Any = ???
-  var headers : js.Dictionary[Any] = ???
+  var headers : js.Dictionary[js.Any] = ???
   var xsrfHeaderName : String = ???
   var xsrfCookieName : String = ???
   var transformResponse: js.Array[js.Function2[js.Any, js.Any, js.Any]] = ???
@@ -49,13 +49,13 @@ trait HttpConfig extends js.Object {
 object HttpConfig {
   import js.Dynamic.literal
 
-  def apply(params: (String,js.Any)*) : HttpConfig = literal(params= js.Dictionary(params:_*)).asInstanceOf[HttpConfig]
+  def apply[A](params: (String,A)*) : HttpConfig = literal(params= js.Dictionary(params:_*)).asInstanceOf[HttpConfig]
 
   def apply(method: String = null,
             url: String = null,
-            params: js.Dictionary[Any] = null,
+            params: js.Dictionary[js.Any] = null,
             data: js.Any = null,
-            headers: js.Dictionary[Any] = null,
+            headers: js.Dictionary[js.Any] = null,
             xsrfHeaderName : String = null,
             xsrfCookieName : String = null,
             transformResponse: js.Array[js.Function2[js.Any, js.Any, js.Any]] = null,
@@ -74,20 +74,21 @@ object HttpConfig {
 }
 
 trait HttpFuture[T] extends js.Object {
-  def success(callback: js.Function): this.type = js.native
+  def success(callback: js.Function): HttpFuture[T] = js.native
   def success(callback: js.Function1[js.Any, Unit]): this.type = js.native
   def success(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
   def success(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
   def success(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
   def success(callback: js.Function5[js.Any, Int, js.Any, js.Any, js.Any, Unit]): this.type = js.native
-  def error(callback: js.Function): this.type = js.native
+  def error(callback: js.Function): HttpFuture[T] = js.native
   def error(callback: js.Function1[js.Any, Unit]): this.type = js.native
   def error(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
   def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
   def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
   def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type = js.native
 
-  var `then`: js.Function3[js.Function5[T,js.Any,js.Any,js.Any,js.Any,Unit],js.Function,js.Function,Unit] = js.native
+  var `then`: js.Function3[js.Function,js.Function,js.Function,HttpFuture[T]] = js.native
+  //var `then`: js.Function3[js.Function1[T,Unit],js.Function,js.Function,Unit] = js.native
 
   //------------------------- ANGULATE ENHANCEMENTS --------------------------
   /**
@@ -104,11 +105,11 @@ trait HttpFuture[T] extends js.Object {
 
   //def onSuccess(pf: PartialFunction[Any,Unit]) : Unit = macro impl.HttpPromiseMacros.onSuccess
 
-  def onSuccess(f: T=>Unit) : this.type = macro impl.HttpPromiseMacros.onSuccess
+  def onSuccess(f: T=>Unit) : HttpFuture[T] = macro impl.HttpPromiseMacros.onSuccess
 
-  def onComplete(f: (Try[T])=>Unit) : this.type = macro impl.HttpPromiseMacros.onComplete
+  def onComplete(f: Try[T]=>Unit) : HttpFuture[T] = macro impl.HttpPromiseMacros.onComplete
 
-  def onFailure(f: (HttpError)=>Unit) : this.type = macro impl.HttpPromiseMacros.onFailure
+  def onFailure(f: (HttpError)=>Unit) : HttpFuture[T] = macro impl.HttpPromiseMacros.onFailure
 
   def map[U](f: T=>U) : HttpFuture[U] = macro impl.HttpPromiseMacros.map
 
