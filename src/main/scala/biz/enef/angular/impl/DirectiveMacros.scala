@@ -7,7 +7,7 @@ package biz.enef.angular.impl
 
 import scala.reflect.macros.blackbox
 
-protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroBase {
+protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroBase with ControllerMacroUtils {
   import c.universe._
 
   // print generated code to console during compilation
@@ -32,15 +32,25 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
     val module = c.prefix
 
     // assemble all defined directive attributes (ie 'template', 'restrict', ...)
-    val atts = getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
+    val atts = (getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
+      //case ("withController",a)  => {println(a); q"()"}
       case ("isolateScope",_)  => q"scope = dimpl.isolateScope"
       case ("postLink",_)      => q"link = (dimpl.postLink _):js.Function"
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
-    }
+    }) ++ (
+      getControllerType(ct).map( createController(_) )
+      )
 
     // create directive definition object
     val ddo = q"""literal( ..$atts )"""
+    println(ddo)
+
+    // print debug information at runtime if runtimeLogging==true
+    val debug =
+      if(runtimeLogging)
+        q"""global.console.debug("Created Directive "+$name, ddo)"""
+      else q"()"
 
     // directive factory function
     val constr = ct.members.filter( _.isConstructor ).map( _.asMethod ).head
@@ -49,7 +59,9 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
     val carray =
       q"""js.Array[Any](..$deps, ((..$params) => {
             val dimpl = new $ct(..$args)
-            $ddo
+            val ddo = $ddo
+            $debug
+            ddo
           }):js.Function)
        """
 
@@ -64,4 +76,34 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
   private def getDirectiveAttributes(ct: c.Type) =
     ct.decls.filter( m=> m.isMethod && !m.isConstructor ).map( _.asMethod )
+
+  private def getControllerType(ct: c.Type) =
+    ct.decls.filter( m=> m.isType && m.name.toString == "withController" ).map( _.asType )
+
+  private def createController(ts: TypeSymbol) = {
+    val ct = ts.toType.dealias
+    val cm = getConstructor(ct)
+    val (ctrlDeps,ctrlArgs) = makeArgsList(cm)
+    val ctrlDepNames = getDINames(cm)
+
+    // AngularJS controller construction array
+    /*val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
+          ((scope:js.Dynamic,parentScope:js.Dynamic, ..$ctrlDeps) => {
+            val ctrl = new $ct(..$ctrlArgs)
+            $postConstruction
+          }):js.ThisFunction)"""*/
+  val constructor = q"""js.Array[Any](..$ctrlDepNames,
+          ((scope:js.Any,elem:js.Any,attrs:js.Any, ..$ctrlDeps) => {
+            val ctrl = (new $ct(..$ctrlArgs)).asInstanceOf[js.Dynamic]
+            ctrl.scope = scope
+            ctrl.element = elem
+            ctrl.attributes = attrs
+            ctrl
+          }):js.Function)"""
+
+    //val constructor = createControllerConstructor(ts.toType.finalResultType.dealias,q"ctrl")
+    //println(constructor)
+    q"controller = $constructor" //$constructor"
+  }
+
 }

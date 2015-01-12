@@ -11,7 +11,8 @@ lazy val root = project.in(file(".")).
   settings( 
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      "org.scala-js"   %%% "scalajs-dom" % "0.7.0" 
     ),
     publishTo := { Some( Resolver.sftp("repo", "karchedon.de", "/www/htdocs/w00be83c/maven.karchedon.de") ) }
   ).

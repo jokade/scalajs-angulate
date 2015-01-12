@@ -5,8 +5,10 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
 
+import biz.enef.angular.core.{Attributes, JQLite}
+
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSName
+import scala.scalajs.js.annotation.{JSExportAll, JSExport, JSName}
 
 sealed trait NGController
 
@@ -21,3 +23,9 @@ trait Controller extends NGController
 
 trait ScopeController extends NGController
 
+@JSExportAll
+trait DirectiveController {
+  var scope: js.Any = null
+  var element: JQLite = null
+  var attributes: Attributes = null
+}

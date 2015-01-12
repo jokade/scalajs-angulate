@@ -17,6 +17,8 @@ protected[angular] abstract class MacroBase {
   /* type definitions */
   val namedAnnotation = typeOf[named]
 
+  // include runtime log messages if true
+  protected lazy val runtimeLogging = c.settings.exists( _ == "biz.enef.angular.runtimeLogging" )
 
   /**
    * Print to console during compilation

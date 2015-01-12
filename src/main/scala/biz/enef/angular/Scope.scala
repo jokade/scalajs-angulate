@@ -34,7 +34,7 @@ trait Scope extends js.Object {
    *
    * @param exp An angular expression to be executed (string or a `function(scope)`)
    */
-  def $apply(exp: js.Object = js.native) : js.Any = js.native
+  def $apply(exp: js.Any = js.native) : js.Any = js.native
 
   /**
    * Schedule the invocation of `$$apply` to occur at a later time.
@@ -111,7 +111,7 @@ trait Scope extends js.Object {
    *                 Called with three arguments: new value, old value, current scope
    * @return de-registration function
    */
-  def $watch(watchExpression: String, listener: js.Function3[js.Any,js.Any,Scope,Unit]) : js.Function = js.native
+  def $watch(watchExpression: js.Any, listener: js.Function = null) : js.Function = js.native
 
   /**
    * Registers a listener callback to be executed whenever the `watchExpression` changes.
@@ -121,7 +121,7 @@ trait Scope extends js.Object {
    *                 Called with three arguments: new value, old value, current scope
    * @return de-registration function
    */
-  def $watch(watchExpression: js.Function, listener: js.Function3[js.Any,js.Any,Scope,Unit]) : js.Function = js.native
+  //def $watch(watchExpression: js.Function, listener: js.Function3[js.Any,js.Any,Scope,Unit]) : js.Function = js.native
 
   /**
    * A variant of `$$watch` where it watches an array of `watchExpressions`
@@ -131,7 +131,7 @@ trait Scope extends js.Object {
    *                 Called with three arguments: new values, old values, current scope
    * @return de-registration function
    */
-  def $watchGroup(watchExpressions: js.Array[js.Object], listener: js.Function3[js.Array[js.Any],js.Array[js.Any],Scope,Unit]) : js.Function = js.native
+  def $watchGroup(watchExpressions: js.Array[js.Object], listener: js.Function) : js.Function = js.native
 
   /**
    * Shallow watches the properties of an object and fires whenever any of the properties change.
