@@ -83,22 +83,16 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
   private def createController(ts: TypeSymbol) = {
     val ct = ts.toType.dealias
     val cm = getConstructor(ct)
+    val exportAs = getExportToScope(ct.typeSymbol.asClass)
     val (ctrlDeps,ctrlArgs) = makeArgsList(cm)
     val ctrlDepNames = getDINames(cm)
 
+
     // AngularJS controller construction array
-    /*val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
-          ((scope:js.Dynamic,parentScope:js.Dynamic, ..$ctrlDeps) => {
-            val ctrl = new $ct(..$ctrlArgs)
-            $postConstruction
-          }):js.ThisFunction)"""*/
-  val constructor = q"""js.Array[Any](..$ctrlDepNames,
-          ((scope:js.Any,elem:js.Any,attrs:js.Any, ..$ctrlDeps) => {
-            val ctrl = (new $ct(..$ctrlArgs)).asInstanceOf[js.Dynamic]
-            ctrl.scope = scope
-            ctrl.element = elem
-            ctrl.attributes = attrs
-            ctrl
+    val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
+          ((scope:js.Dictionary[js.Any],..$ctrlDeps) => {
+            val ctrl = (new $ct(..$ctrlArgs)).asInstanceOf[js.Any]
+            ${if(exportAs.isDefined) q"scope(${exportAs.get}) = ctrl" else q""}
           }):js.Function)"""
 
     //val constructor = createControllerConstructor(ts.toType.finalResultType.dealias,q"ctrl")

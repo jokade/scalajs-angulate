@@ -1,5 +1,5 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
-// Description:
+// Description: Defines marker traits for angulate controllers
 //
 // Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
@@ -23,9 +23,3 @@ trait Controller extends NGController
 
 trait ScopeController extends NGController
 
-@JSExportAll
-trait DirectiveController {
-  var scope: js.Any = null
-  var element: JQLite = null
-  var attributes: Attributes = null
-}

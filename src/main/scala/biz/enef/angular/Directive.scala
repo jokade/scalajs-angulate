@@ -18,7 +18,7 @@ trait Directive {
   //def controller[T<:Scope](scope: T, elem: JQLite, attrs: Attributes) : Unit = ???
 
   //def controller(scope: js.Dynamic, elem: JQLite, attrs: Attributes) : Unit = ???
-  type withController <: DirectiveController
+  type withController <: NGController
 
   def controllerAs: String = ???
 

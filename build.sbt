@@ -2,7 +2,9 @@ lazy val commonSettings = Seq(
   organization := "biz.enef",
   version := "0.1-SNAPSHOT",
   scalaVersion := "2.11.2",
-  scalacOptions ++= Seq("-deprecation","-feature","-Xlint")
+  scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
+  // work around for a bug during publishing
+  scalacOptions in (Compile,doc) ~= { _.filterNot(_.contains("scalajs-compiler_")) }
 )
 
   

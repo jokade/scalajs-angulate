@@ -5,7 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
-import biz.enef.angular.{named, ScopeController}
+import biz.enef.angular.{ExportToScope, named, ScopeController}
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
@@ -76,12 +76,7 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
     val ctrlDepNames = getDINames(cm)
 
     // AngularJS controller construction array
-    /*val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
-          ((scope:js.Dynamic,parentScope:js.Dynamic, ..$ctrlDeps) => {
-            val ctrl = new $ct(..$ctrlArgs)
-            $postConstruction
-          }):js.ThisFunction)"""*/
-  val constructor = q"""js.Array[Any](..$ctrlDepNames,
+    val constructor = q"""js.Array[Any](..$ctrlDepNames,
           ((scope:js.Dynamic, ..$ctrlDeps) => {
             val ctrl = new $ct(..$ctrlArgs)
             $postConstruction
@@ -107,7 +102,8 @@ protected[angular] trait ControllerMacroUtils {
   this: MacroBase =>
   import c.universe._
 
-
+  /* types */
+  val exportToScopeAnnotation = typeOf[ExportToScope]
 
   protected def copyMembers(ct: Type) = {
     val props = ct.decls.filter( p => p.isPublic && p.isMethod && !p.isConstructor).map( _.asMethod )
@@ -138,4 +134,8 @@ protected[angular] trait ControllerMacroUtils {
       })
   }
 
+  protected def getExportToScope(ts: ClassSymbol) = {
+    ts.annotations.filter( _.tree.tpe =:= exportToScopeAnnotation ).
+    map( _.tree.children(1) ).headOption
+  }
 }

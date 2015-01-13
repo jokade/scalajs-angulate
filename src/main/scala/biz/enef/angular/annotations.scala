@@ -14,3 +14,11 @@ import scala.annotation.StaticAnnotation
  */
 @annotation.meta.param
 case class named(name: String) extends StaticAnnotation
+
+/**
+ * This annotation marks an NGController to be exported to the corresponding
+ * scope under the specified name.
+ *
+ * @param name variable name under which the controller will be exported to the scope
+ */
+case class ExportToScope(name: String) extends StaticAnnotation
