@@ -3,7 +3,7 @@
 //
 // Based on https://github.com/greencatsoft/scalajs-angular .. angularjs/core/Http.scala
 //
-// Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
+// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core
 
