@@ -12,7 +12,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ng/service/$location]]
  */
-trait Location {
+trait Location extends js.Object {
 
   def absUrl(): String = ???
   def url(url: String = null, replace: String = null): String = ???

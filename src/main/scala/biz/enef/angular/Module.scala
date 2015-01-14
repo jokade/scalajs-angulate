@@ -19,7 +19,7 @@ trait Module  extends js.Object {
   /**
    * The name of the module
    */
-  def name: String
+  def name: String = ???
 
   /**
    * Defines an animation hook that can be later used with the $animate service and directives that use this service.
@@ -31,7 +31,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#animate]]
    */
-  def animation(name: String, animationFactory: js.Function) : Module
+  def animation(name: String, animationFactory: js.Function) : Module = ???
 
   /**
    * Defines an animation hook that can be later used with the $animate service and directives that use this service.
@@ -44,7 +44,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#animate]]
    */
-  def animation(name: String, animationFactory: js.Array[Any]) : Module
+  def animation(name: String, animationFactory: js.Array[Any]) : Module = ???
 
   /**
    * Use this method to register work which needs to be performed on module loading.
@@ -53,7 +53,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#config]]
    */
-  def config(configFn: js.Function) : Module
+  def config(configFn: js.Function) : Module = ???
 
   /**
    * Use this method to register work which needs to be performed on module loading.
@@ -63,7 +63,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#config]]
    */
-  def config(configFn: js.Array[Any]) : Module
+  def config(configFn: js.Array[Any]) : Module = ???
 
   /**
    * Register a constant service, such as a string, number, array ...
@@ -73,7 +73,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#constant]]
    */
-  def constant(name: String, value: js.Any) : Module
+  def constant(name: String, value: js.Any) : Module = ???
 
   /**
    * Registers a controller.
@@ -83,7 +83,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#controller]]
    */
-  def controller(name: String, constructor: js.Function) : Module
+  def controller(name: String, constructor: js.Function) : Module = ???
 
   /**
    * Registers a controller.
@@ -94,7 +94,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#controller]]
    */
-  def controller(name: String, constructor: js.Array[Any]) : Module
+  def controller(name: String, constructor: js.Array[Any]) : Module = ???
 
   /**
    * Register a new directive with the compiler.
@@ -104,7 +104,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#directive]]
    */
-  def directive(name: String, directiveFactory: js.Function) : Module
+  def directive(name: String, directiveFactory: js.Function) : Module = ???
 
   /**
    * Register a new directive with the compiler.
@@ -115,7 +115,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#directive]]
    */
-  def directive(name: String, directiveFactory: js.Array[Any]) : Module
+  def directive(name: String, directiveFactory: js.Array[Any]) : Module = ???
 
   /**
    * Register a service factory.
@@ -125,7 +125,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#factory]]
    */
-  def factory(name: String, constructor: js.Function) : Module
+  def factory(name: String, constructor: js.Function) : Module = ???
 
   /**
    * Register a service factory.
@@ -136,7 +136,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#factory]]
    */
-  def factory(name: String, constructor: js.Array[Any]) : Module
+  def factory(name: String, constructor: js.Array[Any]) : Module = ???
 
   /**
    * Register a filter factory.
@@ -146,7 +146,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#filter]]
    */
-  def filter(name: String, filterFactory: js.Function) : Module
+  def filter(name: String, filterFactory: js.Function) : Module = ???
 
   /**
    * Register a filter factory.
@@ -157,7 +157,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#filter]]
    */
-  def filter(name: String, filterFactory: js.Array[Any]) : Module
+  def filter(name: String, filterFactory: js.Array[Any]) : Module = ???
 
   /**
    * Register a provider function with the $injector.
@@ -167,7 +167,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#provider]]
    */
-  def provider(name: String, constructor: js.Function) : Module
+  def provider(name: String, constructor: js.Function) : Module = ???
 
   /**
    * Register a provider function with the $injector.
@@ -178,7 +178,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#provider]]
    */
-  def provider(name: String, constructor: js.Array[Any]) : Module
+  def provider(name: String, constructor: js.Array[Any]) : Module = ???
   
   /**
    * Use this method to register work which should be performed when the injector is done loading all modules.
@@ -187,7 +187,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#run]]
    */
-  def run(initializationFn: js.Function) : Module
+  def run(initializationFn: js.Function) : Module = ???
 
   /**
    * Use this method to register work which should be performed when the injector is done loading all modules.
@@ -197,7 +197,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#run]]
    */
-  def run(initializationFn: js.Array[Any]) : Module
+  def run(initializationFn: js.Array[Any]) : Module = ???
 
   /**
    * Register a service constructor which will be invoked with `new` to create the service instance.
@@ -207,7 +207,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#service]]
    */
-  def service(name: String, constructor: js.Function) : Module
+  def service(name: String, constructor: js.Function) : Module = ???
 
   /**
    * Register a service constructor which will be invoked with `new` to create the service instance.
@@ -217,7 +217,7 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#service]]
    */
-  def service(name: String, constructor: js.Array[Any]) : Module
+  def service(name: String, constructor: js.Array[Any]) : Module = ???
 
 
   //------------------------------ ENHANCEMENTS ------------------------------
