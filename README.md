@@ -12,7 +12,7 @@ This project is at the very early stage of development (no release yet), and esp
 
 scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which currently provides a more complete Scala.js binding for Angular.
 
-_NOTE: the handling of controllers has recently changed_
+__NOTE__: the sbt resolver setting has changed; scalajs-angulate is now published to sonatype
 
 ##### Contents:
 * [SBT settings](#sbt-settings)
@@ -31,12 +31,13 @@ How to Use
 Add the following lines to your ```sbt``` build definition:
 
 ```scala
-resolvers += "karchedon" at "http://maven.karchedon.de"
+resolvers += 
+  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 
 libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.1-SNAPSHOT"
 ```
 
-scalajs-angulate supports Scala.js `0.5.x` and `0.6.0-M3`.
+scalajs-angulate supports Scala.js `0.5.x` and `0.6.0-RC1`.
 
 ### Defining a Module
 
