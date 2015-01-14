@@ -3,7 +3,7 @@ import SonatypeKeys._
 lazy val commonSettings = Seq(
   organization := "biz.enef",
   version := "0.1-SNAPSHOT",
-  scalaVersion := "2.11.2",
+  scalaVersion := "2.11.5",
   scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
   // work around for a bug during publishing
   scalacOptions in (Compile,doc) ~= { _.filterNot(_.contains("scalajs-compiler_")) }
@@ -26,10 +26,15 @@ lazy val root = project.in(file(".")).
 
 lazy val tests = project.
   dependsOn(root).
+  enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
+  settings(utest.jsrunner.Plugin.utestJsSettings: _*).
   settings(
     publish := {},
-    scalacOptions ++= angulateDebugFlags
+    scalacOptions ++= angulateDebugFlags,
+    scalaJSStage := FastOptStage,
+    jsDependencies += RuntimeDOM,
+    jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test"
   )
 
 
@@ -73,5 +78,4 @@ lazy val angulateDebugFlags = Seq(
   //"ServiceMacros.debug"
   "HttpPromiseMacros.debug"
 ).map( f => s"-Xmacro-settings:biz.enef.angular.$f" )
-
 

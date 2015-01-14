@@ -16,6 +16,8 @@ import scala.scalajs.js
  */
 trait Angular extends js.Object {
 
+  def injector(modules: js.Any, strictDi: Boolean = false) : Angular.Injector = js.native
+
   /**
    * Creates or retrieves an Angular module.
    *
@@ -54,7 +56,7 @@ object Angular {
   /**
    * Returns the global Angular object
    */
-  def apply() : Angular = macro impl.AngularImpl.apply
+  def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[Angular] //macro impl.AngularImpl.apply
 
   /**
    * Creates a new Angular
@@ -63,4 +65,8 @@ object Angular {
    * @return
    */
   def module(name: String, requires: Iterable[String]) : Module = macro impl.AngularImpl.module
+
+  trait Injector extends js.Object {
+    def get(name: String) : js.Any = js.native
+  }
 }
