@@ -5,7 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core.impl
 
-import biz.enef.angular.core.{HttpError, HttpFuture}
+import biz.enef.angular.core.{HttpError, HttpPromise}
 import biz.enef.angular.impl.MacroBase
 
 import scala.Predef
@@ -56,8 +56,8 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   def map(f: c.Tree) = {
     val T = f.tpe.typeArgs(1)
     val tree = q"""{import biz.enef.angular.core
-                    val mapped = new core.impl.MappedHttpFuture(${c.prefix},$f)
-                   mapped.asInstanceOf[core.HttpFuture[$T]]
+                    val mapped = new core.impl.MappedHttpPromise(${c.prefix},$f)
+                   mapped.asInstanceOf[core.HttpPromise[$T]]
                    }
                    """
 
@@ -66,7 +66,7 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   }
 
   def future = {
-    val tree = q"""(new biz.enef.angular.core.impl.HttpFutureWrapper(${c.prefix}))"""
+    val tree = q"""(new biz.enef.angular.core.impl.HttpPromiseWrapper(${c.prefix}))"""
 
     if(logCode) printCode(tree)
     tree
@@ -77,21 +77,21 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
 
 object HttpMacroUtils {
 
-  def mapHttpFuture[T,U](p: HttpFuture[T], f: T=>U) : HttpFuture[U] = {
-    val mapped = js.Object.create(p).asInstanceOf[HttpFuture[U]]
+  def mapHttpPromise[T,U](p: HttpPromise[T], f: T=>U) : HttpPromise[U] = {
+    val mapped = js.Object.create(p).asInstanceOf[HttpPromise[U]]
 
     mapped.`then` = (success:js.Function,error:js.Function,notify:js.Function) => {
       val mappedSuccess = ((data: T, status: Any, headers: Any, config: Any, statusText: Any) =>
         success.asInstanceOf[js.Function5[U,js.Any,js.Any,js.Any,js.Any,Unit]].apply(f(data),status,headers,config,statusText)):js.Function5[T,Any,Any,Any,Any,Unit] //.asInstanceOf[Callback[T]]
       p.`then`(mappedSuccess,error,notify)
-      this.asInstanceOf[HttpFuture[U]]
+      this.asInstanceOf[HttpPromise[U]]
     }
     mapped
   }
 
 }
 
-class HttpFutureWrapper[T](wrapped: HttpFuture[T]) extends Future[T] {
+class HttpPromiseWrapper[T](wrapped: HttpPromise[T]) extends Future[T] {
   private val _promise = Promise[T]()
   wrapped.success( ((t:T)=> _promise.success(t)) )
 
@@ -109,7 +109,7 @@ class HttpFutureWrapper[T](wrapped: HttpFuture[T]) extends Future[T] {
 }
 
 @JSExportAll
-class MappedHttpFuture[T,U](wrapped: HttpFuture[T], f: T=>U) {
+class MappedHttpPromise[T,U](wrapped: HttpPromise[T], f: T=>U) {
   def `then`(success: js.Function5[U,Any,Any,Any,Any,Unit], error: js.Function, notify: js.Function) = {
     wrapped.`then`((data: T, a: js.Any, b: js.Any, c: js.Any, d: js.Any) => {
       success(f(data),a,b,c,d)
