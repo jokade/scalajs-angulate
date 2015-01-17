@@ -91,9 +91,9 @@ trait Scope extends js.Object {
    * Creates a new child scope.
    *
    * @param isolate If true, then the scope does not prototypically inherit from the parent scope
-   * @param parent The parent scope
+   * @param parent The parent scope (default to this, if not provided)
    */
-  def $new(isolate: Boolean, parent: Scope) : Scope = js.native
+  def $new(isolate: Boolean, parent: Scope = null) : Scope = js.native
 
   /**
    * Listens on events of a given type.

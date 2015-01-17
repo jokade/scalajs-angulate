@@ -73,9 +73,9 @@ lazy val angulateDebugFlags = Seq(
   // include some code for runtime debugging
   "runtimeLogging",
   "ModuleMacros.debug",
-  //"ControllerMacros.debug"
+  "ControllerMacros.debug"
   //"DirectiveMacros.debug"
   //"ServiceMacros.debug"
-  "HttpPromiseMacros.debug"
+  //"HttpPromiseMacros.debug"
 ).map( f => s"-Xmacro-settings:biz.enef.angular.$f" )
 

@@ -5,6 +5,8 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
 
+import biz.enef.angular.core.Injector
+
 import scala.language.experimental.macros
 
 import scala.scalajs.js
@@ -16,7 +18,7 @@ import scala.scalajs.js
  */
 trait Angular extends js.Object {
 
-  def injector(modules: js.Any, strictDi: Boolean = false) : Angular.Injector = js.native
+  def injector(modules: js.Any, strictDi: Boolean = false) : Injector = js.native
 
   /**
    * Creates or retrieves an Angular module.
@@ -66,7 +68,4 @@ object Angular {
    */
   def module(name: String, requires: Iterable[String]) : Module = macro impl.AngularImpl.module
 
-  trait Injector extends js.Object {
-    def get(name: String) : js.Any = js.native
-  }
 }
