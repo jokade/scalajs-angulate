@@ -12,7 +12,7 @@ This project is at the very early stage of development (no release yet), and esp
 
 There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
 
-scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which currently provides a more complete Scala.js binding for Angular.
+scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which uses property DI and (factory) objects for controllers and services, as opposed to constructor DI and classes used by this library.
 
 __NOTE__: the first official release (0.1) has been published; please update your sbt settings for scalajs-angulate
 
