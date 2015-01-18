@@ -30,7 +30,9 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   lazy val tAny = q"scalajs.js.Any"
 
   def onSuccess(f: c.Tree) = {
-    val tree = q"${c.prefix}.success( ($f):scalajs.js.Function )"
+    val T = f.tpe.typeArgs.head
+    val tree = q"""{val fun = $f
+                   ${c.prefix}.success( (x: js.UndefOr[$T]) => fun(x.getOrElse(null)) )}"""
 
     if(logCode) printCode(tree)
     tree
@@ -39,7 +41,7 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   def onComplete(f: c.Tree) = {
     val T = f.tpe.typeArgs.head.typeArgs.head
     val tree = q"""{val fun = $f
-                    ${c.prefix}.success( ((x:$T) =>fun($tSuccess(x))) ).
+                    ${c.prefix}.success( ((x:js.UndefOr[$T]) =>fun($tSuccess(x.getOrElse(null)))) ).
                                 error( (msg:Any,status:Int)=>fun($tFailure(new $tHttpError(msg.toString,status))) )
                    }"""
     if(logCode) printCode(tree)

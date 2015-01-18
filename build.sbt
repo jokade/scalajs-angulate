@@ -34,7 +34,8 @@ lazy val tests = project.
     scalacOptions ++= angulateDebugFlags,
     scalaJSStage := FastOptStage,
     jsDependencies += RuntimeDOM,
-    jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test"
+    jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test",
+    jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" % "test"
   )
 
 

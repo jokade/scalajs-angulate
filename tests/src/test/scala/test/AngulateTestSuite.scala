@@ -8,6 +8,7 @@ package test
 import biz.enef.angular.{Controller, Scope, Module, Angular}
 import utest._
 
+import scala.concurrent.Promise
 import scala.scalajs.js
 import scala.scalajs.js.{Dictionary, UndefOr}
 import js.Dynamic.literal
@@ -47,6 +48,15 @@ trait AngulateTestSuite extends TestSuite {
     val scope = $rootScope.$new(false)
     val res = $controller(name, literal($scope = scope))
     scope.asInstanceOf[T]
+  }
+
+  def promise() : AssertionPromise = new AssertionPromise( Promise[Unit]() )
+
+  class AssertionPromise(p: Promise[Unit]) {
+    def ok() = p.success( () )
+    def fail() = p.failure(new RuntimeException)
+    def future = p.future
+    def assert(expr: =>Boolean) : Unit = if(expr) ok() else fail()
   }
 }
 
