@@ -3,16 +3,18 @@ Enhanced Scala.js Bindings for AngularJS
 
 Introduction
 ------------
-**scalajs-angulate** is a small library to simplify the development of [AngularJS](http://angularjs.org/) applications in [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
+**scalajs-angulate** is a small library to simplify developing [AngularJS](http://angularjs.org/) applications in [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
 
 *  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
-*  macros to allow defining controllers, service and directives) in a more natural style compared to direct use of the API
+*  macros to allow defining controllers, services and directives in a more natural style compared to direct use of the API
 
 This project is at the very early stage of development (no release yet), and especially the semantics of the macro-based enhancements are subject to frequent changes.
 
+There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
+
 scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which currently provides a more complete Scala.js binding for Angular.
 
-__NOTE__: the sbt resolver setting has changed; scalajs-angulate is now published to sonatype
+__NOTE__: the first official release (0.1) has been published; please update your sbt settings for scalajs-angulate
 
 ##### Contents:
 * [SBT settings](#sbt-settings)
@@ -29,15 +31,11 @@ How to Use
 
 ### SBT Settings
 Add the following lines to your ```sbt``` build definition:
-
 ```scala
-resolvers += 
-  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-
-libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.1-SNAPSHOT"
+libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.1"
 ```
 
-scalajs-angulate supports Scala.js `0.5.x` and `0.6.0-RC1`.
+scalajs-angulate currently supports Scala.js `0.5.x` and `0.6.0-RC1`.
 
 ### Defining a Module
 
@@ -49,13 +47,23 @@ import biz.enef.angular.ext.{Route, RouteProvider}
 val module = Angular.module("app", Seq("ui.bootstrap","ngRoute"))
 
 module.serviceOf[UserService]
+// - or, setting the service name explicitly:
+// module.serviceOf[UserService]("uservice")
+
 module.controllerOf[UserCtrl]
+// - or, setting the controller name explicitly:
+// module.controllerOf[UserCtrl]("Users")
+
 module.directiveOf[UserDirective]
+// - or, setting the directive name explicitly:
+// module.directiveOf[UserDirective]("person")
+
 module.config( ($routeProvider:RouteProvider) => {
   $routeProvider.
     when("/user/:id", Route( templateUrl = "/tpl/userDetails.html" )).
     otherwise( Route( redirectTo = "/" ) )
 })
+
 module.run( initApp _ )
 
 def initApp($http: HttpService) = ...
@@ -105,6 +113,16 @@ If you need access to the AngularJS `$scope` object, just inject it into the con
 ```scala
 class Ctrl($scope: Scope) extends Controller {
   $scope.$watch( /* ... */ )
+}
+```
+_Note_: the `$scope` injected into the controller in the example above, is _not_ the scope avaliable in the template and does not have the public members of the controller class. So, if you want to watch on a member defined in your controller, you'll have to do it this way:
+```scala
+class Ctrl($scope: Scope) extends Controller {
+  var count = 0
+  
+  $scope.watch( () => count, (cnt: Int) => 
+    /* code to be executed when count changes (don't forget to $digest...) */
+  )
 }
 ```
 
@@ -212,10 +230,12 @@ __with the first letter in lower case__ (to support derivation of dependencies f
 
 
 ### Directives
-There is some basic support for defining Directives:
+To implement an AngularJS directive, create a class extending `Directive` and override all members you want to define on the [directive definition object](https://docs.angularjs.org/api/ng/service/$compile):
 ```scala
 class HelloUserDirective($animate: AnimationService) extends Directive {
   override val restrict = "E"
+  
+  override val transclude = false
   
   override val template = """<div>Hello {{user}}><div>"""
   // -- or --
@@ -230,9 +250,11 @@ class HelloUserDirective($animate: AnimationService) extends Directive {
   // override val scope = true
   
   override def postLink(scope: Scope,
-                        element: js.Dynamic,
-                        attrs: js.Dynamic,
+                        element: JQLite,
+                        attrs: Attributes,
                         controller: js.Dynamic) = ...
+                        
+  // override def compile(tElement: js.Dynamic, tAttrs: Attributes) : js.Any = ...
 }
 
 // defines the directive under the name "helloUser"
@@ -241,6 +263,50 @@ module.directiveOf[HelloUserDirective]
 // module.directiveOf[HelloUserDirective]("sayHello")
 ```
 
+If you need access to the AngularJS `$compile` function, just inject it into the directive constructor:
+```scala
+class MyDirective($compile: Compile) extends Directive {
+  override def postLink(scope: Scope,
+                        element: JQLite,
+                        attrs: Attributes,
+                        controller: js.Dynamic) : Unit = {
+    val tpl = $compile( /* ... */ )
+    /* ... */
+  }
+}
+```
+
+If your directive needs a controller, just define it as described in the section on [Controllers](#controllers) and set the directive's `withController` type to it:
+```scala
+class UserDirectiveCtrl($scope: js.Dynamic) extends Controller {
+  $scope.name = "User 1"
+}
+
+class UserDirective extends Directive {
+  
+  override type withController = UserDirectiveCtrl
+  
+}
+```
+
+If you need access to functions provided by the controller itself, you can annotate it with `@ExportToScope`; the controller is then available in the template under the name passed as argument to the annotation, e.g.:
+```scala
+@ExportToScope("directive")  // <-- the controller is accessible in the template via 'directive'
+class UserDirectiveCtrl($scope: js.Dynamic) extends Controller {
+  @JSExport
+  def click() : Unit = /* ... */
+}
+
+class UserDirective extends Directive {
+  override type withController = UserDirectiveCtrl
+}
+```
+```html
+<user>
+  <!-- directive is the reference to our UserDirectiveCtrl instance -->
+  <button ng-click="directive.click()"></button>
+</user>
+```
 License
 -------
 This code is open source software licensed under the [MIT License](http://opensource.org/licenses/MIT)
