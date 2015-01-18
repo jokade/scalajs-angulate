@@ -342,7 +342,7 @@ trait User extends js.Object {
 }
 
 class UserService($http: HttpService) extends Service {
-  def getAll() : HttpFuture[js.Array[User]] = $http.get("/users")
+  def getAll() : HttpPromise[js.Array[User]] = $http.get("/users")
 }
 
 class UserCtrl(userService: UserService) extends Controller {
