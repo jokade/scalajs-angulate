@@ -1,4 +1,4 @@
-import SonatypeKeys._
+//import SonatypeKeys._
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
@@ -14,7 +14,7 @@ lazy val root = project.in(file(".")).
   enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
   settings(publishingSettings: _*).
-  settings(sonatypeSettings: _*).
+  //settings(sonatypeSettings: _*).
   settings( 
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
