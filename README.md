@@ -23,6 +23,8 @@ __NOTE__: the first official release (0.1) has been published; please update you
 * [Dependency Injection](#dependency-injection)
 * [Services](#services)
 * [Directives](#directives)
+* [Other enhancements](#other-enhancements)
+  * [HttpService](#httpservice)
 
 
 
@@ -307,6 +309,56 @@ class UserDirective extends Directive {
   <button ng-click="directive.click()"></button>
 </user>
 ```
+
+### Other enhancements
+This section gives an overview over the enhancements to AngularJS core modules provided by angulate.
+
+#### HttpService
+The API of the AngularJS `$http` service is provided by the trait `biz.enef.angular.core.HttpService`.
+The `get`, `put`, `post` and `delete` functions on this trait are enhanced with a type parameter that allows to specific the expected return type of the response. Furthermore, these functions return an instance of `HttpPromise[T]` which is a representaion Angular's http promise object with the following additional functions:
+```scala
+trait HttpPromise[T] extends js.Object {
+  /* ... (API provided by AngularJS) */
+  
+  def onComplete(f: Try[T] => Unit) : HttpPromise[T]
+  
+  def onSuccess(f: T => Unit) : HttpPromise[T]
+  
+  def onFailure(f: (HttpError) => Unit) : HttpPromise[T]
+  
+  def map[U](f: T => U) : HttpPromise[U]
+  
+  // transforms this HttpPromise into a standard Scala Future
+  def future: Future[T]
+}
+```
+Calls to `onComplete`, `onSuccess`, and `onFailure` are translated into calls to `success` and `error` of the AngularJS HttpPromise API (i.e. there no additional runtime objects involved).
+
+###### Example:
+```scala
+trait User extends js.Object {
+  var id: Int = js.native
+  var name: String = js.native
+}
+
+class UserService($http: HttpService) extends Service {
+  def getAll() : HttpFuture[js.Array[User]] = $http.get("/users")
+}
+
+class UserCtrl(userService: UserService) extends Controller {
+  var users = js.Array[User]()
+  
+  readAll()
+  
+  def readAll() : Unit = userService.getAll onComplete {
+    case Success(data) => users = data
+    case Failure(ex) => handleError(ex)
+  }
+  
+  def handleError(ex: Throwable) = ...
+}
+```
+
 License
 -------
 This code is open source software licensed under the [MIT License](http://opensource.org/licenses/MIT)
