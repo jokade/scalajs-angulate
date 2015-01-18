@@ -1,7 +1,7 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description:
 //
-// Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
+// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
 
@@ -91,9 +91,9 @@ trait Scope extends js.Object {
    * Creates a new child scope.
    *
    * @param isolate If true, then the scope does not prototypically inherit from the parent scope
-   * @param parent The parent scope
+   * @param parent The parent scope (default to this, if not provided)
    */
-  def $new(isolate: Boolean, parent: Scope) : Scope = ???
+  def $new(isolate: Boolean, parent: Scope = null) : Scope = ???
 
   /**
    * Listens on events of a given type.

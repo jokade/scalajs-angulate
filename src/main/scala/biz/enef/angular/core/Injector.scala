@@ -5,13 +5,9 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core
 
-import org.scalajs.dom.Element
-
 import scala.scalajs.js
 
-trait JQLite extends js.Array[Element] {
-
-  def on(events: String, handler: js.Function) : JQLite = ???
-
-  def off(events: String, handler: js.Function = null) : JQLite = ???
+trait Injector extends js.Object {
+  def get(name: String) : js.Any = ???
+  def invoke(fn: js.Function, self: js.Object = null, locals: js.Object = null) : Unit = ???
 }

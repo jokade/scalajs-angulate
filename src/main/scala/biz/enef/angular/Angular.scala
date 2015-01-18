@@ -1,9 +1,11 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description:
 //
-// Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
+// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
+
+import biz.enef.angular.core.Injector
 
 import scala.language.experimental.macros
 
@@ -16,7 +18,7 @@ import scala.scalajs.js
  */
 trait Angular extends js.Object {
 
-  def injector(modules: js.Any, strictDi: Boolean = false) : Angular.Injector = ???
+  def injector(modules: js.Any, strictDi: Boolean = false) : Injector = ???
 
   /**
    * Creates or retrieves an Angular module.
@@ -66,7 +68,4 @@ object Angular {
    */
   def module(name: String, requires: Iterable[String]) : Module = macro impl.AngularImpl.module
 
-  trait Injector extends js.Object {
-    def get(name: String) : js.Any = ???
-  }
 }

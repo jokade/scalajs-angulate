@@ -1,7 +1,7 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Macros to support using a scala class as Angular directive
 //
-// Copyright (c) 2015 Johannes Kastner <jkspam@karchedon.de>
+// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
