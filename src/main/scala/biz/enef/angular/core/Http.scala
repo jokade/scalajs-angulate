@@ -31,19 +31,19 @@ trait HttpService extends js.Object {
 }
 
 trait HttpConfig extends js.Object {
-  var method: String = ???
-  var url: String = ???
-  var params : js.Dictionary[js.Any] = ???
-  var data : js.Any = ???
-  var headers : js.Dictionary[js.Any] = ???
-  var xsrfHeaderName : String = ???
-  var xsrfCookieName : String = ???
-  var transformResponse: js.Array[js.Function2[js.Any, js.Any, js.Any]] = ???
-  var transformRequest: js.Array[js.Function2[js.Any, js.Any, js.Any]] = ???
-  var cache: js.Any = ???
-  var withCredentials: Boolean = ???
-  var timeout: js.Any = ???
-  var responseType : String = ???
+  var method: String = js.native
+  var url: String = js.native
+  var params : js.Dictionary[js.Any] = js.native
+  var data : js.Any = js.native
+  var headers : js.Dictionary[js.Any] = js.native
+  var xsrfHeaderName : String = js.native
+  var xsrfCookieName : String = js.native
+  var transformResponse: js.Array[js.Function2[js.Any, js.Any, js.Any]] = js.native
+  var transformRequest: js.Array[js.Function2[js.Any, js.Any, js.Any]] = js.native
+  var cache: js.Any = js.native
+  var withCredentials: Boolean = js.native
+  var timeout: js.Any = js.native
+  var responseType : String = js.native
 }
 
 object HttpConfig {
