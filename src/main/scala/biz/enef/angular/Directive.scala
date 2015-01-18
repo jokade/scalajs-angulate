@@ -15,6 +15,10 @@ import scala.scalajs.js
 trait Directive {
   def restrict: String = ???
 
+  def transclude: Boolean = ???
+
+  def priority: Int = ???
+
   //def controller[T<:Scope](scope: T, elem: JQLite, attrs: Attributes) : Unit = ???
 
   //def controller(scope: js.Dynamic, elem: JQLite, attrs: Attributes) : Unit = ???
@@ -32,4 +36,7 @@ trait Directive {
   def isolateScope: js.Dictionary[String] = ???
 
   def postLink(scope: Scope, element: JQLite, attrs: Attributes, controller: js.Dynamic) : Unit = ???
+  //def preLink(scope: Scope, element: JQLite, attrs: Attributes, controller: js.Dynamic) : Unit = ???
+
+  def compile(tElement: js.Dynamic, tAttrs: Attributes) : js.Any = ???
 }

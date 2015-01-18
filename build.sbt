@@ -4,7 +4,7 @@ import ScalaJSKeys._
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.1-SNAPSHOT",
+  version := "0.1",
   scalaVersion := "2.11.2",
   scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
   // work around for a bug during publishing
