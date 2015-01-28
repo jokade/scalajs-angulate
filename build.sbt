@@ -19,8 +19,9 @@ lazy val root = project.in(file(".")).
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-js"   %%% "scalajs-dom" % "0.7.0" 
-    )
+      "org.scala-js"   %%% "scalajs-dom" % "0.7.1-SNAPSHOT"
+    ),
+    resolvers += Resolver.sonatypeRepo("releases")
   )
 
 
