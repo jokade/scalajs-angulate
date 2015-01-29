@@ -5,7 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
-import biz.enef.angular.{ExportToScope, named, ScopeController}
+import biz.enef.angular._
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
@@ -20,7 +20,7 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
   /* type definitions */
   val scopeController = typeOf[ScopeController]
 
-  def controllerOf[T: c.WeakTypeTag] = {
+  def controllerOf[T <: NGController: c.WeakTypeTag] = {
     val controllerType = weakTypeOf[T]
     val name = controllerType.toString
     if( controllerType <:< scopeController)
@@ -29,7 +29,7 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
       createController(controllerType, q"$name")
   }
 
-  def controllerOfWithName[T: c.WeakTypeTag](name: c.Expr[String]) = {
+  def controllerOfWithName[T <: NGController: c.WeakTypeTag](name: c.Expr[String]) = {
     val controllerType = weakTypeOf[T]
     if( controllerType <:< scopeController)
       createScopeController(controllerType, q"$name")
@@ -48,7 +48,8 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
 
     val postConstruction = q"""$debug"""
 
-    val module = c.prefix
+    val module = Select(c.prefix.tree, TermName("self"))
+
     // ctrlDeps: the list of dependencies required by the controller constructor
     // ctrlArgs: list of arguments required by the controller constructor
     // ctrlDepNames: list with names of the dependencies to be injected
@@ -87,7 +88,7 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
     val postConstruction = q"""..${copyMembers(ct)}
                                $debug"""
 
-        val module = c.prefix
+    val module = Select(c.prefix.tree, TermName("self"))
     // ctrlDeps: the list of dependencies required by the controller constructor
     // ctrlArgs: list of arguments required by the controller constructor
     // ctrlDepNames: list with names of the dependencies to be injected
@@ -137,7 +138,7 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
     val tree =
       q"""{import scala.scalajs.js
            import js.Dynamic.{global,literal}
-           $module.controller($name,$constructor)
+           $module.self.controller($name,$constructor)
           }"""
 
     if(logCode) printCode( tree )

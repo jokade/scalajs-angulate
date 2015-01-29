@@ -29,7 +29,7 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
   }
 
   private def createDirective(ct: c.Type, name: c.Tree) = {
-    val module = c.prefix
+    val module = Select(c.prefix.tree, TermName("self"))
 
     // assemble all defined directive attributes (ie 'template', 'restrict', ...)
     val atts = (getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
@@ -67,7 +67,7 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
     val tree = q"""{import scala.scalajs.js
                     import js.Dynamic.{global,literal}
-                    $module.directive($name,$carray)
+                    $module.self.directive($name,$carray)
                    }"""
     if(logCode) printCode(tree)
 

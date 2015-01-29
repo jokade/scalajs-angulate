@@ -14,7 +14,8 @@ protected[angular] class ModuleMacros(val c: blackbox.Context) extends MacroBase
   private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.ModuleMacros.debug" )
 
   def config(f: c.Tree) = {
-    val tree = q"${c.prefix}.config( ${createFunctionDIArray(f)} )"
+    val module = Select(c.prefix.tree, TermName("self"))
+    val tree = q"$module.config( ${createFunctionDIArray(f)} )"
 
     if(logCode) printCode(tree)
 
@@ -22,7 +23,8 @@ protected[angular] class ModuleMacros(val c: blackbox.Context) extends MacroBase
   }
 
   def run(f: c.Tree) = {
-    val tree = q"${c.prefix}.run( ${createFunctionDIArray(f)} )"
+    val module = Select(c.prefix.tree, TermName("self"))
+    val tree = q"$module.run( ${createFunctionDIArray(f)} )"
 
     if(logCode) printCode(tree)
 

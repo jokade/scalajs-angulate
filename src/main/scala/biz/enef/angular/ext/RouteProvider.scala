@@ -16,9 +16,9 @@ trait RouteProvider extends js.Object {
 
   //------------------------------ ANGULAR.JS --------------------------------
 
-  def when(path: String, route: Route) : RouteProvider
+  def when(path: String, route: Route) : RouteProvider = js.native
 
-  def otherwise(params: Route) : RouteProvider
+  def otherwise(params: Route) : RouteProvider = js.native
 }
 
 /**
