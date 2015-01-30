@@ -74,27 +74,27 @@ object HttpConfig {
 trait HttpPromise[T] extends js.Object {
   def success(callback: js.Function): HttpPromise[T] = js.native
 
-  def success(callback: js.Function1[js.Any, Unit]): this.type = js.native
+  def success(callback: js.Function1[js.Any, Unit]): HttpPromise[T] = js.native
 
-  def success(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
+  def success(callback: js.Function2[js.Any, Int, Unit]): HttpPromise[T] = js.native
 
-  def success(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
+  def success(callback: js.Function3[js.Any, js.Any, Int, Unit]): HttpPromise[T] = js.native
 
-  def success(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
+  def success(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): HttpPromise[T] = js.native
 
-  def success(callback: js.Function5[js.Any, Int, js.Any, js.Any, js.Any, Unit]): this.type = js.native
+  def success(callback: js.Function5[js.Any, Int, js.Any, js.Any, js.Any, Unit]): HttpPromise[T] = js.native
 
   def error(callback: js.Function): HttpPromise[T] = js.native
 
-  def error(callback: js.Function1[js.Any, Unit]): this.type = js.native
+  def error(callback: js.Function1[js.Any, Unit]): HttpPromise[T] = js.native
 
-  def error(callback: js.Function2[js.Any, Int, Unit]): this.type = js.native
+  def error(callback: js.Function2[js.Any, Int, Unit]): HttpPromise[T] = js.native
 
-  def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): this.type = js.native
+  def error(callback: js.Function3[js.Any, js.Any, Int, Unit]): HttpPromise[T] = js.native
 
-  def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): this.type = js.native
+  def error(callback: js.Function4[js.Any, Int, js.Any, js.Any, Unit]): HttpPromise[T] = js.native
 
-  def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): this.type = js.native
+  def error(callback: js.Function5[js.Any, Int, js.Any, js.Any, UndefOr[String], Unit]): HttpPromise[T] = js.native
 
   var `then`: js.Function3[js.Function, js.Function, js.Function, HttpPromise[T]] = js.native
   //var `then`: js.Function3[js.Function1[T,Unit],js.Function,js.Function,Unit] = js.native
@@ -102,20 +102,7 @@ trait HttpPromise[T] extends js.Object {
 
 object HttpPromise {
   //------------------------- ANGULATE ENHANCEMENTS --------------------------
-  final implicit class RichHttpPromise[T](self: HttpPromise[T]) {
-    /**
-     * The provided callback will be called when a successful response is available
-     * (response status codes between 200 and 299 are considered a success status).
-     *
-     * @note This is a scalajs-angulate enhancement. The response data provided to
-     *       the callback will be cast to the specified type T.
-     *
-     * @param callback Callback function that will receive the response data as its first argument
-     * @tparam T Type of the response data object
-     */
-    //def success[T](callback: (T) => Unit) : this.type = macro impl.HttpPromiseMacros.onSuccessWithType[T]
-
-    //def onSuccess(pf: PartialFunction[Any,Unit]) : Unit = macro impl.HttpPromiseMacros.onSuccess
+  final implicit class RichHttpPromise[T](val self: HttpPromise[T]) extends AnyVal {
 
     def onSuccess(f: T => Unit): HttpPromise[T] = macro impl.HttpPromiseMacros.onSuccess
 

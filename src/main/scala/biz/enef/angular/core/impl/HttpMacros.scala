@@ -31,8 +31,9 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
 
   def onSuccess(f: c.Tree) = {
     val T = f.tpe.typeArgs.head
+    val self = Select(c.prefix.tree, TermName("self"))
     val tree = q"""{val fun = $f
-                   ${c.prefix}.success( (x: js.UndefOr[$T]) => fun(x.getOrElse(null)) )}"""
+                   $self.success( (x: js.UndefOr[$T]) => fun(x.getOrElse(null)) )}"""
 
     if(logCode) printCode(tree)
     tree
@@ -40,8 +41,11 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
 
   def onComplete(f: c.Tree) = {
     val T = f.tpe.typeArgs.head.typeArgs.head
+
+    val self = Select(c.prefix.tree, TermName("self"))
+
     val tree = q"""{val fun = $f
-                    ${c.prefix}.success( ((x:js.UndefOr[$T]) =>fun($tSuccess(x.getOrElse(null)))) ).
+                    $self.success( ((x:js.UndefOr[$T]) =>fun($tSuccess(x.getOrElse(null)))) ).
                                 error( (msg:Any,status:Int)=>fun($tFailure(new $tHttpError(msg.toString,status))) )
                    }"""
     if(logCode) printCode(tree)
@@ -49,7 +53,8 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   }
 
   def onFailure(f: c.Tree) = {
-    val tree = q"""${c.prefix}.error( (msg:Any,status:Int)=>$f(new $tHttpError(msg.toString,status)))"""
+    val self = Select(c.prefix.tree, TermName("self"))
+    val tree = q"""$self.error( (msg:Any,status:Int)=>$f(new $tHttpError(msg.toString,status)))"""
 
     if(logCode) printCode(tree)
     tree
@@ -57,8 +62,9 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
 
   def map(f: c.Tree) = {
     val T = f.tpe.typeArgs(1)
+    val self = Select(c.prefix.tree, TermName("self"))
     val tree = q"""{import biz.enef.angular.core
-                    val mapped = new core.impl.MappedHttpPromise(${c.prefix},$f)
+                    val mapped = new core.impl.MappedHttpPromise($self,$f)
                    mapped.asInstanceOf[core.HttpPromise[$T]]
                    }
                    """
