@@ -25,7 +25,7 @@ protected [angular] class ServiceMacros(val c: blackbox.Context) extends MacroBa
   }
 
   private def createService(ct: c.Type, name: c.Tree) = {
-    val module = c.prefix
+    val module = Select(c.prefix.tree, TermName("self"))
 
     val constr = ct.members.filter( _.isConstructor ).map( _.asMethod ).head
 
@@ -40,7 +40,7 @@ protected [angular] class ServiceMacros(val c: blackbox.Context) extends MacroBa
 
     val tree = q"""{import scala.scalajs.js
                     import js.Dynamic.{global,literal}
-                    $module.factory($name,$carray)
+                    $module.self.factory($name,$carray)
                    }"""
 
     if (logCode) printCode(tree, "\nserviceOf macro:")

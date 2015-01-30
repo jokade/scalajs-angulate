@@ -6,7 +6,7 @@
 package test
 
 import biz.enef.angular.core.HttpService
-import biz.enef.angular.{named, Service, Angular}
+import biz.enef.angular._
 import utest._
 
 import scala.scalajs.js

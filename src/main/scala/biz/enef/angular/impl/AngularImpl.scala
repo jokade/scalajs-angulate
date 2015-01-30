@@ -5,8 +5,6 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
-import biz.enef.angular.Angular
-
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 

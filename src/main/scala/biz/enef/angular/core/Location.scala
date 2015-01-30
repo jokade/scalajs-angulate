@@ -8,7 +8,7 @@ package biz.enef.angular.core
 import scala.scalajs.js
 
 /**
- * Defines the bindings to the $$location service.
+ * Defines the bindings to the {{{$location}}} service.
  *
  * @see [[https://docs.angularjs.org/api/ng/service/$location]]
  */

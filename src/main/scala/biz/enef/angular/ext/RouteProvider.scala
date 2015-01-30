@@ -8,7 +8,7 @@ package biz.enef.angular.ext
 import scala.scalajs.js
 
 /**
- * Defines the bindings to the ngRoute.$rootProvider API and enhancements provided by scalajs-angulate.
+ * Defines the bindings to the {{{ngRoute.$rootProvider}}} API and enhancements provided by scalajs-angulate.
  *
  * @see [[https://docs.angularjs.org/api/ngRoute/provider/$routeProvider]]
  */
@@ -16,13 +16,13 @@ trait RouteProvider extends js.Object {
 
   //------------------------------ ANGULAR.JS --------------------------------
 
-  def when(path: String, route: Route) : RouteProvider
+  def when(path: String, route: Route) : RouteProvider = js.native
 
-  def otherwise(params: Route) : RouteProvider
+  def otherwise(params: Route) : RouteProvider = js.native
 }
 
 /**
- * Mapping information to be assigned to $$route.current on match.
+ * Mapping information to be assigned to {{{$route.current}}} on match.
  *
  * @see [[https://docs.angularjs.org/api/ngRoute/provider/$routeProvider]]
  */
