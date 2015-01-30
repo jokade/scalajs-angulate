@@ -8,8 +8,6 @@ Introduction
 *  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
 *  macros to allow defining controllers, services and directives in a more natural style compared to direct use of the API
 
-This project is at the very early stage of development (no release yet), and especially the semantics of the macro-based enhancements are subject to frequent changes.
-
 There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
 
 scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which uses property DI and (factory) objects for controllers and services, as opposed to constructor DI and classes used by this library.
@@ -36,8 +34,12 @@ Add the following lines to your ```sbt``` build definition:
 ```scala
 libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.1"
 ```
+scalajs-angulate 0.1 supports Scala.js `0.5.x` and `0.6.0`. The 0.2 release will only target Scala.js `0.6.x`.
 
-scalajs-angulate currently supports Scala.js `0.5.x` and `0.6.0-RC1`.
+If you want to test the latest snapshot, change the version to `0.2-SNAPSHOT` and add the Sonatype snapshots repository to your `build.sbt`:
+```scala
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+```
 
 ### Defining a Module
 
@@ -129,7 +131,7 @@ class Ctrl($scope: Scope) extends Controller {
 ```
 
 #### Controllers with explicit Scope
-Class extending `ScopeController` are "old-style" AngularJS controllers, where the scope available in the template must be injected explicitly:
+Classes extending `ScopeController` are "old-style" AngularJS controllers, where the scope available in the template must be injected explicitly:
 
 ```scala
 val module Angular.module("counter", Nil)
@@ -183,7 +185,7 @@ class UserCtrl($http: HttpService) extends Controller {
   $http.get("/rest/users").onSuccess{ res => ... }
 }
 ```
-the Angular `$http` service will be injected during Controller instantion; no annotations or additional traits are required, as long as the parameter name in the constructor matches the name of the service to be injected (don't worry about JS minification, the macro translates the constructor into a String-based DI array).
+the Angular `$http` service will be injected during Controller instantiation; no annotations or additional traits are required, as long as the parameter name in the constructor matches the name of the service to be injected (don't worry about JS minification, the macro translates the constructor into a String-based DI array).
 
 If you cannot or don't want to use the service name as parameter name, you can define the service to be injected explicitly with the `@named` annotation:
 ```scala
@@ -332,7 +334,7 @@ trait HttpPromise[T] extends js.Object {
   def future: Future[T]
 }
 ```
-Calls to `onComplete`, `onSuccess`, and `onFailure` are translated into calls to `success` and `error` of the AngularJS HttpPromise API (i.e. there no additional runtime objects involved).
+Calls to `onComplete`, `onSuccess`, and `onFailure` are translated into calls to `success` and `error` of the AngularJS HttpPromise API.
 
 ###### Example:
 ```scala
