@@ -21,7 +21,9 @@ lazy val root = project.in(file(".")).
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-js"   %%% "scalajs-dom" % "0.7.0"
     ),
-    resolvers += Resolver.sonatypeRepo("releases")
+    resolvers += Resolver.sonatypeRepo("releases"),
+    autoCompilerPlugins := true,
+    addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2")
   )
 
 
