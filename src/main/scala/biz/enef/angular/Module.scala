@@ -288,6 +288,8 @@ object Module {
      */
     def directiveOf[T <: Directive](name: String): Module = macro impl.DirectiveMacros.directiveOfWithName[T]
 
+    def componentOf[T] : Module = macro impl.ComponentMacros.componentOf[T]
+
     def config(f: Function0[Any]): Module = macro impl.ModuleMacros.config
 
     def config(f: Function1[Nothing, Any]): Module = macro impl.ModuleMacros.config

@@ -22,3 +22,5 @@ case class named(name: String) extends StaticAnnotation
  * @param name variable name under which the controller will be exported to the scope
  */
 case class ExportToScope(name: String) extends StaticAnnotation
+
+case class Component(selector: String = null) extends StaticAnnotation

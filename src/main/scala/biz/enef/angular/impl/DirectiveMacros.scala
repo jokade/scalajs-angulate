@@ -44,7 +44,7 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
     // create directive definition object
     val ddo = q"""literal( ..$atts )"""
-    println(ddo)
+    //println(ddo)
 
     // print debug information at runtime if runtimeLogging==true
     val debug =

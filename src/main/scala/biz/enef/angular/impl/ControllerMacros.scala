@@ -114,38 +114,8 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
     if(logCode) printCode( tree )
     tree
 
-    //createControllerTree(ct,name,postConstruction)
   }
 
-/*
-  private def createControllerTree(ct: Type, name: c.Tree, postConstruction: c.Tree = q"") = {
-    val module = c.prefix
-    // ctrlDeps: the list of dependencies required by the controller constructor
-    // ctrlArgs: list of arguments required by the controller constructor
-    // ctrlDepNames: list with names of the dependencies to be injected
-    val cm = getConstructor(ct)
-    val (ctrlDeps,ctrlArgs) = makeArgsList(cm)
-    val ctrlDepNames = getDINames(cm)
-
-    // AngularJS controller construction array
-    val constructor = q"""js.Array[Any](..$ctrlDepNames,
-          ((scope:js.Dynamic, ..$ctrlDeps) => {
-            val ctrl = new $ct(..$ctrlArgs)
-            $postConstruction
-          }):js.ThisFunction)"""
-
-    // controller registration
-    val tree =
-      q"""{import scala.scalajs.js
-           import js.Dynamic.{global,literal}
-           $module.self.controller($name,$constructor)
-          }"""
-
-    if(logCode) printCode( tree )
-    tree
-
-  }
-*/
 
 }
 
