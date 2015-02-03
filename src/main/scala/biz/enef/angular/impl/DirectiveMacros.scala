@@ -33,9 +33,8 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
     // assemble all defined directive attributes (ie 'template', 'restrict', ...)
     val atts = (getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
-      //case ("withController",a)  => {println(a); q"()"}
       case ("isolateScope",_)  => q"scope = dimpl.isolateScope"
-      case ("postLink",_)      => q"link = (dimpl.postLink _):js.Function"
+      case ("postLink",_)      => q"link = dimpl.postLink _"
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
     }) ++ (
@@ -44,7 +43,6 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
     // create directive definition object
     val ddo = q"""literal( ..$atts )"""
-    println(ddo)
 
     // print debug information at runtime if runtimeLogging==true
     val debug =
@@ -64,6 +62,7 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
             ddo
           }):js.Function)
        """
+    println(carray)
 
     val tree = q"""{import scala.scalajs.js
                     import js.Dynamic.{global,literal}
@@ -92,7 +91,7 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
     val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
           ((scope:js.Dictionary[js.Any],..$ctrlDeps) => {
             val ctrl = (new $ct(..$ctrlArgs)).asInstanceOf[js.Any]
-            ${if(exportAs.isDefined) q"scope(${exportAs.get}) = ctrl" else q""}
+            ${if(exportAs.isDefined) q"scope(${exportAs.get}) = ctrl" else q"()"}
           }):js.Function)"""
 
     //val constructor = createControllerConstructor(ts.toType.finalResultType.dealias,q"ctrl")
