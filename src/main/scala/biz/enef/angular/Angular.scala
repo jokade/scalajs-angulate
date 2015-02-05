@@ -5,6 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
 
+import acyclic.file
 import biz.enef.angular.core.Injector
 
 import scala.language.experimental.macros

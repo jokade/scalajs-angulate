@@ -7,6 +7,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core
 
+import acyclic.file
 import scala.concurrent.Future
 import scala.language.experimental.macros
 import scala.scalajs.js

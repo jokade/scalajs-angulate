@@ -5,8 +5,14 @@ lazy val commonSettings = Seq(
   version := "0.2-SNAPSHOT",
   scalaVersion := "2.11.5",
   scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
-  // work around for a bug during publishing
-  scalacOptions in (Compile,doc) ~= { _.filterNot(_.contains("scalajs-compiler_")) }
+  autoCompilerPlugins := true,
+  addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2"),
+  libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.2" % "provided",
+  scalacOptions ++= (if (isSnapshot.value) Seq.empty else Seq({
+        val a = baseDirectory.value.toURI.toString.replaceFirst("[^/]+/?$", "")
+        val g = "https://raw.githubusercontent.com/jokade/scalajs-angulate"
+        s"-P:scalajs:mapSourceURI:$a->$g/v${version.value}/"
+      }))
 )
 
 

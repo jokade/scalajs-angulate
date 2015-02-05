@@ -5,6 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
+import acyclic.file
 import biz.enef.angular.named
 
 import scala.reflect.macros.blackbox

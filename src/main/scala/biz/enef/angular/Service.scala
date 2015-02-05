@@ -5,6 +5,8 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
 
+import acyclic.file
+
 /**
  * Marks a class that can be used as a AngularJS service
  */
