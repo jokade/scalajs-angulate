@@ -35,11 +35,12 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
     val atts = (getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
       case ("isolateScope",_)  => q"scope = dimpl.isolateScope"
       case ("postLink",_)      => q"link = dimpl.postLink _"
+      case ("controller",_)    => q"""controller = js.Array("$$scope","$$element","$$attrs",(dimpl.controller _):js.ThisFunction)"""
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
-    }) ++ (
+    })/* ++ (
       getControllerType(ct).map( createController(_) )
-      )
+      )*/
 
     // create directive definition object
     val ddo = q"""literal( ..$atts )"""
@@ -77,7 +78,7 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
     ct.decls.filter( m=> m.isMethod && !m.isConstructor ).map( _.asMethod )
 
   private def getControllerType(ct: c.Type) =
-    ct.decls.filter( m=> m.isType && m.name.toString == "withController" ).map( _.asType )
+    ct.decls.filter( m=> m.isType && m.name.toString == "ControllerType" ).map( _.asType ).head
 
   private def createController(ts: TypeSymbol) = {
     val ct = ts.toType.dealias
@@ -88,11 +89,11 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
 
     // AngularJS controller construction array
-    val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
-          ((scope:js.Dictionary[js.Any],..$ctrlDeps) => {
-            val ctrl = (new $ct(..$ctrlArgs)).asInstanceOf[js.Any]
-            ${if(exportAs.isDefined) q"scope(${exportAs.get}) = ctrl" else q"()"}
-          }):js.Function)"""
+    val constructor = q"""js.Array[Any](..$ctrlDepNames,
+          ((target: js.Dynamic, ..$ctrlDeps) => {
+            val ctrl = new $ct(..$ctrlArgs)
+            target.ctrl = ctrl
+          }):js.ThisFunction)"""
 
     //val constructor = createControllerConstructor(ts.toType.finalResultType.dealias,q"ctrl")
     //println(constructor)

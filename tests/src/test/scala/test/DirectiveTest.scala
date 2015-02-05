@@ -34,8 +34,18 @@ object DirectiveTest extends AngulateTestSuite {
       module.directiveOf[Directive2]
       val $compile = injection[js.Dynamic]("$compile")
 
-      val elem = $compile("<directive2></directive2>").apply(literal(foo = "bar")).asInstanceOf[JQLite].head
-      assert( elem.textContent == "bar" )
+      val elem = $compile("""<directive2></directive2>""").apply(literal(foo = "bar")).asInstanceOf[JQLite]
+      assert( elem.head.textContent == "foo" )
+    }
+
+    'controllerAs-{
+      module.directiveOf[Directive3]
+      val $compile = injection[js.Dynamic]("$compile")
+      val $rootScope = injection[Scope]("$rootScope")
+
+      val elem = $compile("""<directive3></directive3>""").apply(literal()).asInstanceOf[JQLite]
+      //$rootScope.$digest()
+      println( elem.head.textContent )
     }
   }
 
@@ -44,15 +54,38 @@ object DirectiveTest extends AngulateTestSuite {
     override def template: String = "foo"
   }
 
+  trait Directive2Ctrl extends js.Object {
+    var bar: String = js.native
+  }
+
   class Directive2 extends Directive {
-    override type withController = Directive2Ctrl
-    override def postLink(scope: Scope, element: JQLite, attrs: Attributes, controller: js.Dynamic): Unit = {
-      element.head.textContent = scope.asInstanceOf[js.Dynamic].foo.toString
-      controller.asInstanceOf[Directive2Ctrl]
+    override type ControllerType = Directive2Ctrl
+
+    override def controller(ctrl: ControllerType, scope: Scope, elem: JQLite, attrs: Attributes): Unit = {
+      ctrl.bar = "foo"
+    }
+
+    override def postLink(scope: Scope, element: JQLite, attrs: Attributes, ctrl: Directive2Ctrl): Unit = {
+      element.head.textContent = ctrl.bar
     }
   }
 
-  class Directive2Ctrl extends Controller {
-    val foo = "bar"
+  trait Directive3Ctrl extends js.Object {
+    var bar: String = js.native
+    var click: js.Function = js.native
+  }
+
+  class Directive3 extends Directive {
+    override type ControllerType = Directive3Ctrl
+    override def controllerAs = "ctrl"
+    override val template = "ctrl.bar"
+
+    //override def isolateScope = js.Dictionary()
+
+    override def controller(ctrl: ControllerType, scope: Scope, elem: JQLite, attrs: Attributes): Unit = {
+      println(ctrl)
+      ctrl.bar = "foo"
+      ctrl.click = () => ctrl.bar = "bar"
+    }
   }
 }

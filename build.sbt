@@ -2,7 +2,7 @@
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.2-SNAPSHOT",
+  version := "issue28-SNAPSHOT",
   scalaVersion := "2.11.5",
   scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
   // work around for a bug during publishing
@@ -29,11 +29,12 @@ lazy val tests = project.
   dependsOn(root).
   enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
-  settings(utest.jsrunner.Plugin.utestJsSettings: _*).
   settings(
     publish := {},
     scalacOptions ++= angulateDebugFlags,
     scalaJSStage := FastOptStage,
+    libraryDependencies += "com.lihaoyi" %% "utest" % "0.3.0",
+    testFrameworks += new TestFramework("utest.runner.Framework"),
     jsDependencies += RuntimeDOM,
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test",
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" % "test"
