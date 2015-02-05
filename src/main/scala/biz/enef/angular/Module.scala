@@ -21,7 +21,7 @@ trait Module  extends js.Object {
   def name: String = js.native
 
   /**
-   * Defines an animation hook that can be later used with the $animate service and directives that use this service.
+   * Defines an animation hook that can be later used with the \$animate service and directives that use this service.
    *
    * @note animations take effect only if the ngAnimate module is loaded
    *
@@ -33,7 +33,7 @@ trait Module  extends js.Object {
   def animation(name: String, animationFactory: js.Function): Module = js.native
 
   /**
-   * Defines an animation hook that can be later used with the $animate service and directives that use this service.
+   * Defines an animation hook that can be later used with the \$animate service and directives that use this service.
    *
    * @note animations take effect only if the ngAnimate module is loaded
    *
@@ -159,7 +159,7 @@ trait Module  extends js.Object {
   def filter(name: String, filterFactory: js.Array[Any]): Module = js.native
 
   /**
-   * Register a provider function with the $injector.
+   * Register a provider function with the \$injector.
    *
    * @param name The name of the instance. NOTE: the provider will be available under name + 'Provider' key.
    * @param constructor Provider constructor function
@@ -169,7 +169,7 @@ trait Module  extends js.Object {
   def provider(name: String, constructor: js.Function): Module = js.native
 
   /**
-   * Register a provider function with the $injector.
+   * Register a provider function with the \$injector.
    *
    * @param name The name of the instance. NOTE: the provider will be available under name + 'Provider' key.
    * @param constructor Array containing the names of the dependencies to be injected and
