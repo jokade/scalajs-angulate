@@ -19,10 +19,11 @@ trait Directive {
 
   def priority: Int = ???
 
-  def controller(ctrl: ControllerType, scope: Scope, elem: JQLite, attrs: Attributes) : Unit = ???
+  def controller(ctrl: ControllerType, scope: ScopeType, elem: JQLite, attrs: Attributes) : Unit = ???
 
   //def controller(scope: js.Dynamic, elem: JQLite, attrs: Attributes) : Unit = ???
-  type ControllerType <: js.Object
+  type ControllerType <: js.Any
+  type ScopeType <: js.Any
 
   def controllerAs: String = ???
 
@@ -35,8 +36,8 @@ trait Directive {
   def scope: Boolean = ???
   def isolateScope: js.Dictionary[String] = ???
 
-  def postLink(scope: Scope, element: JQLite, attrs: Attributes) : Unit = ???
-  def postLink(scope: Scope, element: JQLite, attrs: Attributes, controller: ControllerType) : Unit = ???
+  def postLink(scope: ScopeType, element: JQLite, attrs: Attributes) : Unit = ???
+  def postLink(scope: ScopeType, element: JQLite, attrs: Attributes, controller: ControllerType) : Unit = ???
   //def preLink(scope: Scope, element: JQLite, attrs: Attributes, controller: js.Dynamic) : Unit = ???
 
   def compile(tElement: js.Dynamic, tAttrs: Attributes) : js.Any = ???

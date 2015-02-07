@@ -43,9 +43,9 @@ object DirectiveTest extends AngulateTestSuite {
       val $compile = injection[js.Dynamic]("$compile")
       val $rootScope = injection[Scope]("$rootScope")
 
-      val elem = $compile("""<directive3></directive3>""").apply(literal()).asInstanceOf[JQLite]
+      val elem = $compile("""<directive3 x="1"></directive3>""").apply(literal()).asInstanceOf[JQLite]
       //$rootScope.$digest()
-      println( elem.head.textContent )
+      //println( elem.head.textContent )
     }
   }
 
@@ -77,15 +77,18 @@ object DirectiveTest extends AngulateTestSuite {
 
   class Directive3 extends Directive {
     override type ControllerType = Directive3Ctrl
-    override def controllerAs = "ctrl"
-    override val template = "ctrl.bar"
+    //override val controllerAs = "ctr"
+    override val template = "<div>x</div>"
 
-    //override def isolateScope = js.Dictionary()
-
+    override def isolateScope = js.Dictionary(
+      "x" -> "=x"
+    )
+/*
     override def controller(ctrl: ControllerType, scope: Scope, elem: JQLite, attrs: Attributes): Unit = {
       println(ctrl)
       ctrl.bar = "foo"
       ctrl.click = () => ctrl.bar = "bar"
-    }
+
+    }*/
   }
 }

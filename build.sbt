@@ -1,4 +1,4 @@
-//import SonatypeKeys._
+import SonatypeKeys._
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
@@ -14,7 +14,7 @@ lazy val root = project.in(file(".")).
   enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
   settings(publishingSettings: _*).
-  //settings(sonatypeSettings: _*).
+  settings(sonatypeSettings: _*).
   settings( 
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
@@ -29,12 +29,13 @@ lazy val tests = project.
   dependsOn(root).
   enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
+  settings(utest.jsrunner.Plugin.utestJsSettings: _*).
   settings(
     publish := {},
     scalacOptions ++= angulateDebugFlags,
     scalaJSStage := FastOptStage,
-    libraryDependencies += "com.lihaoyi" %% "utest" % "0.3.0",
-    testFrameworks += new TestFramework("utest.runner.Framework"),
+    //libraryDependencies += "com.lihaoyi" %% "utest" % "0.3.0",
+    //testFrameworks += new TestFramework("utest.runner.Framework"),
     jsDependencies += RuntimeDOM,
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test",
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" % "test"
