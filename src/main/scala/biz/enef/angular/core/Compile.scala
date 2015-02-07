@@ -9,5 +9,5 @@ import scala.scalajs.js
 
 trait Compile extends js.Object {
 
-  def apply(element: js.Any) : js.Function3[js.Any,js.Any,js.Any,js.Any] = ???
+  def apply(element: js.Any) : js.Function3[js.Any,js.Any,js.Any,js.Any] = js.native
 }

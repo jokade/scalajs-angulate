@@ -8,6 +8,6 @@ package biz.enef.angular.core
 import scala.scalajs.js
 
 trait Injector extends js.Object {
-  def get(name: String) : js.Any = ???
-  def invoke(fn: js.Function, self: js.Object = null, locals: js.Object = null) : Unit = ???
+  def get(name: String) : js.Any = js.native
+  def invoke(fn: js.Function, self: js.Object = null, locals: js.Object = null) : Unit = js.native
 }

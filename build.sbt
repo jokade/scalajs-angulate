@@ -1,39 +1,40 @@
-import SonatypeKeys._
-import ScalaJSKeys._
-
+//import SonatypeKeys._
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.1",
-  scalaVersion := "2.11.2",
+  version := "0.2-SNAPSHOT",
+  scalaVersion := "2.11.5",
   scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
   // work around for a bug during publishing
   scalacOptions in (Compile,doc) ~= { _.filterNot(_.contains("scalajs-compiler_")) }
-) ++ scalaJSSettings
+)
 
 
 lazy val root = project.in(file(".")).
+  enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
   settings(publishingSettings: _*).
-  settings(sonatypeSettings: _*).
+  //settings(sonatypeSettings: _*).
   settings( 
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-lang.modules.scalajs"   %%% "scalajs-dom" % "0.6" 
-    )
+      "org.scala-js"   %%% "scalajs-dom" % "0.7.0"
+    ),
+    resolvers += Resolver.sonatypeRepo("releases")
   )
 
 
 lazy val tests = project.
   dependsOn(root).
+  enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
   settings(utest.jsrunner.Plugin.utestJsSettings: _*).
   settings(
     publish := {},
     scalacOptions ++= angulateDebugFlags,
-    requiresDOM := true,
-    //jsDependencies += scala.scalajs.sbtplugin.RuntimeDOM,
+    scalaJSStage := FastOptStage,
+    jsDependencies += RuntimeDOM,
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test",
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" % "test"
   )

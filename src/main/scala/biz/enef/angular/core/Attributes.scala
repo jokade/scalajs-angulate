@@ -12,9 +12,9 @@ import scala.scalajs.js.annotation.JSBracketAccess
 trait Attributes extends js.Object {
 
   @JSBracketAccess
-  def apply(name: String) : UndefOr[String] = ???
+  def apply(name: String) : UndefOr[String] = js.native
 
   @JSBracketAccess
-  def update(name: String, value: String) : Unit = ???
+  def update(name: String, value: String) : Unit = js.native
 
 }

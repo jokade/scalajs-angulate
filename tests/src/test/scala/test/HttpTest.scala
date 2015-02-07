@@ -10,7 +10,6 @@ import biz.enef.angular.core.HttpService
 import utest._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExport
 import scala.util.{Failure, Success}
 import js.Dynamic.literal
 
@@ -78,6 +77,6 @@ object HttpTest extends AngulateTestSuite {
   }
 
   trait Data extends js.Object {
-    def id: Int = ???
+    def id: Int = js.native
   }
 }

@@ -9,16 +9,16 @@ import scala.scalajs.js
 
 trait QPromise extends js.Object {
 
-  def `then`(successCallback: js.Function1[js.Any,js.Any]) : QPromise = ???
+  def `then`(successCallback: js.Function1[js.Any,js.Any]) : QPromise = js.native
 
   def `then`(successCallback: js.Function1[js.Any,js.Any],
-             errorCallback: js.Function1[js.Any,Unit]) : QPromise = ???
+             errorCallback: js.Function1[js.Any,Unit]) : QPromise = js.native
 
   def `then`(successCallback: js.Function1[js.Any,js.Any],
              errorCallback: js.Function1[js.Any,Unit],
-             notifyCallback: js.Function1[js.Any,Unit]) : QPromise = ???
+             notifyCallback: js.Function1[js.Any,Unit]) : QPromise = js.native
 
-  def `catch`(errorCallback: js.Function1[js.Any,Unit]) : QPromise = ???
+  def `catch`(errorCallback: js.Function1[js.Any,Unit]) : QPromise = js.native
 
-  def `finally`(callback: js.Function1[js.Any,Unit]) : QPromise = ???
+  def `finally`(callback: js.Function1[js.Any,Unit]) : QPromise = js.native
 }

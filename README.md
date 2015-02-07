@@ -139,9 +139,9 @@ module.controllerOf[CounterCtrl]
   
 /* Option A: using a custom defined Scope type */
 trait CounterScope extends Scope {
-  var count : Int = ???
-  var inc : js.Function = ???
-  var dec : js.Function = ???
+  var count : Int = js.native
+  var inc : js.Function = js.native
+  var dec : js.Function = js.native
 }
 
 class CounterCtrl($scope: CounterScope) extends ScopeController {

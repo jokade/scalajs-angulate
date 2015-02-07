@@ -8,5 +8,5 @@ package biz.enef.angular.core
 import scala.scalajs.js
 
 trait Timeout extends js.Object {
-  def apply(fn: js.Function, delay: Int = 0, invokeApply: Boolean = true) : QPromise = ???
+  def apply(fn: js.Function, delay: Int = 0, invokeApply: Boolean = true) : QPromise = js.native
 }

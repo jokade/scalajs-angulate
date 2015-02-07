@@ -10,7 +10,6 @@ import biz.enef.angular._
 import utest._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExport
 
 object ControllerTest extends AngulateTestSuite {
   override val tests = TestSuite {
@@ -103,7 +102,7 @@ object ControllerTest extends AngulateTestSuite {
   }
 
   trait TestScope extends Scope {
-    var name: String = ???
+    var name: String = js.native
   }
 
   class TestService extends Service {

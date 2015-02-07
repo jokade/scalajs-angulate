@@ -18,7 +18,7 @@ import scala.scalajs.js
  */
 trait Angular extends js.Object {
 
-  def injector(modules: js.Any, strictDi: Boolean = false) : Injector = ???
+  def injector(modules: js.Any, strictDi: Boolean = false) : Injector = js.native
 
   /**
    * Creates or retrieves an Angular module.
@@ -31,7 +31,7 @@ trait Angular extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
    */
-  def module(name: String, requires: js.Array[String] = null, configFn: js.Function = null) : Module
+  def module(name: String, requires: js.Array[String] = null, configFn: js.Function = null) : Module = js.native
 
   /**
    * Serializes input into a JSON-formatted string.
@@ -41,19 +41,18 @@ trait Angular extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/function/angular.toJson]]
    */
-  def toJson(obj: js.Any, pretty: js.Any) : String = ???
+  def toJson(obj: js.Any, pretty: js.Any) : String = js.native
 
   /**
    * Converts the specified string to uppercase.
    *
    * @param string to be converted
    */
-  def uppercase(string: String) : String = ???
+  def uppercase(string: String) : String = js.native
 
 }
 
 object Angular {
-  import scalajs.js.JSConverters._
 
   /**
    * Returns the global Angular object
