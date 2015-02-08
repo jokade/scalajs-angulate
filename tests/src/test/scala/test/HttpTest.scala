@@ -22,7 +22,7 @@ object HttpTest extends AngulateTestSuite {
       $httpBackend.whenGET("/error").respond(404,"resource not found")
       $httpBackend.whenPOST("/empty").respond(204)
     })
-    val $http = injection[HttpService]("$http")
+    val $http = dependency[HttpService]("$http")
 
     var ok = false
 

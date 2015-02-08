@@ -19,23 +19,23 @@ object ServiceTest extends AngulateTestSuite {
 
       'explicitName-{
         module.serviceOf[Service1]("$service1")
-        val service1 = injection[Service1]("$service1")
+        val service1 = dependency[Service1]("$service1")
         assert( service1.id == "service1" )
       }
 
       'derivedName-{
         module.serviceOf[Service1]
-        val service1 = injection[Service1]("service1")
+        val service1 = dependency[Service1]("service1")
         assert( service1.id == "service1" )
       }
 
       'dependencyInjection-{
         module.serviceOf[Service1]
         module.serviceOf[Service2]
-        val service1 = injection[Service1]("service1")
-        val service2 = injection[Service2]("service2")
-        val $http = injection[HttpService]("$http")
-        val $log = injection[js.Dynamic]("$log")
+        val service1 = dependency[Service1]("service1")
+        val service2 = dependency[Service2]("service2")
+        val $http = dependency[HttpService]("$http")
+        val $log = dependency[js.Dynamic]("$log")
 
         assert(
           service2.id == "service2",

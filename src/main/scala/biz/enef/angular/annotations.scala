@@ -23,4 +23,5 @@ case class named(name: String) extends StaticAnnotation
  */
 case class ExportToScope(name: String) extends StaticAnnotation
 
-case class Component(selector: String = null) extends StaticAnnotation
+case class ComponentDef(selector: String, template: String = null)
+case class Component(cd: ComponentDef) extends StaticAnnotation
