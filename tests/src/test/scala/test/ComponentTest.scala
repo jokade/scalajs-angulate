@@ -5,8 +5,11 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package test
 
+import biz.enef.angular.core.HttpService
 import utest._
 import biz.enef.angular._
+
+import scala.scalajs.js.annotation.JSExport
 
 object ComponentTest extends AngulateTestSuite {
   override val tests = TestSuite {
@@ -25,10 +28,12 @@ object ComponentTest extends AngulateTestSuite {
         assert(elem2.head.textContent == "component2" )
       }
     }
-
+/*
     'controller-{
-
+      module.componentOf[Component3]
+      val elem3 = compileAndLink("<foo></foo>")
     }
+    */
   }
 
 
@@ -46,10 +51,9 @@ object ComponentTest extends AngulateTestSuite {
 
   @Component( ComponentDef(
     selector = "foo",
-    template = "ctrl"
-
+    template = "{{ctrl.foo}}"
   ))
-  class Component3 {
+  class Component3($http: HttpService) {
     val foo = "bar"
   }
 }
