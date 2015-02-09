@@ -86,11 +86,26 @@ object Angular {
     /**
      * Creates a new Angular module
      * @param name
+     * @return
+     */
+    def createModule(name: String) : Module = self.module(name, js.Array())
+
+    /**
+     * Creates a new Angular module
+     * @param name
      * @param requires
      * @return
      */
-    def createModule(name: String, requires: Iterable[String] = Seq(), configFn: AnnotatedFunction[js.Function] = none) : Module =
-      if (configFn == none) self.module(name, requires.toJSArray) else self.module(name, requires.toJSArray, configFn.inlineArrayAnnotatedFn)
+    def createModule(name: String, requires: Iterable[String]) : Module = self.module(name, requires.toJSArray)
+
+    /**
+     * Creates a new Angular module
+     * @param name
+     * @param requires
+     * @return
+     */
+    def createModule(name: String, requires: Iterable[String] = Seq(), configFn: AnnotatedFunction[js.Function]) : Module =
+      self.module(name, requires.toJSArray, configFn.inlineArrayAnnotatedFn)
   }
 
 }

@@ -11,6 +11,4 @@ object AnnotatedFunction {
 
   @inline implicit def annotatedFunction[F <: js.Function](f: F): AnnotatedFunction[F] = macro impl.AnnotationMacros.functionDIArray
 
-  val none = new AnnotatedFunction[js.Function](js.Array())
-
 }
