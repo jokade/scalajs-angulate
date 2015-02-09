@@ -8,8 +8,6 @@ package biz.enef.angular
 import acyclic.file
 import biz.enef.angular.core.Injector
 
-import scala.language.experimental.macros
-
 import scala.scalajs.js
 
 /**
@@ -22,9 +20,30 @@ trait Angular extends js.Object {
   def injector(modules: js.Any, strictDi: Boolean = false) : Injector = js.native
 
   /**
-   * Creates or retrieves an Angular module.
+   * Retrieves an Angular module.
    *
-   * @param name The name of the module to create or retrieve.
+   * @param name The name of the module to retrieve.
+   *
+   * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
+   */
+  def module(name: String) : Module = js.native
+
+  /**
+   * Creates an Angular module.
+   *
+   * @param name The name of the module to create .
+   * @param requires Array with the names of other modules required by this module.
+   *                 If specified then a new module is being created. If unspecified then the
+   *                 module is being retrieved for further configuration.
+   *
+   * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
+   */
+  def module(name: String, requires: js.Array[String]) : Module = js.native
+
+  /**
+   * Creates  an Angular module.
+   *
+   * @param name The name of the module to create.
    * @param requires Array with the names of other modules required by this module.
    *                 If specified then a new module is being created. If unspecified then the
    *                 module is being retrieved for further configuration.
@@ -32,7 +51,7 @@ trait Angular extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
    */
-  def module(name: String, requires: js.Array[String] = null, configFn: js.Function = null) : Module = js.native
+  def module(name: String, requires: js.Array[String], configFn: js.Array[_]) : Module = js.native
 
   /**
    * Serializes input into a JSON-formatted string.
@@ -58,14 +77,20 @@ object Angular {
   /**
    * Returns the global Angular object
    */
-  def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[Angular] //macro impl.AngularImpl.apply
+  def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[Angular]
 
-  /**
-   * Creates a new Angular
-   * @param name
-   * @param requires
-   * @return
-   */
-  def module(name: String, requires: Iterable[String]) : Module = macro impl.AngularImpl.module
+  implicit class RichAngular(val self: Angular) extends AnyVal {
+    import scala.scalajs.js.JSConverters._
+    import AnnotatedFunction._
+
+    /**
+     * Creates a new Angular module
+     * @param name
+     * @param requires
+     * @return
+     */
+    def createModule(name: String, requires: Iterable[String] = Seq(), configFn: AnnotatedFunction[js.Function] = none) : Module =
+      if (configFn == none) self.module(name, requires.toJSArray) else self.module(name, requires.toJSArray, configFn.inlineArrayAnnotatedFn)
+  }
 
 }

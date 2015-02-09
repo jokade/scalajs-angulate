@@ -5,7 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.Angular
+import biz.enef.angular._
 import biz.enef.angular.core.HttpService
 import utest._
 
@@ -16,7 +16,7 @@ import js.Dynamic.literal
 object HttpTest extends AngulateTestSuite {
 
   override val tests = TestSuite {
-    implicit val module = Angular.module("test", Seq("ngMockE2E"))
+    implicit val module = angular.createModule("test", Seq("ngMockE2E"))
     module.run( ($httpBackend: js.Dynamic) => {
       $httpBackend.whenGET("/ok").respond( literal(id = 200) )
       $httpBackend.whenGET("/error").respond(404,"resource not found")

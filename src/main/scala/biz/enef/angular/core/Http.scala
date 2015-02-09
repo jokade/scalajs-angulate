@@ -7,7 +7,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core
 
-import acyclic.file
+// don't import acyclic.file, there is a known circular dependency with impl.HttpMacros
 import scala.concurrent.Future
 import scala.language.experimental.macros
 import scala.scalajs.js
