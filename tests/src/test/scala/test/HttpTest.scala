@@ -13,11 +13,15 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 import js.Dynamic.literal
 
+import scala.language.implicitConversions
+import AnnotatedFunction._
+import Module._
+
 object HttpTest extends AngulateTestSuite {
 
   override val tests = TestSuite {
     implicit val module = angular.createModule("test", Seq("ngMockE2E"))
-    module.run( ($httpBackend: js.Dynamic) => {
+    module.run ( ($httpBackend: js.Dynamic) => {
       $httpBackend.whenGET("/ok").respond( literal(id = 200) )
       $httpBackend.whenGET("/error").respond(404,"resource not found")
       $httpBackend.whenPOST("/empty").respond(204)

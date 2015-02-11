@@ -6,6 +6,7 @@
 package biz.enef.angular
 
 import acyclic.file
+import biz.enef.angular.Module.RichModule
 import biz.enef.angular.core.Injector
 
 import scala.scalajs.js
@@ -51,7 +52,7 @@ trait Angular extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
    */
-  def module(name: String, requires: js.Array[String], configFn: js.Array[_]) : Module = js.native
+  def module(name: String, requires: js.Array[String], configFn: js.Array[Any]) : Module = js.native
 
   /**
    * Serializes input into a JSON-formatted string.
@@ -79,7 +80,7 @@ object Angular {
    */
   def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[Angular]
 
-  implicit class RichAngular(val self: Angular) extends AnyVal {
+  @inline final implicit class RichAngular(val self: Angular) extends AnyVal {
     import scala.scalajs.js.JSConverters._
 
     /**
@@ -87,7 +88,7 @@ object Angular {
      * @param name
      * @return
      */
-    def createModule(name: String) : Module = self.module(name, js.Array())
+    @inline def createModule(name: String) : RichModule = self.module(name, js.Array())
 
     /**
      * Creates a new Angular module
@@ -95,7 +96,7 @@ object Angular {
      * @param requires
      * @return
      */
-    def createModule(name: String, requires: Iterable[String]) : Module = self.module(name, requires.toJSArray)
+    @inline def createModule(name: String, requires: Iterable[String]) : RichModule = self.module(name, requires.toJSArray)
 
     /**
      * Creates a new Angular module
@@ -103,7 +104,7 @@ object Angular {
      * @param requires
      * @return
      */
-    def createModule(name: String, requires: Iterable[String], configFn: AnnotatedFunction) : Module =
+    @inline def createModule(name: String, requires: Iterable[String], configFn: AnnotatedFunction) : RichModule =
       self.module(name, requires.toJSArray, configFn.inlineArrayAnnotatedFn)
   }
 
