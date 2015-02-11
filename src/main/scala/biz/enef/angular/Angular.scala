@@ -81,7 +81,6 @@ object Angular {
 
   implicit class RichAngular(val self: Angular) extends AnyVal {
     import scala.scalajs.js.JSConverters._
-    import AnnotatedFunction._
 
     /**
      * Creates a new Angular module
@@ -104,7 +103,7 @@ object Angular {
      * @param requires
      * @return
      */
-    def createModule(name: String, requires: Iterable[String] = Seq(), configFn: AnnotatedFunction[js.Function]) : Module =
+    def createModule(name: String, requires: Iterable[String], configFn: AnnotatedFunction) : Module =
       self.module(name, requires.toJSArray, configFn.inlineArrayAnnotatedFn)
   }
 

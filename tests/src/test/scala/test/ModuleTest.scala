@@ -8,6 +8,8 @@ package test
 import biz.enef.angular._
 import utest._
 
+import scala.scalajs.js
+
 object ModuleTest extends AngulateTestSuite {
   override val tests = TestSuite {
     'new-{
@@ -17,6 +19,13 @@ object ModuleTest extends AngulateTestSuite {
       val module2 = angular.createModule("module2", Seq("module1"))
       assert( module2.name == "module2" )
 
+    }
+
+    'newWithConfig-{
+      val module3 = angular.createModule("module3", Nil, ($logProvider: js.Dynamic) => {
+        $logProvider.debugEnabled(true)
+      })
+      assert( module3.name == "module3" )
     }
   }
 }
