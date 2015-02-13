@@ -8,6 +8,7 @@ package biz.enef.angular
 import acyclic.file
 import biz.enef.angular.Module.RichModule
 import biz.enef.angular.core.Injector
+import org.scalajs.dom.html.Element
 
 import scala.scalajs.js
 
@@ -71,7 +72,13 @@ trait Angular extends js.Object {
    */
   def uppercase(string: String) : String = js.native
 
+  def bootstrap(element: Element, modules: js.Array[Any]): Injector = js.native
+
+  def bootstrap(element: Element, modules: js.Array[Any], config: AngularConfiguration): Injector = js.native
+
 }
+
+case class AngularConfiguration(strictDi: Boolean = false)
 
 object Angular {
 
@@ -106,6 +113,15 @@ object Angular {
      */
     @inline def createModule(name: String, requires: Iterable[String], configFn: AnnotatedFunction) : RichModule =
       self.module(name, requires.toJSArray, configFn.inlineArrayAnnotatedFn)
+
+    @inline def bootstrap(element: Element, modules: Iterable[String]) = self.bootstrap(element, modules.toJSArray.asInstanceOf[js.Array[Any]])
+
+    @inline def bootstrap(element: Element, modules: Seq[AnnotatedFunction]) = self.bootstrap(element, modules.map(_.inlineArrayAnnotatedFn).toJSArray.asInstanceOf[js.Array[Any]])
+
+    @inline def bootstrap(element: Element, modules: Iterable[String], config: AngularConfiguration) = self.bootstrap(element, modules.toJSArray.asInstanceOf[js.Array[Any]], config)
+
+    @inline def bootstrap(element: Element, modules: Seq[AnnotatedFunction], config: AngularConfiguration) = self.bootstrap(element, modules.map(_.inlineArrayAnnotatedFn).toJSArray.asInstanceOf[js.Array[Any]], config)
+
   }
 
 }

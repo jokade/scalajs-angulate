@@ -9,6 +9,7 @@ import biz.enef.angular._
 import utest._
 
 import scala.scalajs.js
+import org.scalajs.dom
 
 object ModuleTest extends AngulateTestSuite {
   override val tests = TestSuite {
@@ -22,10 +23,14 @@ object ModuleTest extends AngulateTestSuite {
     }
 
     'newWithConfig-{
+      var configFnCalled = false
       val module3 = angular.createModule("module3", Nil, ($logProvider: js.Dynamic) => {
         $logProvider.debugEnabled(true)
+        configFnCalled = true
       })
+      angular.bootstrap(dom.document.body, Seq("module3"))
       assert( module3.name == "module3" )
+      assert( configFnCalled )
     }
   }
 }
