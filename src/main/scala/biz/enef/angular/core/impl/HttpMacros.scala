@@ -5,6 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core.impl
 
+// don't import acyclic.file, there is a known circular dependency with core.Http
 import biz.enef.angular.core.{HttpError, HttpPromise}
 import biz.enef.angular.impl.MacroBase
 

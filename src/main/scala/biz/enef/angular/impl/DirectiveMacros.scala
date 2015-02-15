@@ -5,6 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.impl
 
+import acyclic.file
 import scala.reflect.macros.blackbox
 
 protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroBase with ControllerMacroUtils {

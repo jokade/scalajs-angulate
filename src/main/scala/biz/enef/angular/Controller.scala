@@ -5,6 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
 
+import acyclic.file
 import biz.enef.angular.core.{Attributes, JQLite}
 
 import scala.scalajs.js

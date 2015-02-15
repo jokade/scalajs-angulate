@@ -5,12 +5,13 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.ext
 
+import acyclic.file
 import scala.scalajs.js
 
 /**
- * Defines the bindings to the {{{ngRoute.$rootProvider}}} API and enhancements provided by scalajs-angulate.
+ * Defines the bindings to the ngRoute.\$rootProvider API and enhancements provided by scalajs-angulate.
  *
- * @see [[https://docs.angularjs.org/api/ngRoute/provider/$routeProvider]]
+ * @see [[https://docs.angularjs.org/api/ngRoute/provider/\$routeProvider]]
  */
 trait RouteProvider extends js.Object {
 
@@ -22,9 +23,9 @@ trait RouteProvider extends js.Object {
 }
 
 /**
- * Mapping information to be assigned to {{{$route.current}}} on match.
+ * Mapping information to be assigned to \$route.current on match.
  *
- * @see [[https://docs.angularjs.org/api/ngRoute/provider/$routeProvider]]
+ * @see [[https://docs.angularjs.org/api/ngRoute/provider/\$routeProvider]]
  */
 trait Route extends js.Object {
 

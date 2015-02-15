@@ -5,6 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core
 
+import acyclic.file
 import scala.scalajs.js
 
 trait Injector extends js.Object {

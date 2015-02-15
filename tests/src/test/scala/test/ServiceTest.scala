@@ -13,7 +13,7 @@ import scala.scalajs.js
 
 object ServiceTest extends AngulateTestSuite {
   override val tests = TestSuite {
-    implicit val module = Angular.module("test", Nil)
+    implicit val module = angular.createModule("test")
 
     'serviceOf-{
 

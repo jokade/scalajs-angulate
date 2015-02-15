@@ -5,6 +5,7 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core
 
+import acyclic.file
 import org.scalajs.dom.Element
 
 import scala.scalajs.js

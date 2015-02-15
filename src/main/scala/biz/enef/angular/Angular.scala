@@ -5,9 +5,10 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular
 
+import acyclic.file
+import biz.enef.angular.Module.RichModule
 import biz.enef.angular.core.Injector
-
-import scala.language.experimental.macros
+import org.scalajs.dom.html.Element
 
 import scala.scalajs.js
 
@@ -21,9 +22,30 @@ trait Angular extends js.Object {
   def injector(modules: js.Any, strictDi: Boolean = false) : Injector = js.native
 
   /**
-   * Creates or retrieves an Angular module.
+   * Retrieves an Angular module.
    *
-   * @param name The name of the module to create or retrieve.
+   * @param name The name of the module to retrieve.
+   *
+   * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
+   */
+  def module(name: String) : Module = js.native
+
+  /**
+   * Creates an Angular module.
+   *
+   * @param name The name of the module to create .
+   * @param requires Array with the names of other modules required by this module.
+   *                 If specified then a new module is being created. If unspecified then the
+   *                 module is being retrieved for further configuration.
+   *
+   * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
+   */
+  def module(name: String, requires: js.Array[String]) : Module = js.native
+
+  /**
+   * Creates  an Angular module.
+   *
+   * @param name The name of the module to create.
    * @param requires Array with the names of other modules required by this module.
    *                 If specified then a new module is being created. If unspecified then the
    *                 module is being retrieved for further configuration.
@@ -31,7 +53,7 @@ trait Angular extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/function/angular.module]]
    */
-  def module(name: String, requires: js.Array[String] = null, configFn: js.Function = null) : Module = js.native
+  def module(name: String, requires: js.Array[String], configFn: js.Array[Any]) : Module = js.native
 
   /**
    * Serializes input into a JSON-formatted string.
@@ -50,21 +72,56 @@ trait Angular extends js.Object {
    */
   def uppercase(string: String) : String = js.native
 
+  def bootstrap(element: Element, modules: js.Array[Any]): Injector = js.native
+
+  def bootstrap(element: Element, modules: js.Array[Any], config: AngularConfiguration): Injector = js.native
+
 }
+
+case class AngularConfiguration(strictDi: Boolean = false)
 
 object Angular {
 
   /**
    * Returns the global Angular object
    */
-  def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[Angular] //macro impl.AngularImpl.apply
+  def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[Angular]
 
-  /**
-   * Creates a new Angular
-   * @param name
-   * @param requires
-   * @return
-   */
-  def module(name: String, requires: Iterable[String]) : Module = macro impl.AngularImpl.module
+  @inline final implicit class RichAngular(val self: Angular) extends AnyVal {
+    import scala.scalajs.js.JSConverters._
+
+    /**
+     * Creates a new Angular module
+     * @param name
+     * @return
+     */
+    @inline def createModule(name: String) : RichModule = self.module(name, js.Array())
+
+    /**
+     * Creates a new Angular module
+     * @param name
+     * @param requires
+     * @return
+     */
+    @inline def createModule(name: String, requires: Iterable[String]) : RichModule = self.module(name, requires.toJSArray)
+
+    /**
+     * Creates a new Angular module
+     * @param name
+     * @param requires
+     * @return
+     */
+    @inline def createModule(name: String, requires: Iterable[String], configFn: AnnotatedFunction) : RichModule =
+      self.module(name, requires.toJSArray, configFn.inlineArrayAnnotatedFn)
+
+    @inline def bootstrap(element: Element, modules: Iterable[String]) = self.bootstrap(element, modules.toJSArray.asInstanceOf[js.Array[Any]])
+
+    @inline def bootstrap(element: Element, modules: Seq[AnnotatedFunction]) = self.bootstrap(element, modules.map(_.inlineArrayAnnotatedFn).toJSArray.asInstanceOf[js.Array[Any]])
+
+    @inline def bootstrap(element: Element, modules: Iterable[String], config: AngularConfiguration) = self.bootstrap(element, modules.toJSArray.asInstanceOf[js.Array[Any]], config)
+
+    @inline def bootstrap(element: Element, modules: Seq[AnnotatedFunction], config: AngularConfiguration) = self.bootstrap(element, modules.map(_.inlineArrayAnnotatedFn).toJSArray.asInstanceOf[js.Array[Any]], config)
+
+  }
 
 }

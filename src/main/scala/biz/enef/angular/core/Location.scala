@@ -5,12 +5,13 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angular.core
 
+import acyclic.file
 import scala.scalajs.js
 
 /**
- * Defines the bindings to the {{{$location}}} service.
+ * Defines the bindings to the \$location service.
  *
- * @see [[https://docs.angularjs.org/api/ng/service/$location]]
+ * @see [[https://docs.angularjs.org/api/ng/service/\$location]]
  */
 trait Location extends js.Object {
 
