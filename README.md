@@ -244,9 +244,17 @@ __with the first letter in lower case__ (to support derivation of dependencies f
 
 
 ### Directives
+__Note:__ This section describes the directive API provided by scalajs-angulate 0.2.
+
 To implement an AngularJS directive, create a class extending `Directive` and override all members you want to define on the [directive definition object](https://docs.angularjs.org/api/ng/service/$compile):
 ```scala
 class HelloUserDirective($animate: AnimationService) extends Directive {
+  // the type of the scope object passed to postLink() and controller()
+  override type ScopeType = js.Dynamic
+  
+  // the type of the controller instance passed to postLink() and controller()
+  override type ControllerType = HelloUserCtrl
+  
   override val restrict = "E"
   
   override val transclude = false
@@ -263,10 +271,10 @@ class HelloUserDirective($animate: AnimationService) extends Directive {
   // -- or --
   // override val scope = true
   
-  override def postLink(scope: Scope,
+  override def postLink(scope: ScopeType,
                         element: JQLite,
                         attrs: Attributes,
-                        controller: js.Dynamic) = ...
+                        controller: ControllerType) = ...
                         
   // override def compile(tElement: js.Dynamic, tAttrs: Attributes) : js.Any = ...
 }
@@ -280,26 +288,35 @@ module.directiveOf[HelloUserDirective]
 If you need access to the AngularJS `$compile` function, just inject it into the directive constructor:
 ```scala
 class MyDirective($compile: Compile) extends Directive {
-  override def postLink(scope: Scope,
+  override def postLink(scope: ScopeType,
                         element: JQLite,
                         attrs: Attributes,
-                        controller: js.Dynamic) : Unit = {
+                        controller: ControllerType) : Unit = {
     val tpl = $compile( /* ... */ )
     /* ... */
   }
 }
 ```
 
-If your directive needs a controller, just define it as described in the section on [Controllers](#controllers) and set the directive's `withController` type to it:
+If you need to define properties or methods on the directive controller or scope, you can do so in the `controller` method:
 ```scala
-class UserDirectiveCtrl($scope: js.Dynamic) extends Controller {
-  $scope.name = "User 1"
+trait UserDirectiveCtrl extends js.Object {
+  var greet: js.Function = js.native
 }
 
 class UserDirective extends Directive {
+  override type ScopeType = js.Dynamic
+  override type ControllerType = UserDirectiveCtrl
   
-  override type withController = UserDirectiveCtrl
-  
+  override def controller(ctrl: ControllerType,
+                          scope: ScopeType,
+                          elem: JQLite,
+                          attrs: Attributes) : Unit = {
+    scope.greeting = "Hello"
+    ctrl.greet = () => {
+      /* ... */
+    }
+  }
 }
 ```
 
