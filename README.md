@@ -44,9 +44,9 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 ### Defining a Module
 
 ```scala
-import biz.enef.angular._
-import biz.enef.angular.core.HttpService
-import biz.enef.angular.ext.{Route, RouteProvider}
+import biz.enef.angulate._
+import biz.enef.angulate.core.HttpService
+import biz.enef.angulate.ext.{Route, RouteProvider}
 
 val module = Angular.module("app", Seq("ui.bootstrap","ngRoute"))
 
@@ -316,7 +316,7 @@ class UserDirective extends Directive {
 This section gives an overview over the enhancements to AngularJS core modules provided by angulate.
 
 #### HttpService
-The API of the AngularJS `$http` service is provided by the trait `biz.enef.angular.core.HttpService`.
+The API of the AngularJS `$http` service is provided by the trait `biz.enef.angulate.core.HttpService`.
 The `get`, `put`, `post` and `delete` functions on this trait are enhanced with a type parameter that allows to specific the expected return type of the response. Furthermore, these functions return an instance of `HttpPromise[T]` which is a representaion Angular's http promise object with the following additional functions:
 ```scala
 trait HttpPromise[T] extends js.Object {

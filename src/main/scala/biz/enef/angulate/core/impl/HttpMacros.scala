@@ -1,13 +1,12 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Provides the macros for enhancements to the Angular $http API
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.core.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.core.impl
 
 // don't import acyclic.file, there is a known circular dependency with core.Http
-import biz.enef.angular.core.{HttpError, HttpPromise}
-import biz.enef.angular.impl.MacroBase
+import biz.enef.angulate.core.{HttpError, HttpPromise}
+import biz.enef.angulate.impl.MacroBase
 
 import scala.Predef
 import scala.concurrent.duration.Duration
@@ -19,11 +18,11 @@ import scala.scalajs.js.annotation.{JSExport, JSExportAll}
 import scala.util.{Try, Success, Failure}
 
 
-protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends MacroBase {
+protected[angulate] class HttpPromiseMacros(val c: blackbox.Context) extends MacroBase {
   import c.universe._
 
   // print generated code to console during compilation
-  private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.HttpPromiseMacros.debug" )
+  private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.HttpPromiseMacros.debug" )
 
   lazy val tHttpError = typeOf[HttpError]
   lazy val tFailure = q"scala.util.Failure"
@@ -64,7 +63,7 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   def map(f: c.Tree) = {
     val T = f.tpe.typeArgs(1)
     val self = Select(c.prefix.tree, TermName("self"))
-    val tree = q"""{import biz.enef.angular.core
+    val tree = q"""{import biz.enef.angulate.core
                     val mapped = new core.impl.MappedHttpPromise($self,$f)
                    mapped.asInstanceOf[core.HttpPromise[$T]]
                    }
@@ -75,7 +74,7 @@ protected[angular] class HttpPromiseMacros(val c: blackbox.Context) extends Macr
   }
 
   def future = {
-    val tree = q"""(new biz.enef.angular.core.impl.HttpPromiseWrapper(${c.prefix}))"""
+    val tree = q"""(new biz.enef.angulate.core.impl.HttpPromiseWrapper(${c.prefix}))"""
 
     if(logCode) printCode(tree)
     tree

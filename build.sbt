@@ -75,6 +75,10 @@ lazy val publishingSettings = Seq(
         <name>Johannes Kastner</name>
         <email>jokade@karchedon.de</email>
       </developer>
+      <developer>
+        <id>ludovicc</id>
+        <name>Ludovic Claude</name>
+      </developer>
     </developers>
   )
 )
@@ -87,5 +91,5 @@ lazy val angulateDebugFlags = Seq(
   //"DirectiveMacros.debug"
   //"ServiceMacros.debug"
   "HttpPromiseMacros.debug"
-).map( f => s"-Xmacro-settings:biz.enef.angular.$f" )
+).map( f => s"-Xmacro-settings:biz.enef.angulate.$f" )
 

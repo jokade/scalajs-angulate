@@ -1,18 +1,17 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description:
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.impl
 
 import acyclic.file
 import scala.reflect.macros.blackbox
 
-protected [angular] class ServiceMacros(val c: blackbox.Context) extends MacroBase {
+protected [angulate] class ServiceMacros(val c: blackbox.Context) extends MacroBase {
   import c.universe._
 
   // print generated code to console during compilation
-  private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.ServiceMacros.debug" )
+  private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.ServiceMacros.debug" )
 
   def serviceOf[T: c.WeakTypeTag] = {
     val serviceType = weakTypeOf[T]

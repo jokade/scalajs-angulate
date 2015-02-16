@@ -1,12 +1,11 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description:
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate
 
 import acyclic.file
-import biz.enef.angular.core.{Attributes, JQLite}
+import biz.enef.angulate.core.{Attributes, JQLite}
 
 import scala.scalajs.js
 

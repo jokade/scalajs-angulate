@@ -1,20 +1,20 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Macro implementations for Angular
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.impl
 
 import acyclic.file
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
-protected[angular] class AngularMacros(val c: Context) extends MacroBase {
+// TODO: remove
+protected[angulate] class AngularMacros(val c: Context) extends MacroBase {
   import c.universe._
 
   private def printCode(tree: Tree) = c.info( c.enclosingPosition, showCode(tree), true )
 
-  val angular = q"scala.scalajs.js.Dynamic.global.angular.asInstanceOf[biz.enef.angular.Angular]"
+  val angular = q"scala.scalajs.js.Dynamic.global.angular.asInstanceOf[biz.enef.angulate.Angular]"
 /*
   def module(name: c.Expr[String], requires: c.Expr[Iterable[String]]) = {
     // create js.Array from Iterable with dependencies

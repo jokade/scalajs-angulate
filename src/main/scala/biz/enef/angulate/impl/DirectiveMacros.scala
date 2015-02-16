@@ -1,18 +1,17 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Macros to support using a scala class as Angular directive
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.impl
 
 import acyclic.file
 import scala.reflect.macros.blackbox
 
-protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroBase with ControllerMacroUtils {
+protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends MacroBase with ControllerMacroUtils {
   import c.universe._
 
   // print generated code to console during compilation
-  private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.DirectiveMacros.debug" )
+  private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.DirectiveMacros.debug" )
 
   // types
   val tNotImplemented = typeOf[NotImplementedError]

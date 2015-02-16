@@ -1,9 +1,8 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: API for Angular $locationProvider
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.core
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.core
 
 import acyclic.file
 import scala.scalajs.js

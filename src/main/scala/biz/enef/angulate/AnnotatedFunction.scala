@@ -1,4 +1,8 @@
-package biz.enef.angular
+// -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
+// Description:
+//
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate
 
 import scala.scalajs.js
 import scala.language.implicitConversions

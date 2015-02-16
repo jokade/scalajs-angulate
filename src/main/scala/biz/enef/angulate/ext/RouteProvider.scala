@@ -1,9 +1,8 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Binding and enhancements for Angular $routeProvider API
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.ext
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.ext
 
 import acyclic.file
 import scala.scalajs.js

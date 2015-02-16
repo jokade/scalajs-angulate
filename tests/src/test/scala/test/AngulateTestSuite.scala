@@ -1,12 +1,11 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
-// Description:
+// Description: Utility trait for tests
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
+// Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.Module.RichModule
-import biz.enef.angular.{Scope, Angular}
+import biz.enef.angulate.Module.RichModule
+import biz.enef.angulate.{Scope, Angular}
 import utest._
 
 import scala.concurrent.Promise

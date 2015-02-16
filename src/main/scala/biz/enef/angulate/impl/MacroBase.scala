@@ -1,17 +1,16 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Provides a base class for macros with common utility functions
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.impl
 
 import acyclic.file
-import biz.enef.angular.named
+import biz.enef.angulate.named
 
 import scala.reflect.macros.blackbox
 
 
-protected[angular] abstract class MacroBase {
+protected[angulate] abstract class MacroBase {
   val c: blackbox.Context
   import c.universe._
 
@@ -19,7 +18,7 @@ protected[angular] abstract class MacroBase {
   val namedAnnotation = typeOf[named]
 
   // include runtime log messages if true
-  protected lazy val runtimeLogging = c.settings.exists( _ == "biz.enef.angular.runtimeLogging" )
+  protected lazy val runtimeLogging = c.settings.exists( _ == "biz.enef.angulate.runtimeLogging" )
 
   /**
    * Print to console during compilation
