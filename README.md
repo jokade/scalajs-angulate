@@ -306,36 +306,40 @@ trait UserDirectiveCtrl extends js.Object {
 
 class UserDirective extends Directive {
   override type ScopeType = js.Dynamic
-  override type ControllerType = UserDirectiveCtrl
   
   override def controller(ctrl: ControllerType,
                           scope: ScopeType,
                           elem: JQLite,
                           attrs: Attributes) : Unit = {
     scope.greeting = "Hello"
-    ctrl.greet = () => {
-      /* ... */
-    }
   }
 }
 ```
 
-If you need access to functions provided by the controller itself, you can annotate it with `@ExportToScope`; the controller is then available in the template under the name passed as argument to the annotation, e.g.:
+Using Angular's `controllerAs` property, you can access the controller from your directive:
 ```scala
 @ExportToScope("directive")  // <-- the controller is accessible in the template via 'directive'
-class UserDirectiveCtrl($scope: js.Dynamic) extends Controller {
-  @JSExport
-  def click() : Unit = /* ... */
+trait UserDirectiveCtrl extends js.Object {
+  var click : js.Function = js.native
 }
 
 class UserDirective extends Directive {
-  override type withController = UserDirectiveCtrl
+  override type ControllerType = UserDirectiveCtrl
+  
+  override val controllerAs = "ctrl"
+  
+  override def controller(ctrl: ControllerType,
+                          scope: ScopeType,
+                          elem: JQLite,
+                          attrs: Attributes) : Unit = {
+    ctrl.click = () => { /* ... */ }
+  }
 }
 ```
 ```html
 <user>
   <!-- directive is the reference to our UserDirectiveCtrl instance -->
-  <button ng-click="directive.click()"></button>
+  <button ng-click="ctrl.click()"></button>
 </user>
 ```
 
