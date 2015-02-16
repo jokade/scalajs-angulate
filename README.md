@@ -48,7 +48,7 @@ import biz.enef.angulate._
 import biz.enef.angulate.core.HttpService
 import biz.enef.angulate.ext.{Route, RouteProvider}
 
-val module = Angular.module("app", Seq("ui.bootstrap","ngRoute"))
+val module = angular.createModule("app", Seq("ui.bootstrap","ngRoute"))
 
 module.serviceOf[UserService]
 // - or, setting the service name explicitly:
@@ -86,7 +86,7 @@ Classes extending `Controller` export all their public `var`s, `val`s and `def`s
 Defining a custom `Scope` type is not required. However, instantiating the controller in the template requires the new AngularJS `as` syntax:
 
 ```scala
-val module Angular.module("counter", Nil)
+val module = angular.createModule("counter")
 module.controllerOf[CounterCtrl]
   
 class CounterCtrl extends Controller {
@@ -134,7 +134,7 @@ class Ctrl($scope: Scope) extends Controller {
 Classes extending `ScopeController` are "old-style" AngularJS controllers, where the scope available in the template must be injected explicitly:
 
 ```scala
-val module Angular.module("counter", Nil)
+val module = angular.createModule("counter")
 module.controllerOf[CounterCtrl]
   
 /* Option A: using a custom defined Scope type */
@@ -195,7 +195,7 @@ class UserCtrl(@named("$http") httpService: HttpService) extends Controller {
 ```
 
 
-DI is also supported for functions passed to `Module.config()` and `Module.run()`:
+DI is also supported for functions passed to methods such as `Module.config()` and `Module.run()`:
 ```scala
 module.config( ($routeProvider: RouteProvider) => {
   /* ... */
@@ -206,7 +206,17 @@ def routing($routeProvider: RouteProvider) = $routeProvider.when( /* ... */ )
 
 module.config( routing _ )
 ```
-However, the `@named` annoation is not supported for function DI, i.e. the _parameter names must match the services_ to be injected for this to work.
+However, the `@named` annotation is not supported for function DI, i.e. the _parameter names must match the services_ to be injected for this to work.
+
+Functions are implicitely converted to AnnotatedFunction which transform the function into an array following the [Inline Array Annotation](https://docs.angularjs.org/guide/di).
+You can use this to declare the function in one place and use it in another:
+```scala
+val configFn: AnnotatedFunction = ($logProvider: js.Dynamic) => {
+  /* ... */
+}
+
+val module = angular.createModule("app", Nil, configFn)
+```
 
 ### Services
 Services can be implemented as plain classes extending the `Service` trait. As with controllers,
