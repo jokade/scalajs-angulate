@@ -33,18 +33,17 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
 
     // assemble all defined directive attributes (ie 'template', 'restrict', ...)
     val atts = (getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
-      //case ("withController",a)  => {println(a); q"()"}
       case ("isolateScope",_)  => q"scope = dimpl.isolateScope"
-      case ("postLink",_)      => q"link = (dimpl.postLink _):js.Function"
+      case ("postLink",_)      => q"link = dimpl.postLink _"
+      case ("controller",_)    => q"""controller = js.Array("$$scope","$$element","$$attrs",(dimpl.controller _):js.ThisFunction)"""
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
-    }) ++ (
+    })/* ++ (
       getControllerType(ct).map( createController(_) )
-      )
+      )*/
 
     // create directive definition object
     val ddo = q"""literal( ..$atts )"""
-    println(ddo)
 
     // print debug information at runtime if runtimeLogging==true
     val debug =
@@ -64,6 +63,7 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
             ddo
           }):js.Function)
        """
+    println(carray)
 
     val tree = q"""{import scala.scalajs.js
                     import js.Dynamic.{global,literal}
@@ -78,7 +78,7 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
     ct.decls.filter( m=> m.isMethod && !m.isConstructor ).map( _.asMethod )
 
   private def getControllerType(ct: c.Type) =
-    ct.decls.filter( m=> m.isType && m.name.toString == "withController" ).map( _.asType )
+    ct.decls.filter( m=> m.isType && m.name.toString == "ControllerType" ).map( _.asType ).head
 
   private def createController(ts: TypeSymbol) = {
     val ct = ts.toType.dealias
@@ -89,11 +89,11 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
 
 
     // AngularJS controller construction array
-    val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
-          ((scope:js.Dictionary[js.Any],..$ctrlDeps) => {
-            val ctrl = (new $ct(..$ctrlArgs)).asInstanceOf[js.Any]
-            ${if(exportAs.isDefined) q"scope(${exportAs.get}) = ctrl" else q""}
-          }):js.Function)"""
+    val constructor = q"""js.Array[Any](..$ctrlDepNames,
+          ((target: js.Dynamic, ..$ctrlDeps) => {
+            val ctrl = new $ct(..$ctrlArgs)
+            target.ctrl = ctrl
+          }):js.ThisFunction)"""
 
     //val constructor = createControllerConstructor(ts.toType.finalResultType.dealias,q"ctrl")
     //println(constructor)

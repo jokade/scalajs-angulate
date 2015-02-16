@@ -14,4 +14,6 @@ trait JQLite extends js.Array[Element] {
   def on(events: String, handler: js.Function) : JQLite = js.native
 
   def off(events: String, handler: js.Function = null) : JQLite = js.native
+
+  def triggerHandler(eventType: String) : JQLite = js.native
 }
