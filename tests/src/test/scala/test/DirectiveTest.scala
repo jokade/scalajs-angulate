@@ -5,8 +5,8 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.core.{Attributes, JQLite}
-import biz.enef.angular._
+import biz.enef.angulate.core.{Attributes, JQLite}
+import biz.enef.angulate._
 import org.scalajs.dom.Element
 import utest._
 
@@ -16,7 +16,7 @@ import scala.scalajs.js.annotation.JSExport
 
 object DirectiveTest extends AngulateTestSuite {
   override val tests = TestSuite {
-    implicit val module = Angular.module("test", Nil)
+    implicit val module = angular.createModule("test", Nil)
 
     'directiveOf-{
       module.directiveOf[Directive1]
@@ -61,11 +61,11 @@ object DirectiveTest extends AngulateTestSuite {
   class Directive2 extends Directive {
     override type ControllerType = Directive2Ctrl
 
-    override def controller(ctrl: ControllerType, scope: Scope, elem: JQLite, attrs: Attributes): Unit = {
+    override def controller(ctrl: ControllerType, scope: ScopeType, elem: JQLite, attrs: Attributes): Unit = {
       ctrl.bar = "foo"
     }
 
-    override def postLink(scope: Scope, element: JQLite, attrs: Attributes, ctrl: Directive2Ctrl): Unit = {
+    override def postLink(scope: ScopeType, element: JQLite, attrs: Attributes, ctrl: Directive2Ctrl): Unit = {
       element.head.textContent = ctrl.bar
     }
   }

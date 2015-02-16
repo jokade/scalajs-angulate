@@ -1,16 +1,16 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
-// Description:
+// Description: Utility trait for tests
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
+// Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.{Controller, Scope, Module, Angular}
+import biz.enef.angulate.Module.RichModule
+import biz.enef.angulate.{Scope, Angular}
 import utest._
 
 import scala.concurrent.Promise
 import scala.scalajs.js
-import scala.scalajs.js.{Dictionary, UndefOr}
+import scala.scalajs.js.UndefOr
 import js.Dynamic.literal
 
 /**
@@ -25,7 +25,7 @@ trait AngulateTestSuite extends TestSuite {
    * @tparam T
    * @return
    */
-  def injection[T](name: String)(implicit module: Module) : T =
+  def injection[T](name: String)(implicit module: RichModule) : T =
     Angular().injector(js.Array("ng",module.name)).get(name).asInstanceOf[T]
 
   /**
@@ -42,7 +42,7 @@ trait AngulateTestSuite extends TestSuite {
    * @param module
    * @tparam T the scope type
    */
-  def controller[T](name: String)(implicit module: Module) : T = {
+  def controller[T](name: String)(implicit module: RichModule) : T = {
     val $controller = injection[js.Function2[String,js.Object,js.Any]]("$controller")
     val $rootScope = injection[Scope]("$rootScope")
     val scope = $rootScope.$new(false)

@@ -1,10 +1,10 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Provides the bindings to Angular promises and $q service
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.core
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.core
 
+import acyclic.file
 import scala.scalajs.js
 
 trait QPromise extends js.Object {
