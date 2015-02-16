@@ -12,7 +12,7 @@ There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc
 
 scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which uses property DI and (factory) objects for controllers and services, as opposed to constructor DI and classes used by this library.
 
-__NOTE__: the first official release (0.1) has been published; please update your sbt settings for scalajs-angulate
+__NOTE__: This guide already contains some changes for scalajs-angulate 0.2. Please read the __[guide for version 0.1](https://github.com/jokade/scalajs-angulate/tree/v0.1-sjs0.6.0)__ if your using scalajs-angulate 0.1.
 
 ##### Contents:
 * [SBT settings](#sbt-settings)
