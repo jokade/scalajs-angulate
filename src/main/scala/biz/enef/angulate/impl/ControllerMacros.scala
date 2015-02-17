@@ -1,21 +1,21 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Macro-based enhancements for Angular controllers
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.impl
 
-import biz.enef.angular._
+import acyclic.file
+import biz.enef.angulate._
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
 // TODO: understand Scala macros and clean up this hacked mess ...
-protected[angular] class ControllerMacros(val c: Context) extends MacroBase with ControllerMacroUtils {
+protected[angulate] class ControllerMacros(val c: Context) extends MacroBase with ControllerMacroUtils {
   import c.universe._
 
   // print generated code to console during compilation
-  private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.ControllerMacros.debug" )
+  private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.ControllerMacros.debug" )
 
   /* type definitions */
   val scopeController = typeOf[ScopeController]
@@ -113,19 +113,16 @@ protected[angular] class ControllerMacros(val c: Context) extends MacroBase with
 
     if(logCode) printCode( tree )
     tree
-
   }
 
 
 }
 
 
-protected[angular] trait ControllerMacroUtils {
+protected[angulate] trait ControllerMacroUtils {
   this: MacroBase =>
   import c.universe._
 
-  /* types */
-  val exportToScopeAnnotation = typeOf[ExportToScope]
 
   protected def copyMembers(ct: Type) = {
     val props = ct.decls.filter( p => p.isPublic && p.isMethod && !p.isConstructor).map( _.asMethod )
@@ -156,8 +153,4 @@ protected[angular] trait ControllerMacroUtils {
       })
   }
 
-  protected def getExportToScope(ts: ClassSymbol) = {
-    ts.annotations.filter( _.tree.tpe =:= exportToScopeAnnotation ).
-    map( _.tree.children(1) ).headOption
-  }
 }

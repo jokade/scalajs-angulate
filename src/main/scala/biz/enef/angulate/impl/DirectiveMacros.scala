@@ -1,17 +1,17 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Macros to support using a scala class as Angular directive
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.impl
 
+import acyclic.file
 import scala.reflect.macros.blackbox
 
-protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroBase with ControllerMacroUtils {
+protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends MacroBase with ControllerMacroUtils {
   import c.universe._
 
   // print generated code to console during compilation
-  private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.DirectiveMacros.debug" )
+  private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.DirectiveMacros.debug" )
 
   // types
   val tNotImplemented = typeOf[NotImplementedError]
@@ -33,18 +33,15 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
 
     // assemble all defined directive attributes (ie 'template', 'restrict', ...)
     val atts = (getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
-      //case ("withController",a)  => {println(a); q"()"}
       case ("isolateScope",_)  => q"scope = dimpl.isolateScope"
-      case ("postLink",_)      => q"link = (dimpl.postLink _):js.Function"
+      case ("postLink",_)      => q"link = dimpl.postLink _"
+      case ("controller",_)    => q"""controller = js.Array("$$scope","$$element","$$attrs",(dimpl.controller _):js.ThisFunction)"""
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
-    }) ++ (
-      getControllerType(ct).map( createController(_) )
-      )
+    })
 
     // create directive definition object
     val ddo = q"""literal( ..$atts )"""
-    //println(ddo)
 
     // print debug information at runtime if runtimeLogging==true
     val debug =
@@ -64,6 +61,7 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
             ddo
           }):js.Function)
        """
+    println(carray)
 
     val tree = q"""{import scala.scalajs.js
                     import js.Dynamic.{global,literal}
@@ -78,26 +76,6 @@ protected[angular] class DirectiveMacros(val c: blackbox.Context) extends MacroB
     ct.decls.filter( m=> m.isMethod && !m.isConstructor ).map( _.asMethod )
 
   private def getControllerType(ct: c.Type) =
-    ct.decls.filter( m=> m.isType && m.name.toString == "withController" ).map( _.asType )
-
-  private def createController(ts: TypeSymbol) = {
-    val ct = ts.toType.dealias
-    val cm = getConstructor(ct)
-    val exportAs = getExportToScope(ct.typeSymbol.asClass)
-    val (ctrlDeps,ctrlArgs) = makeArgsList(cm)
-    val ctrlDepNames = getDINames(cm)
-
-
-    // AngularJS controller construction array
-    val constructor = q"""js.Array[Any]("$$scope",..$ctrlDepNames,
-          ((scope:js.Dictionary[js.Any],..$ctrlDeps) => {
-            val ctrl = (new $ct(..$ctrlArgs)).asInstanceOf[js.Any]
-            ${if(exportAs.isDefined) q"scope(${exportAs.get}) = ctrl" else q""}
-          }):js.Function)"""
-
-    //val constructor = createControllerConstructor(ts.toType.finalResultType.dealias,q"ctrl")
-    //println(constructor)
-    q"controller = $constructor" //$constructor"
-  }
+    ct.decls.filter( m=> m.isType && m.name.toString == "ControllerType" ).map( _.asType ).head
 
 }

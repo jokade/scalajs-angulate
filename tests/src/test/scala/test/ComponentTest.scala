@@ -5,15 +5,15 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.core.HttpService
+import biz.enef.angulate.core.HttpService
 import utest._
-import biz.enef.angular._
+import biz.enef.angulate._
 
 import scala.scalajs.js.annotation.JSExport
 
 object ComponentTest extends AngulateTestSuite {
   override val tests = TestSuite {
-    implicit val module = Angular.module("test", Nil)
+    implicit val module = angular.createModule("test", Nil)
 
     'componentDef-{
       'orderedComponentDef- {

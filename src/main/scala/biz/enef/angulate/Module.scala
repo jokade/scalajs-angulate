@@ -1,10 +1,10 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Facade and enhancements for AngularJS Module API
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate
 
+import acyclic.file
 import scala.scalajs.js
 
 /**
@@ -21,19 +21,7 @@ trait Module  extends js.Object {
   def name: String = js.native
 
   /**
-   * Defines an animation hook that can be later used with the $animate service and directives that use this service.
-   *
-   * @note animations take effect only if the ngAnimate module is loaded
-   *
-   * @param name animation name
-   * @param animationFactory Factory function
-   *
-   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#animate]]
-   */
-  def animation(name: String, animationFactory: js.Function): Module = js.native
-
-  /**
-   * Defines an animation hook that can be later used with the $animate service and directives that use this service.
+   * Defines an animation hook that can be later used with the \$animate service and directives that use this service.
    *
    * @note animations take effect only if the ngAnimate module is loaded
    *
@@ -44,15 +32,6 @@ trait Module  extends js.Object {
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#animate]]
    */
   def animation(name: String, animationFactory: js.Array[Any]): Module = js.native
-
-//  /**
-//   * Use this method to register work which needs to be performed on module loading.
-//   *
-//   * @param configFn This function is executed on module load
-//   *
-//   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#config]]
-//   */
-//  def config(configFn: js.Function): Module = js.native
 
   /**
    * Use this method to register work which needs to be performed on module loading.
@@ -78,32 +57,12 @@ trait Module  extends js.Object {
    * Registers a controller.
    *
    * @param name The name of the controller
-   * @param constructor Controller construction function
-   *
-   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#controller]]
-   */
-  def controller(name: String, constructor: js.Function): Module = js.native
-
-  /**
-   * Registers a controller.
-   *
-   * @param name The name of the controller
    * @param constructor Array containing the names of the dependencies to be injected and
    *                    the constructor function as last element
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#controller]]
    */
   def controller(name: String, constructor: js.Array[Any]): Module = js.native
-
-  /**
-   * Register a new directive with the compiler.
-   *
-   * @param name Name of the directive in camel-case (ie `ngBind`)
-   * @param directiveFactory Directive constructor function
-   *
-   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#directive]]
-   */
-  def directive(name: String, directiveFactory: js.Function): Module = js.native
 
   /**
    * Register a new directive with the compiler.
@@ -117,14 +76,14 @@ trait Module  extends js.Object {
   def directive(name: String, directiveFactory: js.Array[Any]): Module = js.native
 
   /**
-   * Register a service factory.
+   * Register a new directive with the compiler.
    *
-   * @param name The name of the service
-   * @param constructor Service constructor function
+   * @param name Name of the directive in camel-case (ie `ngBind`)
+   * @param directiveFactory Function that returns the directive definition object (DDO) when called
    *
-   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#factory]]
+   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#directive]]
    */
-  def factory(name: String, constructor: js.Function): Module = js.native
+  def directive(name: String, directiveFactory: js.Function): Module = js.native
 
   /**
    * Register a service factory.
@@ -141,16 +100,6 @@ trait Module  extends js.Object {
    * Register a filter factory.
    *
    * @param name The name of the filter
-   * @param filterFactory Filter constructor function
-   *
-   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#filter]]
-   */
-  def filter(name: String, filterFactory: js.Function): Module = js.native
-
-  /**
-   * Register a filter factory.
-   *
-   * @param name The name of the filter
    * @param filterFactory Array containing the names of the dependencies to be injected and
    *                      the constructor function as last element
    *
@@ -159,17 +108,7 @@ trait Module  extends js.Object {
   def filter(name: String, filterFactory: js.Array[Any]): Module = js.native
 
   /**
-   * Register a provider function with the $injector.
-   *
-   * @param name The name of the instance. NOTE: the provider will be available under name + 'Provider' key.
-   * @param constructor Provider constructor function
-   *
-   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#provider]]
-   */
-  def provider(name: String, constructor: js.Function): Module = js.native
-
-  /**
-   * Register a provider function with the $injector.
+   * Register a provider function with the \$injector.
    *
    * @param name The name of the instance. NOTE: the provider will be available under name + 'Provider' key.
    * @param constructor Array containing the names of the dependencies to be injected and
@@ -178,15 +117,6 @@ trait Module  extends js.Object {
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#provider]]
    */
   def provider(name: String, constructor: js.Array[Any]): Module = js.native
-
-//  /**
-//   * Use this method to register work which should be performed when the injector is done loading all modules.
-//   *
-//   * @param initializationFn This function is executed when all modules have been loaded
-//   *
-//   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#run]]
-//   */
-//  def run(initializationFn: js.Function): Module = js.native
 
   /**
    * Use this method to register work which should be performed when the injector is done loading all modules.
@@ -206,16 +136,6 @@ trait Module  extends js.Object {
    *
    * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#service]]
    */
-  def service(name: String, constructor: js.Function): Module = js.native
-
-  /**
-   * Register a service constructor which will be invoked with `new` to create the service instance.
-   *
-   * @param name The name of the service
-   * @param constructor A class constructor function
-   *
-   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#service]]
-   */
   def service(name: String, constructor: js.Array[Any]): Module = js.native
 
 }
@@ -225,7 +145,104 @@ object Module {
   import scala.language.experimental.macros
   import scala.language.implicitConversions
 
-  final implicit class RichModule(val self: Module) extends AnyVal {
+  @inline final implicit class RichModule(val self: Module) extends AnyVal {
+
+    /**
+     * The name of the module
+     */
+    @inline def name: String = self.name
+
+    /**
+     * Defines an animation hook that can be later used with the \$animate service and directives that use this service.
+     *
+     * @note animations take effect only if the ngAnimate module is loaded
+     *
+     * @param name animation name
+     * @param animationFactory Factory function
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#animate]]
+     */
+    @inline def animation(name: String, animationFactory: AnnotatedFunction): Module = self.animation(name, animationFactory.inlineArrayAnnotatedFn)
+
+    /**
+     * Use this method to register work which needs to be performed on module loading.
+     *
+     * @param configFn This function is executed on module load
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#config]]
+     */
+    @inline def config(configFn: AnnotatedFunction): Module = self.config(configFn.inlineArrayAnnotatedFn)
+
+    /**
+     * Registers a controller.
+     *
+     * @param name The name of the controller
+     * @param constructor Controller construction function
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#controller]]
+     */
+    @inline def controller(name: String, constructor: AnnotatedFunction): Module = self.controller(name, constructor.inlineArrayAnnotatedFn)
+
+    /**
+     * Register a new directive with the compiler.
+     *
+     * @param name Name of the directive in camel-case (ie `ngBind`)
+     * @param directiveFactory Directive constructor function
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#directive]]
+     */
+    @inline def directive(name: String, directiveFactory: AnnotatedFunction): Module = self.directive(name, directiveFactory.inlineArrayAnnotatedFn)
+
+    /**
+     * Register a service factory.
+     *
+     * @param name The name of the service
+     * @param constructor Service constructor function
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#factory]]
+     */
+    @inline def factory(name: String, constructor: AnnotatedFunction): Module = self.factory(name, constructor.inlineArrayAnnotatedFn)
+
+    /**
+     * Register a filter factory.
+     *
+     * @param name The name of the filter
+     * @param filterFactory Filter constructor function
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#filter]]
+     */
+    @inline def filter(name: String, filterFactory: AnnotatedFunction): Module = self.filter(name, filterFactory.inlineArrayAnnotatedFn)
+
+    /**
+     * Register a provider function with the \$injector.
+     *
+     * @param name The name of the instance. NOTE: the provider will be available under name + 'Provider' key.
+     * @param constructor Provider constructor function
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#provider]]
+     */
+    @inline def provider(name: String, constructor: AnnotatedFunction): Module = self.provider(name, constructor.inlineArrayAnnotatedFn)
+
+    /**
+     * Use this method to register work which should be performed when the injector is done loading all modules.
+     *
+     * @param initializationFn This function is executed on module fully loaded
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#run]]
+     */
+    @inline def run(initializationFn: AnnotatedFunction): Module = self.run(initializationFn.inlineArrayAnnotatedFn)
+
+    /**
+     * Register a service constructor which will be invoked with `new` to create the service instance.
+     *
+     * @param name The name of the service
+     * @param constructor A class constructor function
+     *
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#service]]
+     */
+    @inline def service(name: String, constructor: AnnotatedFunction): Module = self.service(name, constructor.inlineArrayAnnotatedFn)
+
+    @inline implicit def autoUnwrapRichModule(m: RichModule): Module = m.self
 
     //------------------------------ ENHANCEMENTS ------------------------------
     /**
@@ -235,7 +252,7 @@ object Module {
      *
      * @tparam T Controller class
      */
-    def controllerOf[T <: NGController]: Module = macro impl.ControllerMacros.controllerOf[T]
+    @inline def controllerOf[T <: NGController]: Module = macro impl.ControllerMacros.controllerOf[T]
 
     /**
      * Registers the specified controller using an explicitly given controller name.
@@ -245,7 +262,7 @@ object Module {
      * @param name The controller name
      * @tparam T Controller class
      */
-    def controllerOf[T <: NGController](name: String): Module = macro impl.ControllerMacros.controllerOfWithName[T]
+    @inline def controllerOf[T <: NGController](name: String): Module = macro impl.ControllerMacros.controllerOfWithName[T]
 
     /**
      * Registers the specified class as Angular service.
@@ -255,7 +272,7 @@ object Module {
      *
      * @tparam T Service class
      */
-    def serviceOf[T <: Service]: Module = macro impl.ServiceMacros.serviceOf[T]
+    @inline def serviceOf[T <: Service]: Module = macro impl.ServiceMacros.serviceOf[T]
 
     /**
      * Registers the specified class as Angular service using the explicitly given service name.
@@ -265,7 +282,7 @@ object Module {
      * @param name The service name
      * @tparam T Service class
      */
-    def serviceOf[T <: Service](name: String): Module = macro impl.ServiceMacros.serviceOfWithName[T]
+    @inline def serviceOf[T <: Service](name: String): Module = macro impl.ServiceMacros.serviceOfWithName[T]
 
     /**
      * Registers the specified class as Angular directive.
@@ -276,7 +293,7 @@ object Module {
      *
      * @tparam T Class defining the directive
      */
-    def directiveOf[T <: Directive]: Module = macro impl.DirectiveMacros.directiveOf[T]
+    @inline def directiveOf[T <: Directive]: Module = macro impl.DirectiveMacros.directiveOf[T]
 
     /**
      * Registers the specified class as Angular directive under the given name.
@@ -286,33 +303,9 @@ object Module {
      * @param name The name of the directive
      * @tparam T Class defining the directive
      */
-    def directiveOf[T <: Directive](name: String): Module = macro impl.DirectiveMacros.directiveOfWithName[T]
+    @inline def directiveOf[T <: Directive](name: String): Module = macro impl.DirectiveMacros.directiveOfWithName[T]
 
-    def componentOf[T] : Module = macro impl.ComponentMacros.componentOf[T]
-
-    def config(f: Function0[Any]): Module = macro impl.ModuleMacros.config
-
-    def config(f: Function1[Nothing, Any]): Module = macro impl.ModuleMacros.config
-
-    def config(f: Function2[Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.config
-
-    def config(f: Function3[Nothing, Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.config
-
-    def config(f: Function4[Nothing, Nothing, Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.config
-
-    def config(f: Function5[Nothing, Nothing, Nothing, Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.config
-
-    def run(f: Function0[Any]): Module = macro impl.ModuleMacros.run
-
-    def run(f: Function1[Nothing, Any]): Module = macro impl.ModuleMacros.run
-
-    def run(f: Function2[Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.run
-
-    def run(f: Function3[Nothing, Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.run
-
-    def run(f: Function4[Nothing, Nothing, Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.run
-
-    def run(f: Function5[Nothing, Nothing, Nothing, Nothing, Nothing, Any]): Module = macro impl.ModuleMacros.run
+    @inline def componentOf[T] : Module = macro impl.ComponentMacros.componentOf[T]
 
   }
 

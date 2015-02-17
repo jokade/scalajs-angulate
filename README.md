@@ -12,13 +12,13 @@ There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc
 
 scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which uses property DI and (factory) objects for controllers and services, as opposed to constructor DI and classes used by this library.
 
-__NOTE__: the first official release (0.1) has been published; please update your sbt settings for scalajs-angulate
+__NOTE__: This guide already contains some changes for scalajs-angulate 0.2. Please read the __[guide for version 0.1](https://github.com/jokade/scalajs-angulate/tree/v0.1-sjs0.6.0)__ if your using scalajs-angulate 0.1.
 
 ##### Contents:
 * [SBT settings](#sbt-settings)
 * [Modules](#defining-a-module)
 * [Controllers](#controllers)
-* [Dependency Injection](#dependency-injection)
+* [Dependency Injection](#dependency-dependency)
 * [Services](#services)
 * [Directives](#directives)
 * [Other enhancements](#other-enhancements)
@@ -44,11 +44,11 @@ resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repos
 ### Defining a Module
 
 ```scala
-import biz.enef.angular._
-import biz.enef.angular.core.HttpService
-import biz.enef.angular.ext.{Route, RouteProvider}
+import biz.enef.angulate._
+import biz.enef.angulate.core.HttpService
+import biz.enef.angulate.ext.{Route, RouteProvider}
 
-val module = Angular.module("app", Seq("ui.bootstrap","ngRoute"))
+val module = angular.createModule("app", Seq("ui.bootstrap","ngRoute"))
 
 module.serviceOf[UserService]
 // - or, setting the service name explicitly:
@@ -79,14 +79,14 @@ Two flavors are currently supported:
 *  [Body Scope controllers](#body-scope-controllers), extending `Controller`
 *  [Controllers with explicit scope](#controllers-with-explicit-scope), extending `ScopeController`
 
-Both flavors support constructor [dependency injection](#dependency-injection).
+Both flavors support constructor [dependency dependency](#dependency-dependency).
 
 #### Body Scope Controllers
 Classes extending `Controller` export all their public `var`s, `val`s and `def`s into the controller scope.
 Defining a custom `Scope` type is not required. However, instantiating the controller in the template requires the new AngularJS `as` syntax:
 
 ```scala
-val module Angular.module("counter", Nil)
+val module = angular.createModule("counter")
 module.controllerOf[CounterCtrl]
   
 class CounterCtrl extends Controller {
@@ -134,7 +134,7 @@ class Ctrl($scope: Scope) extends Controller {
 Classes extending `ScopeController` are "old-style" AngularJS controllers, where the scope available in the template must be injected explicitly:
 
 ```scala
-val module Angular.module("counter", Nil)
+val module = angular.createModule("counter")
 module.controllerOf[CounterCtrl]
   
 /* Option A: using a custom defined Scope type */
@@ -176,7 +176,7 @@ class DynamicCounterCtrl($scope: js.Dynamic) extends ScopeController {
 
 
 ### Dependency Injection
-scalajs-angulate supports constructor dependency injection of Angular services into controllers, services and directives:
+scalajs-angulate supports constructor dependency dependency of Angular services into controllers, services and directives:
 
 ```scala
 class UserCtrl($http: HttpService) extends Controller {
@@ -195,7 +195,7 @@ class UserCtrl(@named("$http") httpService: HttpService) extends Controller {
 ```
 
 
-DI is also supported for functions passed to `Module.config()` and `Module.run()`:
+DI is also supported for functions passed to methods such as `Module.config()` and `Module.run()`:
 ```scala
 module.config( ($routeProvider: RouteProvider) => {
   /* ... */
@@ -206,11 +206,21 @@ def routing($routeProvider: RouteProvider) = $routeProvider.when( /* ... */ )
 
 module.config( routing _ )
 ```
-However, the `@named` annoation is not supported for function DI, i.e. the _parameter names must match the services_ to be injected for this to work.
+However, the `@named` annotation is not supported for function DI, i.e. the _parameter names must match the services_ to be injected for this to work.
+
+Functions are implicitely converted to AnnotatedFunction which transform the function into an array following the [Inline Array Annotation](https://docs.angularjs.org/guide/di).
+You can use this to declare the function in one place and use it in another:
+```scala
+val configFn: AnnotatedFunction = ($logProvider: js.Dynamic) => {
+  /* ... */
+}
+
+val module = angular.createModule("app", Nil, configFn)
+```
 
 ### Services
 Services can be implemented as plain classes extending the `Service` trait. As with controllers,
-constructor based dependency injection is supported:
+constructor based dependency dependency is supported:
 ```scala
 class UserService($http: HttpService) extends Service {
   def getUsers() : HttpPromise = $http.get("/rest/users/")
@@ -234,9 +244,17 @@ __with the first letter in lower case__ (to support derivation of dependencies f
 
 
 ### Directives
+__Note:__ This section describes the directive API provided by scalajs-angulate 0.2.
+
 To implement an AngularJS directive, create a class extending `Directive` and override all members you want to define on the [directive definition object](https://docs.angularjs.org/api/ng/service/$compile):
 ```scala
 class HelloUserDirective($animate: AnimationService) extends Directive {
+  // the type of the scope object passed to postLink() and controller()
+  override type ScopeType = js.Dynamic
+  
+  // the type of the controller instance passed to postLink() and controller()
+  override type ControllerType = HelloUserCtrl
+  
   override val restrict = "E"
   
   override val transclude = false
@@ -253,10 +271,10 @@ class HelloUserDirective($animate: AnimationService) extends Directive {
   // -- or --
   // override val scope = true
   
-  override def postLink(scope: Scope,
+  override def postLink(scope: ScopeType,
                         element: JQLite,
                         attrs: Attributes,
-                        controller: js.Dynamic) = ...
+                        controller: ControllerType) = ...
                         
   // override def compile(tElement: js.Dynamic, tAttrs: Attributes) : js.Any = ...
 }
@@ -270,26 +288,35 @@ module.directiveOf[HelloUserDirective]
 If you need access to the AngularJS `$compile` function, just inject it into the directive constructor:
 ```scala
 class MyDirective($compile: Compile) extends Directive {
-  override def postLink(scope: Scope,
+  override def postLink(scope: ScopeType,
                         element: JQLite,
                         attrs: Attributes,
-                        controller: js.Dynamic) : Unit = {
+                        controller: ControllerType) : Unit = {
     val tpl = $compile( /* ... */ )
     /* ... */
   }
 }
 ```
 
-If your directive needs a controller, just define it as described in the section on [Controllers](#controllers) and set the directive's `withController` type to it:
+If you need to define properties or methods on the directive controller or scope, you can do so in the `controller` method:
 ```scala
-class UserDirectiveCtrl($scope: js.Dynamic) extends Controller {
-  $scope.name = "User 1"
+trait UserDirectiveCtrl extends js.Object {
+  var greet: js.Function = js.native
 }
 
 class UserDirective extends Directive {
+  override type ScopeType = js.Dynamic
+  override type ControllerType = UserDirectiveCtrl
   
-  override type withController = UserDirectiveCtrl
-  
+  override def controller(ctrl: ControllerType,
+                          scope: ScopeType,
+                          elem: JQLite,
+                          attrs: Attributes) : Unit = {
+    scope.greeting = "Hello"
+    ctrl.greet = () => {
+      /* ... */
+    }
+  }
 }
 ```
 
@@ -316,7 +343,7 @@ class UserDirective extends Directive {
 This section gives an overview over the enhancements to AngularJS core modules provided by angulate.
 
 #### HttpService
-The API of the AngularJS `$http` service is provided by the trait `biz.enef.angular.core.HttpService`.
+The API of the AngularJS `$http` service is provided by the trait `biz.enef.angulate.core.HttpService`.
 The `get`, `put`, `post` and `delete` functions on this trait are enhanced with a type parameter that allows to specific the expected return type of the response. Furthermore, these functions return an instance of `HttpPromise[T]` which is a representaion Angular's http promise object with the following additional functions:
 ```scala
 trait HttpPromise[T] extends js.Object {

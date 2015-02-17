@@ -1,17 +1,18 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
-// Description:
+// Description: Utility trait for tests
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
+// Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.core.JQLite
-import biz.enef.angular.{Controller, Scope, Module, Angular}
+import biz.enef.angulate.Module.RichModule
+import biz.enef.angulate.{Scope, Angular}
+import biz.enef.angulate.core.JQLite
+import biz.enef.angulate.{Controller, Scope, Module, angular}
 import utest._
 
 import scala.concurrent.Promise
 import scala.scalajs.js
-import scala.scalajs.js.{Dictionary, UndefOr}
+import scala.scalajs.js.UndefOr
 import js.Dynamic.literal
 
 /**
@@ -26,8 +27,8 @@ trait AngulateTestSuite extends TestSuite {
    * @tparam T
    * @return
    */
-  def dependency[T](name: String)(implicit module: Module) : T =
-    Angular().injector(js.Array("ng",module.name)).get(name).asInstanceOf[T]
+  def dependency[T](name: String)(implicit module: RichModule) : T =
+    angular.injector(js.Array("ng",module.name)).get(name).asInstanceOf[T]
 
   /**
    * Checks that the specified value is neither null nor undefined.
@@ -43,7 +44,7 @@ trait AngulateTestSuite extends TestSuite {
    * @param scope
    * @param module
    */
-  def compileAndLink(tpl: String, scope: js.Object = literal())(implicit module: Module) : JQLite = {
+  def compileAndLink(tpl: String, scope: js.Object = literal())(implicit module: RichModule) : JQLite = {
     dependency[js.Dynamic]("$compile").apply(tpl).apply(scope).asInstanceOf[JQLite]
   }
 
@@ -54,7 +55,7 @@ trait AngulateTestSuite extends TestSuite {
    * @param module
    * @tparam T the scope type
    */
-  def controller[T](name: String)(implicit module: Module) : T = {
+  def controller[T](name: String)(implicit module: RichModule) : T = {
     val $controller = dependency[js.Function2[String,js.Object,js.Any]]("$controller")
     val $rootScope = dependency[Scope]("$rootScope")
     val scope = $rootScope.$new(false)

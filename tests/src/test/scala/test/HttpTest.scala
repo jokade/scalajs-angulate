@@ -1,23 +1,26 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description:
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
+// Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.Angular
-import biz.enef.angular.core.HttpService
+import biz.enef.angulate._
+import biz.enef.angulate.core.HttpService
 import utest._
 
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 import js.Dynamic.literal
 
+import scala.language.implicitConversions
+import AnnotatedFunction._
+import Module._
+
 object HttpTest extends AngulateTestSuite {
 
   override val tests = TestSuite {
-    implicit val module = Angular.module("test", Seq("ngMockE2E"))
-    module.run( ($httpBackend: js.Dynamic) => {
+    implicit val module = angular.createModule("test", Seq("ngMockE2E"))
+    module.run ( ($httpBackend: js.Dynamic) => {
       $httpBackend.whenGET("/ok").respond( literal(id = 200) )
       $httpBackend.whenGET("/error").respond(404,"resource not found")
       $httpBackend.whenPOST("/empty").respond(204)

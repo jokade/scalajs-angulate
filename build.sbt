@@ -2,11 +2,17 @@
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "component-SNAPSHOT",
+  version := "0.2-SNAPSHOT",
   scalaVersion := "2.11.5",
   scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
-  // work around for a bug during publishing
-  scalacOptions in (Compile,doc) ~= { _.filterNot(_.contains("scalajs-compiler_")) }
+  autoCompilerPlugins := true,
+  addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2"),
+  libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.2" % "provided",
+  scalacOptions ++= (if (isSnapshot.value) Seq.empty else Seq({
+        val a = baseDirectory.value.toURI.toString.replaceFirst("[^/]+/?$", "")
+        val g = "https://raw.githubusercontent.com/jokade/scalajs-angulate"
+        s"-P:scalajs:mapSourceURI:$a->$g/v${version.value}/"
+      }))
 )
 
 
@@ -19,7 +25,7 @@ lazy val root = project.in(file(".")).
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-js"   %%% "scalajs-dom" % "0.7.0"
+      "org.scala-js"   %%% "scalajs-dom" % "0.8.0"
     ),
     resolvers += Resolver.sonatypeRepo("releases")
   )
@@ -29,11 +35,13 @@ lazy val tests = project.
   dependsOn(root).
   enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
-  settings(utest.jsrunner.Plugin.utestJsSettings: _*).
   settings(
     publish := {},
     scalacOptions ++= angulateDebugFlags,
-    scalaJSStage := FastOptStage,
+    scalaJSStage in Test := FastOptStage,
+    testFrameworks += new TestFramework("utest.runner.Framework"),
+    requiresDOM := true,
+    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.3.0" % "test",
     jsDependencies += RuntimeDOM,
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test",
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" % "test"
@@ -67,6 +75,10 @@ lazy val publishingSettings = Seq(
         <name>Johannes Kastner</name>
         <email>jokade@karchedon.de</email>
       </developer>
+      <developer>
+        <id>ludovicc</id>
+        <name>Ludovic Claude</name>
+      </developer>
     </developers>
   )
 )
@@ -80,5 +92,5 @@ lazy val angulateDebugFlags = Seq(
   //"ServiceMacros.debug"
   "ComponentMacros.debug"
   //"HttpPromiseMacros.debug"
-).map( f => s"-Xmacro-settings:biz.enef.angular.$f" )
+).map( f => s"-Xmacro-settings:biz.enef.angulate.$f" )
 

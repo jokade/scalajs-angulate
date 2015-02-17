@@ -1,19 +1,18 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Test cases for angulate service enhancements
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
+// Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angular.core.HttpService
-import biz.enef.angular._
+import biz.enef.angulate.core.HttpService
+import biz.enef.angulate._
 import utest._
 
 import scala.scalajs.js
 
 object ServiceTest extends AngulateTestSuite {
   override val tests = TestSuite {
-    implicit val module = Angular.module("test", Nil)
+    implicit val module = angular.createModule("test")
 
     'serviceOf-{
 

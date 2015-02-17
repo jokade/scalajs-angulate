@@ -1,16 +1,15 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Macro-based implementation of the Component pattern
 //
-// Copyright (c) 2015 Johannes Kastner <jokade@karchedon.de>
-//               Distributed under the MIT License (see included file LICENSE)
-package biz.enef.angular.impl
+// Distributed under the MIT License (see included file LICENSE)
+package biz.enef.angulate.impl
 
-import biz.enef.angular._
+import biz.enef.angulate._
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
 
-protected[angular] class ComponentMacros(val c: Context) extends MacroBase with ControllerMacroUtils {
+protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with ControllerMacroUtils {
   import c.universe._
 
   /* types */
@@ -21,7 +20,7 @@ protected[angular] class ComponentMacros(val c: Context) extends MacroBase with 
   val ngTwoWayAnnotation = typeOf[NgTwoWay]
 
   // print generated code to console during compilation
-  private lazy val logCode = c.settings.exists( _ == "biz.enef.angular.ComponentMacros.debug" )
+  private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.ComponentMacros.debug" )
 
   def componentOf[T: c.WeakTypeTag] = {
     val ct = weakTypeOf[T]
