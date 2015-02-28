@@ -6,8 +6,9 @@ package biz.enef.angulate
 
 import acyclic.file
 import biz.enef.angulate.Module.RichModule
-import biz.enef.angulate.core.Injector
-import org.scalajs.dom.html.Element
+import biz.enef.angulate.core._
+import org.scalajs.dom.html.{Document, Element}
+import org.scalajs.jquery.JQuery
 
 import scala.scalajs.js
 
@@ -71,13 +72,63 @@ trait Angular extends js.Object {
    */
   def uppercase(string: String) : String = js.native
 
+  def bootstrap(element: String, modules: js.Array[Any]): Injector = js.native
+
+  def bootstrap(element: String, modules: js.Array[Any], config: AngularConfiguration): Injector = js.native
+
+  def bootstrap(element: String, modules: String): Injector = js.native
+
+  def bootstrap(element: String, modules: String, config: AngularConfiguration): Injector = js.native
+
   def bootstrap(element: Element, modules: js.Array[Any]): Injector = js.native
 
   def bootstrap(element: Element, modules: js.Array[Any], config: AngularConfiguration): Injector = js.native
 
+  def bootstrap(element: Element, modules: String): Injector = js.native
+
+  def bootstrap(element: Element, modules: String, config: AngularConfiguration): Injector = js.native
+
+  def bootstrap(element: Document, modules: js.Array[Any]): Injector = js.native
+
+  def bootstrap(element: Document, modules: js.Array[Any], config: AngularConfiguration): Injector = js.native
+
+  def bootstrap(element: Document, modules: String): Injector = js.native
+
+  def bootstrap(element: Document, modules: String, config: AngularConfiguration): Injector = js.native
+
+  def bootstrap(element: JQLite, modules: js.Array[Any]): Injector = js.native
+
+  def bootstrap(element: JQLite, modules: js.Array[Any], config: AngularConfiguration): Injector = js.native
+
+  def bootstrap(element: JQLite, modules: String): Injector = js.native
+
+  def bootstrap(element: JQLite, modules: String, config: AngularConfiguration): Injector = js.native
+
+  def bootstrap(element: JQuery, modules: js.Array[Any]): Injector = js.native
+
+  def bootstrap(element: JQuery, modules: js.Array[Any], config: AngularConfiguration): Injector = js.native
+
+  def bootstrap(element: JQuery, modules: String): Injector = js.native
+
+  def bootstrap(element: JQuery, modules: String, config: AngularConfiguration): Injector = js.native
+
+  def element: AugmentedJQLiteStatic = js.native
+
+  def reloadWithDebugInfo(): Unit = js.native
+
+  val version: AngularVersion = js.native
+
 }
 
 case class AngularConfiguration(strictDi: Boolean = false)
+
+trait AngularVersion extends js.Object {
+  val full: String = js.native
+  val major: Int = js.native
+  val minor: Int = js.native
+  val dot: Int = js.native
+  val codeName: String = js.native
+}
 
 object Angular {
 
@@ -117,9 +168,13 @@ object Angular {
 
     @inline def bootstrap(element: Element, modules: Seq[AnnotatedFunction]) = self.bootstrap(element, modules.map(_.inlineArrayAnnotatedFn).toJSArray.asInstanceOf[js.Array[Any]])
 
+    @inline def bootstrap(element: Element, modules: String, config: AngularConfiguration) = self.bootstrap(element, modules, config)
+
     @inline def bootstrap(element: Element, modules: Iterable[String], config: AngularConfiguration) = self.bootstrap(element, modules.toJSArray.asInstanceOf[js.Array[Any]], config)
 
     @inline def bootstrap(element: Element, modules: Seq[AnnotatedFunction], config: AngularConfiguration) = self.bootstrap(element, modules.map(_.inlineArrayAnnotatedFn).toJSArray.asInstanceOf[js.Array[Any]], config)
+
+    @inline def jQueryElement: AugmentedJQueryStatic = self.element.asInstanceOf[AugmentedJQueryStatic]
 
   }
 
