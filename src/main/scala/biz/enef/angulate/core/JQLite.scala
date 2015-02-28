@@ -141,7 +141,7 @@ trait AugmentedJQ[Q] extends js.Any {
   def find(obj: Q): AugmentedJQ[Q] = js.native
   def controller(): js.Any = js.native
   def controller(name: String): js.Any = js.native
-  def injector(): js.Any = js.native
+  def injector(): Injector = js.native
   def scope(): Scope = js.native
   def isolateScope(): Scope = js.native
   def inheritedData(key: String, value: js.Any): Q = js.native
@@ -156,7 +156,7 @@ trait AugmentedJQLite extends JQLite with AugmentedJQ[JQLite] {
   override def find(obj: JQLite): AugmentedJQLite = js.native
   override def controller(): js.Any = js.native
   override def controller(name: String): js.Any = js.native
-  override def injector(): js.Any = js.native
+  override def injector(): Injector = js.native
   override def scope(): Scope = js.native
   override def isolateScope(): Scope = js.native
   override def inheritedData(key: String, value: js.Any): JQLite = js.native
@@ -171,7 +171,7 @@ trait AugmentedJQuery extends JQuery with AugmentedJQ[JQuery] {
   override def find(obj: JQuery): AugmentedJQuery = js.native
   override def controller(): js.Any = js.native
   override def controller(name: String): js.Any = js.native
-  override def injector(): js.Any = js.native
+  override def injector(): Injector = js.native
   override def scope(): Scope = js.native
   override def isolateScope(): Scope = js.native
   override def inheritedData(key: String, value: js.Any): JQuery = js.native

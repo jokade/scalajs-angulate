@@ -13,7 +13,7 @@ import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 import scala.util.Try
 
-trait HttpService extends js.Object {
+trait HttpService extends js.Object with ProvidedService {
   def get[T](url: String): HttpPromise[T] = js.native
   def get[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
   def post[T](url: String): HttpPromise[T] = js.native
