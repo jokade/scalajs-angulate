@@ -9,6 +9,7 @@ import biz.enef.angulate._
 import utest._
 
 import scala.scalajs.js
+import scala.scalajs.js.annotation.JSExportAll
 
 object ControllerTest extends AngulateTestSuite {
   override val tests = TestSuite {
@@ -80,11 +81,15 @@ object ControllerTest extends AngulateTestSuite {
       'bodyScope-{
         module.controllerOf[Ctrl3]("Ctrl3")
         val scope = controller[js.Dynamic]("Ctrl3 as ctrl")
-        //scope.$$ChildScope.asInstanceOf[js.Dictionary[js.Any]].keys.foreach(println)
-        /*assert(
+        //println(scope.$$ChildScope)
+        scope.$$ChildScope.asInstanceOf[js.Dictionary[js.Any]].keys.foreach(println)
+        println(scope.name)
+        assert(
           defined(scope),
+          defined(scope.ctrl),
+          defined(scope.name),
           scope.name.asInstanceOf[String] == "ctrl3"
-        )*/
+        )
       }
     }
   }
@@ -112,11 +117,12 @@ object ControllerTest extends AngulateTestSuite {
     $scope.name = "ctrl1"
   }
 
-  class Ctrl2(testService: TestService, @named("$http") http: js.Dynamic) extends Controller {
+  class Ctrl2($scope: js.Dynamic, testService: TestService, @named("$http") http: js.Dynamic) extends Controller {
     assert( defined(testService) )
     assert( defined(http) )
   }
 
+  @JSExportAll
   class Ctrl3 extends Controller {
     var name = "ctrl3"
   }

@@ -4,7 +4,7 @@ lazy val commonSettings = Seq(
   organization := "biz.enef",
   version := "0.2-SNAPSHOT",
   scalaVersion := "2.11.5",
-  scalacOptions ++= Seq("-deprecation","-feature","-Xlint"),
+  scalacOptions ++= Seq("-deprecation","-unchecked","-feature","-language:implicitConversions","-Xlint"),
   autoCompilerPlugins := true,
   addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2"),
   libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.2" % "provided",
@@ -26,7 +26,7 @@ lazy val root = project.in(file(".")).
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       "org.scala-js"   %%% "scalajs-dom" % "0.8.0",
-      "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
+      "be.doeraene" %%% "scalajs-jquery" % "0.8.0" % "provided"
     ),
     resolvers += Resolver.sonatypeRepo("releases")
   )
@@ -42,10 +42,11 @@ lazy val tests = project.
     scalaJSStage in Test := FastOptStage,
     testFrameworks += new TestFramework("utest.runner.Framework"),
     requiresDOM := true,
-    libraryDependencies += "com.lihaoyi" %%% "utest" % "0.3.0" % "test",
+    libraryDependencies ++= Seq("com.lihaoyi" %%% "utest" % "0.3.0" % "test",
+      "be.doeraene" %%% "scalajs-jquery" % "0.8.0"),
     jsDependencies += RuntimeDOM,
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test",
-    jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" % "test"
+    jsDependencies += ("org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" dependsOn "angular.min.js") % "test"
   )
 
 
@@ -79,6 +80,7 @@ lazy val publishingSettings = Seq(
       <developer>
         <id>ludovicc</id>
         <name>Ludovic Claude</name>
+        <email>ludovic.claude@laposte.net</email>
       </developer>
     </developers>
   )
@@ -86,9 +88,9 @@ lazy val publishingSettings = Seq(
  
 lazy val angulateDebugFlags = Seq(
   // include some code for runtime debugging
-  "runtimeLogging",
+  //"runtimeLogging",
   "ModuleMacros.debug",
-  //"ControllerMacros.debug"
+  "ControllerMacros.debug",
   "DirectiveMacros.debug",
   //"ServiceMacros.debug"
   "HttpPromiseMacros.debug"

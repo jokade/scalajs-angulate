@@ -97,12 +97,28 @@ protected[angulate] class ControllerMacros(val c: Context) extends MacroBase wit
     val ctrlDepNames = getDINames(cm)
 
     // AngularJS controller construction array
-    val constructor = q"""js.Array[Any](..$ctrlDepNames,
-          ((scope:js.Dynamic, ..$ctrlDeps) => {
-            val ctrl = new $ct(..$ctrlArgs)
-            $postConstruction
-            ctrl
-          }):js.ThisFunction)"""
+    val constructor = if (ctrlDepNames.contains("$scope")) {
+      val Typed(Ident(scopeDep: TermName), TypeTree()) = ctrlDeps(ctrlDepNames.indexOf("$scope"))
+      c.info( c.enclosingPosition,
+           s"""scope dep:
+              |${showRaw(scopeDep)}
+            """.stripMargin, true )
+      q"""js.Array[Any](..$ctrlDepNames,
+                ((..$ctrlDeps) => {
+                  val ctrl = new $ct(..$ctrlArgs)
+                  val scope = $scopeDep
+                  $postConstruction
+                  ctrl
+                }):js.ThisFunction)"""
+    } else {
+      val ctrlDepNamesWithScope = "$scope" +: ctrlDepNames
+      q"""js.Array[Any](..$ctrlDepNamesWithScope,
+        ((scope:js.Dynamic, ..$ctrlDeps) => {
+          val ctrl = new $ct(..$ctrlArgs)
+          $postConstruction
+          ctrl
+        }):js.ThisFunction)"""
+    }
 
     // controller registration
     val tree =
@@ -140,10 +156,11 @@ protected[angulate] trait ControllerMacroUtils {
         val setterType = setter.paramLists.head.head.typeSignature
         q"""global.Object.defineProperty(scope,$getterName,
               literal(get = ()=>ctrl.$getter,
-                      set = (v:$setterType) => ctrl.$getter = v))"""
+                      set = (v:$setterType) => ctrl.$getter = v,
+                      enumerable = true))"""
       }
       setterOption.getOrElse {
-        q"""global.Object.defineProperty(scope,$getterName,literal(get = ()=>ctrl.$getter))"""
+        q"""global.Object.defineProperty(scope,$getterName,literal(get = ()=>ctrl.$getter, enumerable = true))"""
       }
     }) ++
       (funcs map { func =>
