@@ -13,7 +13,12 @@ import scala.scalajs.js
  * Interface to be implemented by classes that represent an AngularJS directive.
  */
 trait Directive {
-  def restrict: String = ???
+  // def name: String = ???
+  def restrict: String = ??? // subset of EACM
+  // def multiElement: Boolean = ???
+  // def replace: Boolean = ??? - deprecated
+  // def terminal: Boolean = ???
+  // def require: js.Any = ??? -string or array of strings
 
   def transclude: Boolean = ???
 
@@ -26,15 +31,18 @@ trait Directive {
   type ScopeType <: js.Any
 
   def controllerAs: String = ???
+  //def bindToController: Boolean = ???
 
   def template: String = ???
   def template(element: JQLite, attrs: Attributes) : String = ???
 
   def templateUrl: String = ???
   def templateUrl(element: JQLite, attrs: Attributes) : String = ???
+  // def templateNamespace: String = ???
 
   def scope: Boolean = ???
   def isolateScope: js.Dictionary[String] = ???
+  // def bindToController: Boolean = ???
 
   def postLink(scope: ScopeType, element: JQLite, attrs: Attributes) : Unit = ???
   def postLink(scope: ScopeType, element: JQLite, attrs: Attributes, controller: ControllerType) : Unit = ???

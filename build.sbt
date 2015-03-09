@@ -25,7 +25,8 @@ lazy val root = project.in(file(".")).
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      "org.scala-js"   %%% "scalajs-dom" % "0.8.0"
+      "org.scala-js"   %%% "scalajs-dom" % "0.8.0",
+      "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
     ),
     resolvers += Resolver.sonatypeRepo("releases")
   )
@@ -88,7 +89,7 @@ lazy val angulateDebugFlags = Seq(
   "runtimeLogging",
   "ModuleMacros.debug",
   //"ControllerMacros.debug"
-  //"DirectiveMacros.debug"
+  "DirectiveMacros.debug",
   //"ServiceMacros.debug"
   "HttpPromiseMacros.debug"
 ).map( f => s"-Xmacro-settings:biz.enef.angulate.$f" )
