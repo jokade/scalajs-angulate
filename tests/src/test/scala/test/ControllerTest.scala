@@ -9,7 +9,7 @@ import biz.enef.angulate._
 import utest._
 
 import scala.scalajs.js
-import scala.scalajs.js.annotation.JSExportAll
+import scala.scalajs.js.annotation.{JSExport, JSExportAll}
 
 object ControllerTest extends AngulateTestSuite {
   override val tests = TestSuite {
@@ -18,30 +18,30 @@ object ControllerTest extends AngulateTestSuite {
     'ScopeController-{
 
       'explicitName-{
-        module.controllerOf[ScopeCtrl1]("sctrl1")
+        module.controllerOf[ScopeCtrlSettingValue]("sctrl1")
         val scope = controller[TestScope]("sctrl1")
         assert(
           defined(scope),
-          scope.name == "sctrl1"
+          scope.name == "scope-ctrl-setting-value"
         )
       }
 
       'implicitName-{
-        module.controllerOf[ScopeCtrl1]
-        val scope = controller[TestScope]("test.ControllerTest.ScopeCtrl1")
+        module.controllerOf[ScopeCtrlSettingValue]
+        val scope = controller[TestScope]("test.ControllerTest.ScopeCtrlSettingValue")
         assert(
           defined(scope),
-          scope.name == "sctrl1"
+          scope.name == "scope-ctrl-setting-value"
         )
       }
 
       'dependencyInjection-{
-        module.controllerOf[ScopeCtrl2]("ScopeCtrl")
+        module.controllerOf[ScopeCtrlWithDI]("ScopeCtrlWithDI")
         module.serviceOf[TestService]
-        val scope = controller[TestScope]("ScopeCtrl")
+        val scope = controller[TestScope]("ScopeCtrlWithDI")
         assert(
           defined( scope ),
-          scope.name == "sctrl2"
+          scope.name == "scope-ctrl-with-DI"
         )
       }
     }
@@ -50,59 +50,61 @@ object ControllerTest extends AngulateTestSuite {
     'Controller-{
 
       'explicitName-{
-        module.controllerOf[Ctrl1]("Ctrl1")
-        val scope = controller[TestScope]("Ctrl1 as hello")
+        module.controllerOf[CtrlWithExplicitScope]("CtrlWithExplicitScope")
+        val scope = controller[TestScope]("CtrlWithExplicitScope as hello")
+        //scope.asInstanceOf[js.Dictionary[js.Any]].keys.foreach(println)
         assert(
           defined( scope ),
-          scope.name == "ctrl1"
+          defined(scope.asInstanceOf[js.Dynamic].$id),
+          defined(scope.asInstanceOf[js.Dynamic].hello),
+          scope.name == "ctrl-with-explicit-scope"
         )
       }
 
       'implicitName-{
-        module.controllerOf[Ctrl1]
-        val scope = controller[TestScope]("test.ControllerTest.Ctrl1 as ctrl")
+        module.controllerOf[CtrlWithExplicitScope]
+        val scope = controller[TestScope]("test.ControllerTest.CtrlWithExplicitScope as ctrl")
+        //scope.asInstanceOf[js.Dictionary[js.Any]].keys.foreach(println)
         assert(
           defined( scope ),
-          scope.name == "ctrl1"
+          scope.name == "ctrl-with-explicit-scope"
         )
       }
 
       'dependencyInjection-{
         module.serviceOf[TestService]
-        module.controllerOf[Ctrl2]("Ctrl2")
-        val scope = controller[js.Dynamic]("Ctrl2 as ctrl")
+        module.controllerOf[CtrlWithDI]("CtrlWithDI")
+        val scope = controller[js.Dynamic]("CtrlWithDI as ctrl")
         assert(
           defined(scope),
           defined(scope.ctrl)
         )
       }
 
-      // TODO: test if property name from class body is copied to the scope!
       'bodyScope-{
-        module.controllerOf[Ctrl3]("Ctrl3")
-        val scope = controller[js.Dynamic]("Ctrl3 as ctrl")
-        //println(scope.$$ChildScope)
-        scope.$$ChildScope.asInstanceOf[js.Dictionary[js.Any]].keys.foreach(println)
-        println(scope.name)
+        module.controllerOf[CtrlIncludingScope]("CtrlIncludingScope")
+        val scope = controller[js.Dynamic]("CtrlIncludingScope as ctrl")
         assert(
           defined(scope),
           defined(scope.ctrl),
-          defined(scope.name),
-          scope.name.asInstanceOf[String] == "ctrl3"
+          defined(scope.ctrl.myValue),
+          scope.ctrl.myValue.asInstanceOf[String] == "ctrl-including-scope"
         )
       }
     }
   }
 
 
-  class ScopeCtrl1($scope: TestScope) extends ScopeController {
-    $scope.name = "sctrl1"
+  class ScopeCtrlSettingValue($scope: TestScope) extends ScopeController {
+    $scope.name = "scope-ctrl-setting-value"
   }
 
-  class ScopeCtrl2($http: HttpService, $scope: TestScope, @named("testService") service: TestService) extends ScopeController {
+  class ScopeCtrlWithDI($http: HttpService, $scope: TestScope, @named("testService") service: TestService) extends ScopeController {
     assert( defined($http) )
+    assert( defined($scope) )
+    assert( defined(service) )
     assert( service.id == "testService" )
-    $scope.name = "sctrl2"
+    $scope.name = "scope-ctrl-with-DI"
   }
 
   trait TestScope extends Scope {
@@ -113,18 +115,20 @@ object ControllerTest extends AngulateTestSuite {
     def id = "testService"
   }
 
-  class Ctrl1($scope: TestScope) extends Controller {
-    $scope.name = "ctrl1"
+  @JSExportAll
+  class CtrlWithExplicitScope($scope: TestScope) extends Controller {
+    $scope.name = "ctrl-with-explicit-scope"
   }
 
-  class Ctrl2($scope: js.Dynamic, testService: TestService, @named("$http") http: js.Dynamic) extends Controller {
+  @JSExportAll
+  class CtrlWithDI(testService: TestService, @named("$http") http: js.Dynamic) extends Controller {
     assert( defined(testService) )
     assert( defined(http) )
   }
 
   @JSExportAll
-  class Ctrl3 extends Controller {
-    var name = "ctrl3"
+  class CtrlIncludingScope extends Controller {
+    var myValue = "ctrl-including-scope"
   }
 }
 

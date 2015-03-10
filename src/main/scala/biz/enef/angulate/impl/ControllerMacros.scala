@@ -23,20 +23,13 @@ protected[angulate] class ControllerMacros(val c: Context) extends MacroBase wit
   def controllerOf[T <: NGController: c.WeakTypeTag] = {
     val controllerType = weakTypeOf[T]
     val name = controllerType.toString
-    if( controllerType <:< scopeController)
-      createScopeController(controllerType, q"$name")
-    else
-      createController(controllerType, q"$name")
+    createScopeController(controllerType, q"$name")
   }
 
   def controllerOfWithName[T <: NGController: c.WeakTypeTag](name: c.Expr[String]) = {
     val controllerType = weakTypeOf[T]
-    if( controllerType <:< scopeController)
-      createScopeController(controllerType, q"$name")
-    else
-      createController(controllerType, q"$name")
+    createScopeController(controllerType, q"$name")
   }
-
 
 
   private def createScopeController(ct: Type, name: Tree) = {
@@ -76,61 +69,6 @@ protected[angulate] class ControllerMacros(val c: Context) extends MacroBase wit
     tree
 
   }
-
-
-  private def createController(ct: Type, name: Tree) = {
-    // print debug information at runtime if runtimeLogging==true
-    val debug =
-      if(runtimeLogging)
-        q"""global.console.debug("Created Controller "+$name, ctrl.asInstanceOf[js.Dynamic], "with scope:", scope)"""
-      else q"()"
-
-    val postConstruction = q"""..${copyMembers(ct)}
-                               $debug"""
-
-    val module = Select(c.prefix.tree, TermName("self"))
-    // ctrlDeps: the list of dependencies required by the controller constructor
-    // ctrlArgs: list of arguments required by the controller constructor
-    // ctrlDepNames: list with names of the dependencies to be injected
-    val cm = getConstructor(ct)
-    val (ctrlDeps,ctrlArgs) = makeArgsList(cm)
-    val ctrlDepNames = getDINames(cm)
-
-    // AngularJS controller construction array
-    val constructor = if (ctrlDepNames.contains("$scope")) {
-      val Typed(Ident(scopeDep: TermName), TypeTree()) = ctrlDeps(ctrlDepNames.indexOf("$scope"))
-      c.info( c.enclosingPosition,
-           s"""scope dep:
-              |${showRaw(scopeDep)}
-            """.stripMargin, true )
-      q"""js.Array[Any](..$ctrlDepNames,
-                ((..$ctrlDeps) => {
-                  val ctrl = new $ct(..$ctrlArgs)
-                  val scope = $scopeDep
-                  $postConstruction
-                  ctrl
-                }):js.ThisFunction)"""
-    } else {
-      val ctrlDepNamesWithScope = "$scope" +: ctrlDepNames
-      q"""js.Array[Any](..$ctrlDepNamesWithScope,
-        ((scope:js.Dynamic, ..$ctrlDeps) => {
-          val ctrl = new $ct(..$ctrlArgs)
-          $postConstruction
-          ctrl
-        }):js.ThisFunction)"""
-    }
-
-    // controller registration
-    val tree =
-      q"""{import scala.scalajs.js
-           import js.Dynamic.{global,literal}
-           $module.controller($name,$constructor)
-          }"""
-
-    if(logCode) printCode( tree )
-    tree
-  }
-
 
 }
 
