@@ -32,13 +32,14 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
     val module = Select(c.prefix.tree, TermName("self"))
 
     // assemble all defined directive attributes (ie 'template', 'restrict', ...)
-    val atts = (getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
+    val atts = getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
       case ("isolateScope",_)  => q"scope = dimpl.isolateScope"
+      case ("preLink",_)       => q"link = dimpl.preLink _"
       case ("postLink",_)      => q"link = dimpl.postLink _"
       case ("controller",_)    => q"""controller = js.Array("$$scope","$$element","$$attrs",(dimpl.controller _):js.ThisFunction)"""
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
-    })
+    }
 
     // create directive definition object
     val ddo = q"""literal( ..$atts )"""
