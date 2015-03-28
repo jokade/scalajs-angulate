@@ -6,6 +6,7 @@ package biz.enef.angulate
 
 import acyclic.file
 import scala.annotation.StaticAnnotation
+import scala.scalajs.js
 
 /**
  * Annotation for explicitly setting the name of a service to be injected.
@@ -17,11 +18,9 @@ case class named(name: String) extends StaticAnnotation
 
 case class ComponentDef(selector: String,
                         template: String = null,
-                        templateUrl: String = null)
+                        templateUrl: String = null,
+                        map: js.Dictionary[String] = null)
 
 case class Component(cd: ComponentDef) extends StaticAnnotation
 
-case class NgAttr() extends StaticAnnotation
-case class NgOneWay() extends StaticAnnotation
-case class NgTwoWay() extends StaticAnnotation
 

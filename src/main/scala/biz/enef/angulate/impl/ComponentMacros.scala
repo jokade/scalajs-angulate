@@ -8,6 +8,7 @@ import biz.enef.angulate._
 
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox.Context
+import scala.scalajs.js
 
 protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with ControllerMacroUtils {
   import c.universe._
@@ -15,9 +16,6 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
   /* types */
   val componentAnnotation = typeOf[Component]
   val componentDefType = typeOf[ComponentDef]
-  val ngAttrAnnotation = typeOf[NgAttr]
-  val ngOneWayAnnotation = typeOf[NgOneWay]
-  val ngTwoWayAnnotation = typeOf[NgTwoWay]
 
   // print generated code to console during compilation
   private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.ComponentMacros.debug" )
@@ -33,6 +31,7 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
       "controllerAs" -> q""""ctrl"""",
       "bindToController" -> q"true"
     )
+    println(defs)
 
     // controller construction array
     val debugCtrl =
@@ -79,10 +78,12 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
       Map()
     }
 
-    // parse controller bindings
-    val bindings = getBindings(t)
-
-    defs ++ bindings
+    if(defs.contains("map")) {
+      val bindings = defs("map")
+      defs - "map" + ("scope"->bindings)
+    }
+    else
+      defs + ("scope"->q"js.Dictionary()")
   }
 
   // analyze ComponentDef with out-of-order parameters
@@ -97,7 +98,8 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
     Map(
       "selector"    -> defs(names(0)),
       "template"    -> defs(names(1)),
-      "templateUrl" -> defs(names(2))
+      "templateUrl" -> defs(names(2)),
+      "map"         -> defs(names(3))
     )
   }
 
@@ -111,20 +113,6 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
   private def getComponentAnnotation(ts: ClassSymbol) = {
     ts.annotations.filter( _.tree.tpe =:= componentAnnotation ).
     map( _.tree.children(1) )
-  }
-
-  private def getBindings(ct: Type) : CDef = {
-    val props = ct.decls.filter( p => p.isPublic && p.isMethod && !p.isConstructor).map( _.asMethod )
-    val ngAttrs : Iterable[Tree] = ct.members.filter(m => m.annotations.exists( _.tree.tpe =:= ngAttrAnnotation )).
-      map( _.name.toString.trim ).map(name => q""" $name -> "@" """)
-
-    val ngOneWay : Iterable[Tree] = ct.members.filter(m => m.annotations.exists( _.tree.tpe =:= ngOneWayAnnotation )).
-      map( _.name.toString.trim ).map(name => q""" $name -> "&" """)
-
-    val ngTwoWay : Iterable[Tree] = ct.members.filter(m => m.annotations.exists( _.tree.tpe =:= ngTwoWayAnnotation )).
-      map( _.name.toString.trim ).map(name => q""" $name -> "=" """)
-
-    Map("scope" -> q"""js.Dictionary( ..$ngAttrs, ..$ngOneWay, ..$ngTwoWay )""")
   }
 
   type CDef = Map[String,Tree]
