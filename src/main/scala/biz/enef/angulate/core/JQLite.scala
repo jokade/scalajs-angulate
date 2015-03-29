@@ -7,7 +7,7 @@ package biz.enef.angulate.core
 import acyclic.file
 import biz.enef.angulate.Scope
 import org.scalajs.dom
-import org.scalajs.dom.Element
+import org.scalajs.dom.{Event, Element}
 import org.scalajs.jquery.{JQuery, JQueryStatic}
 
 import scala.scalajs.js
@@ -61,10 +61,10 @@ trait JQLite extends js.Object {
   def off(events: String): JQLite = js.native
   def off(): JQLite = js.native
   def off(eventsMap: js.Any): JQLite = js.native
-  def on(events: String): JQLite = js.native
-  def on(eventsMap: js.Any): JQLite = js.native
-  def one(events: String): JQLite = js.native
-  def one(eventsMap: js.Any): JQLite = js.native
+  def on[T<:Event](events: String, handler: js.Function1[T,_]): JQLite = js.native
+  def on[T<:Event](eventsMap: js.Any, handler: js.Function1[T,_]): JQLite = js.native
+  def one[T<:Event](events: String, handler: js.Function1[T,_]): JQLite = js.native
+  def one[T<:Event](eventsMap: js.Any, handler: js.Function1[T,_]): JQLite = js.native
   def ready(handler: js.Any): JQLite = js.native
   def triggerHandler(eventType: String, extraParameters: js.Any*): Object = js.native
   def unbind(eventType: String): JQLite = js.native
