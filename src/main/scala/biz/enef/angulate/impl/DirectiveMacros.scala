@@ -37,6 +37,7 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
       case ("preLink",_)       => q"link = dimpl.preLink _"
       case ("postLink",_)      => q"link = dimpl.postLink _"
       case ("controller",_)    => q"""controller = js.Array("$$scope","$$element","$$attrs",(dimpl.controller _):js.ThisFunction)"""
+      case ("require",a)       => q"require = dimpl.${a.name}"
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
     }
