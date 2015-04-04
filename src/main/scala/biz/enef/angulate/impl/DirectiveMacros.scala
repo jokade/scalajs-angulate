@@ -62,7 +62,7 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
             ddo
           }):js.Function)
        """
-    println(carray)
+    //println(carray)
 
     val tree = q"""{import scala.scalajs.js
                     import js.Dynamic.{global,literal}

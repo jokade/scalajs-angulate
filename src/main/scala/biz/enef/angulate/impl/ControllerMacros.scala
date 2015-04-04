@@ -149,7 +149,10 @@ protected[angulate] trait ControllerMacroUtils {
       (funcs map { func =>
         val funcName = func.name.toString
         val (params,args) = makeArgsList(func)
-        q"""global.Object.defineProperty(scope,$funcName,literal(value = (..$params) => ctrl.$func(..$args)))"""
+        if(func.paramLists.isEmpty)
+          q"""global.Object.defineProperty(scope,$funcName,literal(get = () => ctrl.$func))"""
+        else
+          q"""global.Object.defineProperty(scope,$funcName,literal(value = (..$params) => ctrl.$func(..$args)))"""
       })
   }
 
