@@ -31,19 +31,20 @@ protected[angulate] abstract class MacroBase {
         |${showCode(tree)}
       """.stripMargin, true )
 
-
-  protected[this] def makeArgsList(f: MethodSymbol) = {
-    f.paramLists.head.map( p => {
-      val name = TermName(c.freshName("x"))
-      (q"$name: ${p.typeSignature}", q"$name")
-    }).unzip
-  }
+  protected[this] def makeArgsList(f: MethodSymbol) =
+    if(f.paramLists.isEmpty)
+      (List(),List())
+    else
+      f.paramLists.head.map( p => {
+        val name = TermName(c.freshName("x"))
+        (q"$name: ${p.typeSignature}", q"$name")
+      }).unzip
 
   protected[this] def getDINames(f: MethodSymbol) = {
     f.paramLists.head.map{ p=>
       p.annotations.find( _.tree.tpe =:= namedAnnotation ).map { a =>
         val name = a.tree.children.tail.head.toString
-        // TODO: that's ludicrous... what is thr right way to unquote the string???
+        // TODO: that's ludicrous... what is the right way to unquote the string???
         name.substring(1,name.length-1)
       }.getOrElse(p.name.toString)
     }

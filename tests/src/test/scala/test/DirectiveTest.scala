@@ -5,8 +5,9 @@
 //               Distributed under the MIT License (see included file LICENSE)
 package test
 
-import biz.enef.angulate.core.{Attributes, JQLite}
+import biz.enef.angulate.core.{Compile, AugmentedJQLite, Attributes, JQLite}
 import biz.enef.angulate._
+import org.scalajs.dom
 import org.scalajs.dom.Element
 import utest._
 
@@ -21,31 +22,34 @@ object DirectiveTest extends AngulateTestSuite {
     'directiveOf-{
       module.directiveOf[Directive1]
       module.directiveOf[Directive1]("anotherDirective")
-      val $compile = dependency[js.Dynamic]("$compile")
+      val $compile = injection[Compile]("$compile")
 
-      val elem1 = $compile("<directive1></directive1>").apply(literal()).asInstanceOf[JQLite].head
+      val elem1 = $compile("<directive1></directive1>")(literal())(0)
       assert( elem1.textContent == "foo" )
 
-      val elem2 = $compile("<another-directive></another-directive>").apply(literal()).asInstanceOf[JQLite].head
+      val elem2 = $compile("<another-directive></another-directive>")(literal())(0)
       assert( elem2.textContent == "foo" )
     }
 
     'postLink-{
       module.directiveOf[Directive2]
-      val $compile = dependency[js.Dynamic]("$compile")
+      val $compile = injection[Compile]("$compile")
 
-      val elem = $compile("""<directive2></directive2>""").apply(literal(foo = "bar")).asInstanceOf[JQLite]
-      assert( elem.head.textContent == "foo" )
+      val elem = $compile("""<directive2></directive2>""")(literal(bar = "foo"))(0)
+      js.Dynamic.global.console.log(elem.nodeName)
+      js.Dynamic.global.console.log(elem.nodeValue)
+      js.Dynamic.global.console.log("content: " + elem.textContent)
+      assert( elem.textContent == "foo" )
     }
 
     'controllerAs-{
       module.directiveOf[Directive3]
-      val $compile = dependency[js.Dynamic]("$compile")
-      val $rootScope = dependency[Scope]("$rootScope")
+      val $compile = injection[Compile]("$compile")
+      val $rootScope = injection[Scope]("$rootScope")
 
-      val elem = $compile("""<directive3 x="1"></directive3>""").apply(literal()).asInstanceOf[JQLite]
-      //$rootScope.$digest()
-      //println( elem.head.textContent )
+      val elem = $compile("""<directive3 x="1"></directive3>""")($rootScope)(0)
+      $rootScope.$digest()
+      println( elem.textContent )
     }
   }
 
@@ -66,7 +70,7 @@ object DirectiveTest extends AngulateTestSuite {
     }
 
     override def postLink(scope: ScopeType, element: JQLite, attrs: Attributes, ctrl: Directive2Ctrl): Unit = {
-      element.head.textContent = ctrl.bar
+      element(0).textContent = ctrl.bar
     }
   }
 

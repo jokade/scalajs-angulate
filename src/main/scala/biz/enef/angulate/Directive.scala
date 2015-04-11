@@ -13,15 +13,21 @@ import scala.scalajs.js
  * Interface to be implemented by classes that represent an AngularJS directive.
  */
 trait Directive {
-  def restrict: String = ???
+  def name: String = ???
+  def restrict: String = ??? // subset of EACM
+  def multiElement: Boolean = ???
+  @Deprecated
+  def replace: Boolean = ???
+  def terminal: Boolean = ???
+  def require: js.Any = ??? // string or array of strings
 
   def transclude: Boolean = ???
 
   def priority: Int = ???
 
   def controller(ctrl: ControllerType, scope: ScopeType, elem: JQLite, attrs: Attributes) : Unit = ???
-
   //def controller(scope: js.Dynamic, elem: JQLite, attrs: Attributes) : Unit = ???
+
   type ControllerType <: js.Any
   type ScopeType <: js.Any
 
@@ -32,13 +38,16 @@ trait Directive {
 
   def templateUrl: String = ???
   def templateUrl(element: JQLite, attrs: Attributes) : String = ???
+  def templateNamespace: String = ???
 
   def scope: Boolean = ???
   def isolateScope: js.Dictionary[String] = ???
+  def bindToController: Boolean = ???
 
   def postLink(scope: ScopeType, element: JQLite, attrs: Attributes) : Unit = ???
   def postLink(scope: ScopeType, element: JQLite, attrs: Attributes, controller: ControllerType) : Unit = ???
-  //def preLink(scope: Scope, element: JQLite, attrs: Attributes, controller: js.Dynamic) : Unit = ???
+  def preLink(scope: ScopeType, element: JQLite, attrs: Attributes) : Unit = ???
+  def preLink(scope: ScopeType, element: JQLite, attrs: Attributes, controller: ControllerType) : Unit = ???
 
   def compile(tElement: js.Dynamic, tAttrs: Attributes) : js.Any = ???
 }
