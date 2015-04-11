@@ -33,11 +33,15 @@ protected[angulate] class DirectiveMacros(val c: blackbox.Context) extends Macro
 
     // assemble all defined directive attributes (ie 'template', 'restrict', ...)
     val atts = getDirectiveAttributes(ct).map( a => (a.name.toString,a)) map {
+      // TODO: restrict: should be a subset of EACM
+      // TODO: link and controller are mutually exclusive
+      // TODO: link and compile are mutually exclusive
       case ("isolateScope",_)  => q"scope = dimpl.isolateScope"
       case ("preLink",_)       => q"link = dimpl.preLink _"
       case ("postLink",_)      => q"link = dimpl.postLink _"
       case ("controller",_)    => q"""controller = js.Array("$$scope","$$element","$$attrs",(dimpl.controller _):js.ThisFunction)"""
       case ("require",a)       => q"require = dimpl.${a.name}"
+      case ("requireAll",a)    => q"require = dimpl.${a.name}"
       case (_,a) if a.isGetter => q"${a.name} = dimpl.${a.name}"
       case (_,a)               => q"${a.name} = (dimpl.${a.name} _):js.Function"
     }

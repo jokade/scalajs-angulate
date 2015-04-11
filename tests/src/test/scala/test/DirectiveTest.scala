@@ -13,7 +13,7 @@ import utest._
 
 import scala.scalajs.js
 import js.Dynamic.literal
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.{JSExportAll, JSExport}
 
 object DirectiveTest extends AngulateTestSuite {
   override val tests = TestSuite {
@@ -42,6 +42,7 @@ object DirectiveTest extends AngulateTestSuite {
       assert( elem.textContent == "foo" )
     }
 
+    // TODO
     'controllerAs-{
       module.directiveOf[Directive3]
       val $compile = dependency[Compile]("$compile")
@@ -51,6 +52,31 @@ object DirectiveTest extends AngulateTestSuite {
       $rootScope.$digest()
       println( elem.textContent )
     }
+
+    // TODO
+    'require-{
+      module.directiveOf[TabsDirective]("myTabs")
+      module.directiveOf[PaneDirective]("myPane")
+      val $compile = dependency[Compile]("$compile")
+      val $rootScope = dependency[Scope]("$rootScope")
+
+      val elem = $compile("""<my-tabs>
+                            |  <my-pane title="Hello">
+                            |    <h4>Hello</h4>
+                            |    <p>Lorem ipsum dolor sit amet</p>
+                            |  </my-pane>
+                            |  <my-pane title="World">
+                            |    <h4>World</h4>
+                            |    <em>Mauris elementum elementum enim at suscipit.</em>
+                            |    <p><a href ng-click="i = i + 1">counter: {{i || 0}}</a></p>
+                            |  </my-pane>
+                            |</my-tabs>""")($rootScope)(0)
+      js.Dynamic.global.console.log(elem.nodeName)
+      js.Dynamic.global.console.log(elem.nodeValue)
+      js.Dynamic.global.console.log("content: " + elem.textContent)
+      //assert( elem.textContent == "foo" )
+    }
+
   }
 
 
@@ -94,5 +120,62 @@ object DirectiveTest extends AngulateTestSuite {
       ctrl.click = () => ctrl.bar = "bar"
 
     }*/
+  }
+
+  trait Pane extends js.Object {
+    var selected: Boolean = js.native
+  }
+
+  trait TabsDirectiveController extends js.Object {
+    var addPane: js.Function1[Pane, Unit] = js.native
+  }
+  trait TabsDirectiveScope extends js.Object {
+    var panes: Seq[Pane] = js.native
+    var select: js.Function1[Pane, Unit] = js.native
+  }
+
+  class TabsDirective extends Directive {
+
+    override def restrict= "E"
+    override def transclude = true
+
+    override def isolateScope = js.Dictionary()
+    override type ControllerType = TabsDirectiveController
+    override type ScopeType = TabsDirectiveScope
+    override def controller(ctrl: ControllerType, scope: ScopeType, elem: JQLite, attrs: Attributes) = {
+      scope.panes = Seq()
+      scope.select = (pane: Pane) => {
+        scope.panes.foreach(_.selected = false)
+        pane.selected = true
+      }
+      ctrl.addPane = (pane: Pane) => {
+        if (scope.panes.isEmpty) scope.select(pane)
+        scope.panes = scope.panes :+ pane
+      }
+    }
+
+    override def template = """<div class="tab-pane" ng-show="selected" ng-transclude>
+                              |</div>"""
+  }
+
+  class PaneDirective extends Directive {
+    override def require = "^myTabs"
+    override def restrict= "E"
+    override def transclude = true
+    override def isolateScope = js.Dictionary("title" -> "@")
+    override type ScopeType = Pane
+    override type ControllerType = TabsDirectiveController
+    override def postLink(scope: ScopeType, element: JQLite, attrs: Attributes, tabsCtrl: TabsDirectiveController): Unit = {
+      tabsCtrl.addPane(scope)
+    }
+    override def template = """<div class="tabbable">
+                              |  <ul class="nav nav-tabs">
+                              |    <li ng-repeat="pane in panes" ng-class="{active:pane.selected}">
+                              |      <a href="" ng-click="select(pane)">{{pane.title}}</a>
+                              |    </li>
+                              |  </ul>
+                              |  <div class="tab-content" ng-transclude></div>
+                              |</div>"""
+
   }
 }
