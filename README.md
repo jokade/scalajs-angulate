@@ -77,7 +77,7 @@ Two flavors are currently supported:
 *  [Body Scope controllers](#body-scope-controllers), extending `Controller`
 *  [Controllers with explicit scope](#controllers-with-explicit-scope), extending `ScopeController`
 
-Both flavors support constructor [dependency dependency](#dependency-dependency).
+Both flavors support constructor [dependency injection](#dependency-injection).
 
 #### Body Scope Controllers
 Classes extending `Controller` export all their public `var`s, `val`s and `def`s into the controller scope.
@@ -174,7 +174,7 @@ class DynamicCounterCtrl($scope: js.Dynamic) extends ScopeController {
 
 
 ### Dependency Injection
-scalajs-angulate supports constructor dependency dependency of Angular services into controllers, services and directives:
+scalajs-angulate supports constructor dependency injection of Angular services into controllers, services and directives:
 
 ```scala
 class UserCtrl($http: HttpService) extends Controller {
@@ -218,7 +218,7 @@ val module = angular.createModule("app", Nil, configFn)
 
 ### Services
 Services can be implemented as plain classes extending the `Service` trait. As with controllers,
-constructor based dependency dependency is supported:
+constructor based dependency injection is supported:
 ```scala
 class UserService($http: HttpService) extends Service {
   def getUsers() : HttpPromise = $http.get("/rest/users/")
