@@ -6,6 +6,8 @@ package test
 
 import biz.enef.angulate.Module.RichModule
 import biz.enef.angulate.{Scope, Angular}
+import biz.enef.angulate.core.JQLite
+import biz.enef.angulate.{Controller, Scope, Module, angular}
 import utest._
 
 import scala.concurrent.Promise
@@ -25,8 +27,8 @@ trait AngulateTestSuite extends TestSuite {
    * @tparam T
    * @return
    */
-  def injection[T](name: String)(implicit module: RichModule) : T =
-    Angular().injector(js.Array("ng",module.name)).get(name).asInstanceOf[T]
+  def dependency[T](name: String)(implicit module: RichModule) : T =
+    angular.injector(js.Array("ng",module.name)).get(name).asInstanceOf[T]
 
   /**
    * Checks that the specified value is neither null nor undefined.
@@ -36,6 +38,17 @@ trait AngulateTestSuite extends TestSuite {
   def defined(value: Any) : Boolean = value != null && value.asInstanceOf[UndefOr[js.Any]].isDefined
 
   /**
+   * Compiles the specified template and links it with the provided scope
+   *
+   * @param tpl
+   * @param scope
+   * @param module
+   */
+  def compileAndLink(tpl: String, scope: js.Object = literal())(implicit module: RichModule) : JQLite = {
+    dependency[js.Dynamic]("$compile").apply(tpl).apply(scope).asInstanceOf[JQLite]
+  }
+
+  /**
    * Creates an instance specified controller and returns its scope object.
    *
    * @param name the name of the controller type
@@ -43,8 +56,8 @@ trait AngulateTestSuite extends TestSuite {
    * @tparam T the scope type
    */
   def controller[T](name: String)(implicit module: RichModule) : T = {
-    val $controller = injection[js.Function2[String,js.Object,js.Any]]("$controller")
-    val $rootScope = injection[Scope]("$rootScope")
+    val $controller = dependency[js.Function2[String,js.Object,js.Any]]("$controller")
+    val $rootScope = dependency[Scope]("$rootScope")
     val scope = $rootScope.$new(false)
     val res = $controller(name, literal($scope = scope))
     scope.asInstanceOf[T]

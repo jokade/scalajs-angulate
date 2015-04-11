@@ -125,10 +125,14 @@ protected[angulate] trait ControllerMacroUtils {
 
 
   protected def copyMembers(ct: Type) = {
+    def isGetter(s: MethodSymbol) : Boolean = s.isGetter || s.paramLists.isEmpty
+    def isSetter(s: MethodSymbol) : Boolean = s.isSetter || s.name.toString.endsWith("_$eq")
+    def isFunc(s: MethodSymbol) : Boolean = !(isGetter(s) || isSetter(s))
+
     val props = ct.decls.filter( p => p.isPublic && p.isMethod && !p.isConstructor).map( _.asMethod )
-    val funcs = props.filter( p => !(p.isGetter||p.isSetter) )
-    val getters = props.filter(_.isGetter)
-    val setters = props.filter(_.isSetter).map{ s=>
+    val funcs = props.filter( isFunc )
+    val getters = props.filter(isGetter)
+    val setters = props.filter(isSetter).map{ s=>
       val name = s.name.toString
       val getterName = name.substring(0,name.length-4)
       getterName -> s
@@ -149,9 +153,6 @@ protected[angulate] trait ControllerMacroUtils {
       (funcs map { func =>
         val funcName = func.name.toString
         val (params,args) = makeArgsList(func)
-        if(func.paramLists.isEmpty)
-          q"""global.Object.defineProperty(scope,$funcName,literal(get = () => ctrl.$func))"""
-        else
           q"""global.Object.defineProperty(scope,$funcName,literal(value = (..$params) => ctrl.$func(..$args)))"""
       })
   }

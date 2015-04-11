@@ -76,6 +76,16 @@ trait Module  extends js.Object {
   def directive(name: String, directiveFactory: js.Array[Any]): Module = js.native
 
   /**
+   * Register a new directive with the compiler.
+   *
+   * @param name Name of the directive in camel-case (ie `ngBind`)
+   * @param directiveFactory Function that returns the directive definition object (DDO) when called
+   *
+   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#directive]]
+   */
+  def directive(name: String, directiveFactory: js.Function): Module = js.native
+
+  /**
    * Register a service factory.
    *
    * @param name The name of the service
@@ -141,67 +151,6 @@ object Module {
      * The name of the module
      */
     @inline def name: String = self.name
-
-    //------------------------------ ENHANCEMENTS ------------------------------
-    /**
-     * Registers the specified controller using the fully qualified class as the name of the controller.
-     *
-     * @note This is a scalajs-angulate enhancement
-     *
-     * @tparam T Controller class
-     */
-    @inline def controllerOf[T <: NGController]: Module = macro impl.ControllerMacros.controllerOf[T]
-
-    /**
-     * Registers the specified controller using an explicitly given controller name.
-     *
-     * @note This is a scalajs-angulate enhancement
-     *
-     * @param name The controller name
-     * @tparam T Controller class
-     */
-    @inline def controllerOf[T <: NGController](name: String): Module = macro impl.ControllerMacros.controllerOfWithName[T]
-
-    /**
-     * Registers the specified class as Angular service.
-     * The class name is used as the name of the service, with the __first letter in lower case__.
-     *
-     * @note This is a scalajs-angulate enhancement
-     *
-     * @tparam T Service class
-     */
-    @inline def serviceOf[T <: Service]: Module = macro impl.ServiceMacros.serviceOf[T]
-
-    /**
-     * Registers the specified class as Angular service using the explicitly given service name.
-     *
-     * @note This is a scalajs-angulate enhancement
-     *
-     * @param name The service name
-     * @tparam T Service class
-     */
-    @inline def serviceOf[T <: Service](name: String): Module = macro impl.ServiceMacros.serviceOfWithName[T]
-
-    /**
-     * Registers the specified class as Angular directive.
-     * The name of the directive will be the name of the class, with the first letter in lower case and
-     * without the suffix 'Directive'.
-     *
-     * @note This is a scalajs-angulate enhancement
-     *
-     * @tparam T Class defining the directive
-     */
-    @inline def directiveOf[T <: Directive]: Module = macro impl.DirectiveMacros.directiveOf[T]
-
-    /**
-     * Registers the specified class as Angular directive under the given name.
-     *
-     * @note This is a scalajs-angulate enhancement
-     *
-     * @param name The name of the directive
-     * @tparam T Class defining the directive
-     */
-    @inline def directiveOf[T <: Directive](name: String): Module = macro impl.DirectiveMacros.directiveOfWithName[T]
 
     /**
      * Defines an animation hook that can be later used with the \$animate service and directives that use this service.
@@ -294,6 +243,70 @@ object Module {
     @inline def service(name: String, constructor: AnnotatedFunction): Module = self.service(name, constructor.inlineArrayAnnotatedFn)
 
     @inline implicit def autoUnwrapRichModule(m: RichModule): Module = m.self
+
+    //------------------------------ ENHANCEMENTS ------------------------------
+    /**
+     * Registers the specified controller using the fully qualified class as the name of the controller.
+     *
+     * @note This is a scalajs-angulate enhancement
+     *
+     * @tparam T Controller class
+     */
+    @inline def controllerOf[T <: NGController]: Module = macro impl.ControllerMacros.controllerOf[T]
+
+    /**
+     * Registers the specified controller using an explicitly given controller name.
+     *
+     * @note This is a scalajs-angulate enhancement
+     *
+     * @param name The controller name
+     * @tparam T Controller class
+     */
+    @inline def controllerOf[T <: NGController](name: String): Module = macro impl.ControllerMacros.controllerOfWithName[T]
+
+    /**
+     * Registers the specified class as Angular service.
+     * The class name is used as the name of the service, with the __first letter in lower case__.
+     *
+     * @note This is a scalajs-angulate enhancement
+     *
+     * @tparam T Service class
+     */
+    @inline def serviceOf[T <: Service]: Module = macro impl.ServiceMacros.serviceOf[T]
+
+    /**
+     * Registers the specified class as Angular service using the explicitly given service name.
+     *
+     * @note This is a scalajs-angulate enhancement
+     *
+     * @param name The service name
+     * @tparam T Service class
+     */
+    @inline def serviceOf[T <: Service](name: String): Module = macro impl.ServiceMacros.serviceOfWithName[T]
+
+    /**
+     * Registers the specified class as Angular directive.
+     * The name of the directive will be the name of the class, with the first letter in lower case and
+     * without the suffix 'Directive'.
+     *
+     * @note This is a scalajs-angulate enhancement
+     *
+     * @tparam T Class defining the directive
+     */
+    @inline def directiveOf[T <: Directive]: Module = macro impl.DirectiveMacros.directiveOf[T]
+
+    /**
+     * Registers the specified class as Angular directive under the given name.
+     *
+     * @note This is a scalajs-angulate enhancement
+     *
+     * @param name The name of the directive
+     * @tparam T Class defining the directive
+     */
+    @inline def directiveOf[T <: Directive](name: String): Module = macro impl.DirectiveMacros.directiveOfWithName[T]
+
+    @inline def componentOf[T] : Module = macro impl.ComponentMacros.componentOf[T]
+
   }
 
 }

@@ -10,15 +10,13 @@ Introduction
 
 There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
 
-scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which uses property DI and (factory) objects for controllers and services, as opposed to constructor DI and classes used by this library.
-
 __NOTE__: This guide already contains some changes for scalajs-angulate 0.2. Please read the __[guide for version 0.1](https://github.com/jokade/scalajs-angulate/tree/v0.1-sjs0.6.0)__ if your using scalajs-angulate 0.1.
 
 ##### Contents:
 * [SBT settings](#sbt-settings)
 * [Modules](#defining-a-module)
 * [Controllers](#controllers)
-* [Dependency Injection](#dependency-injection)
+* [Dependency Injection](#dependency-dependency)
 * [Services](#services)
 * [Directives](#directives)
 * [Other enhancements](#other-enhancements)
@@ -79,7 +77,7 @@ Two flavors are currently supported:
 *  [Body Scope controllers](#body-scope-controllers), extending `Controller`
 *  [Controllers with explicit scope](#controllers-with-explicit-scope), extending `ScopeController`
 
-Both flavors support constructor [dependency injection](#dependency-injection).
+Both flavors support constructor [dependency dependency](#dependency-dependency).
 
 #### Body Scope Controllers
 Classes extending `Controller` export all their public `var`s, `val`s and `def`s into the controller scope.
@@ -176,7 +174,7 @@ class DynamicCounterCtrl($scope: js.Dynamic) extends ScopeController {
 
 
 ### Dependency Injection
-scalajs-angulate supports constructor dependency injection of Angular services into controllers, services and directives:
+scalajs-angulate supports constructor dependency dependency of Angular services into controllers, services and directives:
 
 ```scala
 class UserCtrl($http: HttpService) extends Controller {
@@ -220,7 +218,7 @@ val module = angular.createModule("app", Nil, configFn)
 
 ### Services
 Services can be implemented as plain classes extending the `Service` trait. As with controllers,
-constructor based dependency injection is supported:
+constructor based dependency dependency is supported:
 ```scala
 class UserService($http: HttpService) extends Service {
   def getUsers() : HttpPromise = $http.get("/rest/users/")
@@ -396,3 +394,5 @@ License
 -------
 This code is open source software licensed under the [MIT License](http://opensource.org/licenses/MIT)
 
+#### References
+scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which uses property DI and (factory) objects for controllers and services, as opposed to constructor DI and classes used by this library.
