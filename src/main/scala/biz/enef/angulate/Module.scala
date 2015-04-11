@@ -305,6 +305,11 @@ object Module {
      */
     @inline def directiveOf[T <: Directive](name: String): Module = macro impl.DirectiveMacros.directiveOfWithName[T]
 
+    /**
+     * Registers a Angular2-style Component.
+     *
+     * @tparam T
+     */
     @inline def componentOf[T] : Module = macro impl.ComponentMacros.componentOf[T]
 
   }
