@@ -27,9 +27,7 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
     val ctrlName = ct.typeSymbol.fullName
     val defs = cdef - "selector" ++ Map(
       "restrict"     -> q""""E"""",
-      "controller"   -> q"""${ctrlName}""",
-      "controllerAs" -> q""""ctrl"""",
-      "bindToController" -> q"true"
+      "controller"   -> q"""${ctrlName}"""
     )
     println(defs)
 
@@ -41,14 +39,13 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
 
     val cm = getConstructor(ct)
     val (ctrlDeps,ctrlArgs) = makeArgsList(cm)
-    val ctrlDepNames = getDINames(cm)
+    val ctrlDepNames = "$scope" +: getDINames(cm)
     val constructor = q"""js.Array[Any](..$ctrlDepNames,
           ((scope:js.Dynamic, ..$ctrlDeps) => {
             val ctrl = new $ct(..$ctrlArgs)
             ..${copyMembers(ct)}
             $debugCtrl
-            ctrl
-          }):js.ThisFunction)"""
+          }):js.Function)"""
 
 
     val tree =
@@ -78,9 +75,9 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
       Map()
     }
 
-    if(defs.contains("map")) {
-      val bindings = defs("map")
-      defs - "map" + ("scope"->bindings)
+    if(defs.contains("bind")) {
+      val bindings = defs("bind")
+      defs - "bind" + ("scope"->bindings)
     }
     else
       defs + ("scope"->q"js.Dictionary()")
@@ -99,7 +96,7 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
       "selector"    -> defs(names(0)),
       "template"    -> defs(names(1)),
       "templateUrl" -> defs(names(2)),
-      "map"         -> defs(names(3))
+      "bind"        -> defs(names(3))
     )
   }
 

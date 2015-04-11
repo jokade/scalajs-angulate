@@ -22,7 +22,7 @@ object DirectiveTest extends AngulateTestSuite {
     'directiveOf-{
       module.directiveOf[Directive1]
       module.directiveOf[Directive1]("anotherDirective")
-      val $compile = injection[Compile]("$compile")
+      val $compile = dependency[Compile]("$compile")
 
       val elem1 = $compile("<directive1></directive1>")(literal())(0)
       assert( elem1.textContent == "foo" )
@@ -33,7 +33,7 @@ object DirectiveTest extends AngulateTestSuite {
 
     'postLink-{
       module.directiveOf[Directive2]
-      val $compile = injection[Compile]("$compile")
+      val $compile = dependency[Compile]("$compile")
 
       val elem = $compile("""<directive2></directive2>""")(literal(bar = "foo"))(0)
       js.Dynamic.global.console.log(elem.nodeName)
@@ -44,8 +44,8 @@ object DirectiveTest extends AngulateTestSuite {
 
     'controllerAs-{
       module.directiveOf[Directive3]
-      val $compile = injection[Compile]("$compile")
-      val $rootScope = injection[Scope]("$rootScope")
+      val $compile = dependency[Compile]("$compile")
+      val $rootScope = dependency[Scope]("$rootScope")
 
       val elem = $compile("""<directive3 x="1"></directive3>""")($rootScope)(0)
       $rootScope.$digest()

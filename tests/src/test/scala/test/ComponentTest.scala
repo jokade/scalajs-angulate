@@ -19,13 +19,13 @@ object ComponentTest extends AngulateTestSuite {
       'orderedComponentDef- {
         module.componentOf[Component1]
         val elem1 = compileAndLink("<foo></foo>")
-        assert(elem1.head.textContent == "component1")
+        assert(elem1(0).textContent == "component1")
       }
 
       'unorderedComponentDef-{
         module.componentOf[Component2]
         val elem2 = compileAndLink("<foo></foo>")
-        assert(elem2.head.textContent == "component2" )
+        assert(elem2(0).textContent == "component2" )
       }
     }
 /*

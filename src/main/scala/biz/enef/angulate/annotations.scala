@@ -16,11 +16,23 @@ import scala.scalajs.js
 @annotation.meta.param
 case class named(name: String) extends StaticAnnotation
 
+/**
+ * Creates a Component definition to be used with the [[Component]] annotation.
+ *
+ * @param selector HTML tag name for this component
+ * @param template
+ * @param templateUrl
+ * @param bind
+ */
 case class ComponentDef(selector: String,
                         template: String = null,
                         templateUrl: String = null,
-                        map: js.Dictionary[String] = null)
+                        bind: js.Dictionary[String] = null)
 
+/**
+ *
+ * @param cd
+ */
 case class Component(cd: ComponentDef) extends StaticAnnotation
 
 
