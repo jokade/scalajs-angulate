@@ -6,7 +6,7 @@ Introduction
 **scalajs-angulate** is a small library to simplify developing [AngularJS](http://angularjs.org/) applications in [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
 
 *  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
-*  macros to allow defining controllers, services and directives in a more natural style compared to direct use of the API
+*  macros for defining controllers, services and directives in a more natural Scala style
 
 There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
 
@@ -16,12 +16,12 @@ __NOTE__: This guide already contains some changes for scalajs-angulate 0.2. Ple
 * [SBT settings](#sbt-settings)
 * [Modules](#defining-a-module)
 * [Controllers](#controllers)
-* [Dependency Injection](#dependency-dependency)
+* [Dependency Injection](#dependency-injection)
 * [Services](#services)
 * [Directives](#directives)
 * [Other enhancements](#other-enhancements)
   * [HttpService](#httpservice)
-
+  * [Components](#components)
 
 
 How to Use
@@ -390,9 +390,44 @@ class UserCtrl(userService: UserService) extends Controller {
 }
 ```
 
+#### Components
+__EXPERIMENTAL__
+Starting with version `0.2`, Angulate has limited support for [Angular2-style components](http://angular2.com/get-started.html#). An angulate component is just a plain scala class annotated with `@Component()`; all public members defined in the class are then accessible from the component's template:
+```scala
+import biz.enef.angulate._
+
+@Component(ComponentDef(
+  selector = "counter",  // component name (i.e. the HTML tag)
+  template = """{{count}} <button ng-click="inc()">+</button> <button ng-click="dec()">-</button>""",
+  // - or -
+  // templateUrl = "counter.html"
+  bind = js.Dictionary(
+   "init" -> "@"  // assign the value of the DOM attribute 'init' to the class property with the same name 
+  )
+))
+class Counter {
+  
+  var count = 0
+  
+  def init = ???
+  // called with the value of the DOM attribute 'init'
+  def init_=(s: String) = count = s.toInt
+  
+  def inc() = count += 1
+  
+  def dec() = count -= 1
+  
+}
+
+val module = angulate.createModule("foo")
+module.componentOf[Counter]
+```
+The component can then be used as a custom HTML tag:
+```html
+<counter init="42" />
+```
+
 License
 -------
 This code is open source software licensed under the [MIT License](http://opensource.org/licenses/MIT)
 
-#### References
-scalajs-angulate was inspired by [scalajs-angular](https://github.com/greencatsoft/scalajs-angular), which uses property DI and (factory) objects for controllers and services, as opposed to constructor DI and classes used by this library.
