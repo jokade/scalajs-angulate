@@ -5,6 +5,7 @@
 package test
 
 import biz.enef.angulate._
+import biz.enef.angulate.ext.{Route, RouteProvider}
 import utest._
 
 import scala.scalajs.js
@@ -30,6 +31,15 @@ object ModuleTest extends AngulateTestSuite {
       angular.bootstrap(dom.document.body, Seq("module3"))
       assert( module3.name == "module3" )
       assert( configFnCalled )
+    }
+
+    'xx-{
+      val module4 = angular.createModule("module4", Nil)
+      module4.config( ($routeProvider:RouteProvider)=> {
+        $routeProvider
+          .when("/frontend/search",
+            Route(templateUrl = "search.html", controller = "SearchCtrl"))
+      })
     }
   }
 }

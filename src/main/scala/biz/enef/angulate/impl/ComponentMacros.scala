@@ -29,7 +29,7 @@ protected[angulate] class ComponentMacros(val c: Context) extends MacroBase with
       "restrict"     -> q""""E"""",
       "controller"   -> q"""${ctrlName}"""
     )
-    println(defs)
+    //println(defs)
 
     // controller construction array
     val debugCtrl =
