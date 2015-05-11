@@ -2,7 +2,7 @@
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.2-SNAPSHOT",
+  version := "0.2",
   scalaVersion := "2.11.6",
   scalacOptions ++= Seq("-deprecation","-unchecked","-feature","-language:implicitConversions","-Xlint"),
   autoCompilerPlugins := true,
@@ -88,12 +88,12 @@ lazy val publishingSettings = Seq(
  
 lazy val angulateDebugFlags = Seq(
   // include some code for runtime debugging
-  "runtimeLogging",
+  //"runtimeLogging",
   //"ModuleMacros.debug",
   //"ControllerMacros.debug"
   //"DirectiveMacros.debug"
   //"ServiceMacros.debug"
-  "ComponentMacros.debug"
+  //"ComponentMacros.debug"
   //"HttpPromiseMacros.debug"
 ).map( f => s"-Xmacro-settings:biz.enef.angulate.$f" )
 
