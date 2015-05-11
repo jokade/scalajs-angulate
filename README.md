@@ -6,11 +6,11 @@ Introduction
 **scalajs-angulate** is a small library to simplify developing [AngularJS](http://angularjs.org/) applications in [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
 
 *  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
-*  macros for defining controllers, services and directives in a more natural Scala style
+*  macros for defining controllers, services and directives in a more natural Scala style.
 
 There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
 
-__NOTE__: This guide already contains some changes for scalajs-angulate 0.2. Please read the __[guide for version 0.1](https://github.com/jokade/scalajs-angulate/tree/v0.1-sjs0.6.0)__ if your using scalajs-angulate 0.1.
+**News**: angulate 0.2 has been released! Please consult the [release notes](https://github.com/jokade/scalajs-angulate/wiki/Release-Notes#version-02-110515) for a list of changes since version 0.1.
 
 ##### Contents:
 * [SBT settings](#sbt-settings)
@@ -30,11 +30,11 @@ How to Use
 ### SBT Settings
 Add the following lines to your ```sbt``` build definition:
 ```scala
-libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.1"
+libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.2"
 ```
-scalajs-angulate 0.1 supports Scala.js `0.5.x` and `0.6.0`. The 0.2 release will only target Scala.js `0.6.x`.
+scalajs-angulate 0.2 requires Scala.js `0.6.x`.
 
-If you want to test the latest snapshot, change the version to `0.2-SNAPSHOT` and add the Sonatype snapshots repository to your `build.sbt`:
+If you want to test the latest snapshot, change the version to `0.3-SNAPSHOT` and add the Sonatype snapshots repository to your `build.sbt`:
 ```scala
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 ```
