@@ -1,5 +1,5 @@
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
-// Description: API for Angular $locationProvider
+// Description: API for Angular $location
 //
 // Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angulate.core
