@@ -314,33 +314,6 @@ class UserDirective extends Directive {
 }
 ```
 
-Using Angular's `controllerAs` property, you can access the controller from your directive:
-```scala
-@ExportToScope("directive")  // <-- the controller is accessible in the template via 'directive'
-trait UserDirectiveCtrl extends js.Object {
-  var click : js.Function = js.native
-}
-
-class UserDirective extends Directive {
-  override type ControllerType = UserDirectiveCtrl
-  
-  override val controllerAs = "ctrl"
-  
-  override def controller(ctrl: ControllerType,
-                          scope: ScopeType,
-                          elem: JQLite,
-                          attrs: Attributes) : Unit = {
-    ctrl.click = () => { /* ... */ }
-  }
-}
-```
-```html
-<user>
-  <!-- directive is the reference to our UserDirectiveCtrl instance -->
-  <button ng-click="ctrl.click()"></button>
-</user>
-```
-
 ### Other enhancements
 This section gives an overview over the enhancements to AngularJS core modules provided by angulate.
 
