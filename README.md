@@ -10,7 +10,8 @@ Introduction
 
 There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
 
-**News**: angulate 0.2 has been released! Please consult the [release notes](https://github.com/jokade/scalajs-angulate/wiki/Release-Notes#version-02-110515) for a list of changes since version 0.1.
+**News**: angulate 0.2 has been released! Please consult the [release notes](https://github.com/jokade/scalajs-angulate/wiki/Release-Notes#version-02-110515) for a list of changes since version 0.1.  
+This library only provides bindings to Angular 1.x. Support for [Angular 2](https://angular.io) is provided by [angulate2](https://github.com/jokade/angulate2).
 
 ##### Contents:
 * [SBT settings](#sbt-settings)
