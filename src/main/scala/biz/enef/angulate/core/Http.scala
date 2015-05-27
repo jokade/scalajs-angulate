@@ -124,3 +124,18 @@ object HttpPromise {
 class HttpError(msg: String, val status: Int) extends RuntimeException(msg)
 
 
+trait HttpProvider extends Provider {
+  def useApplyAsync() : HttpProvider = js.native
+  def useApplyAsync(async: Boolean) : HttpProvider = js.native
+
+  def defaults: HttpDefaults = js.native
+
+  def interceptors: js.Array[js.Any] = js.native
+}
+
+trait HttpDefaults extends js.Object {
+  def cache: js.Dynamic = js.native
+  def xsrfCookieName: String = js.native
+  def xsrfHeaderName: String = js.native
+  def headers: js.Dynamic = js.native
+}
