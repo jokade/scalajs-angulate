@@ -22,3 +22,10 @@ trait QPromise extends js.Object {
 
   def `finally`(callback: js.Function1[js.Any,Unit]) : QPromise = js.native
 }
+
+trait QService extends ProvidedService {
+  def reject(reason: js.Any) : QPromise = js.native
+  def defer() : js.Dynamic = js.native
+  def when(value: js.Any) : QPromise = js.native
+  def all(promises: js.Array[QPromise]) : QPromise = js.native
+}
