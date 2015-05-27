@@ -139,3 +139,11 @@ trait HttpDefaults extends js.Object {
   def xsrfHeaderName: String = js.native
   def headers: js.Dynamic = js.native
 }
+
+trait HttpResponse extends js.Object {
+  def status: Int = js.native
+  def statusText: String = js.native
+  def data: js.Any = js.native
+  def config: HttpConfig = js.native
+  def headers(name: String) : String = js.native
+}
