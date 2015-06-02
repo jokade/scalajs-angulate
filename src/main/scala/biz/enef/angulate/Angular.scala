@@ -135,7 +135,8 @@ object Angular {
   /**
    * Returns the global Angular object
    */
-  def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[Angular]
+  def apply() : Angular = js.Dynamic.global.angular.asInstanceOf[js.UndefOr[Angular]].
+    getOrElse(throw new RuntimeException("Could not find object angular - has the Angular.js library been loaded?"))
 
   @inline final implicit class RichAngular(val self: Angular) extends AnyVal {
     import scala.scalajs.js.JSConverters._
