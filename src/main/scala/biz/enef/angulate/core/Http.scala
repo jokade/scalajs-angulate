@@ -19,6 +19,7 @@ trait HttpService extends js.Object with ProvidedService {
   def post[T](url: String): HttpPromise[T] = js.native
   def post[T](url: String, data: js.Any): HttpPromise[T] = js.native
   def post[T](url: String, data: js.Any, config: HttpConfig): HttpPromise[T] = js.native
+  def jsonp[T](url: String): HttpPromise[T] = js.native
   def jsonp[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
   def put[T](url: String): HttpPromise[T] = js.native
   def put[T](url: String, data: js.Any): HttpPromise[T] = js.native
@@ -26,6 +27,9 @@ trait HttpService extends js.Object with ProvidedService {
   def delete[T](url: String): HttpPromise[T] = js.native
   def delete[T](url: String, data: js.Any): HttpPromise[T] = js.native
   def delete[T](url: String, data: js.Any, config: HttpConfig): HttpPromise[T] = js.native
+  def head[T](url: String): HttpPromise[T] = js.native
+  def head[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
+  def apply[T](config: HttpConfig): HttpPromise[T] = js.native
 }
 
 trait HttpConfig extends js.Object {
