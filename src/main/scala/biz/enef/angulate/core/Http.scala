@@ -143,11 +143,11 @@ trait HttpProvider extends Provider {
 }
 
 trait HttpDefaults extends js.Object {
-  def cache: js.Dynamic = js.native
-  def xsrfCookieName: String = js.native
-  def xsrfHeaderName: String = js.native
-  def headers: js.Dynamic = js.native
-  def withCredentials: Boolean = js.native
+  var cache: js.Dynamic = js.native
+  var xsrfCookieName: String = js.native
+  var xsrfHeaderName: String = js.native
+  var headers: js.Dynamic = js.native
+  var withCredentials: Boolean = js.native
 }
 
 trait HttpResponse extends js.Object {
