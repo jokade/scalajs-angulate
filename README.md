@@ -1,16 +1,9 @@
-Enhanced Scala.js Bindings for AngularJS
-========================================
+Scala.js Bindings for AngularJS
+===============================
 
-Introduction
-------------
-**scalajs-angulate** is a small library to simplify developing [AngularJS](http://angularjs.org/) applications in [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
+**News**: angulate 0.2.1 has been released! Please consult the [release notes](https://github.com/jokade/scalajs-angulate/wiki/Release-Notes#version-021-130615) for a list of changes since version 0.1.
+There is also a page with [currently known problems & limitations](https://github.com/jokade/scalajs-angulate/wiki/Known-Problems).
 
-*  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
-*  macros for defining controllers, services and directives in a more natural Scala style.
-
-There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
-
-**News**: angulate 0.2 has been released! Please consult the [release notes](https://github.com/jokade/scalajs-angulate/wiki/Release-Notes#version-02-110515) for a list of changes since version 0.1.  
 This library only provides bindings to Angular 1.x. Support for [Angular 2](https://angular.io) is provided by [angulate2](https://github.com/jokade/angulate2).
 
 ##### Contents:
@@ -24,6 +17,14 @@ This library only provides bindings to Angular 1.x. Support for [Angular 2](http
   * [HttpService](#httpservice)
   * [Components](#components)
 
+Introduction
+------------
+**scalajs-angulate** is a small library to simplify developing [AngularJS](http://angularjs.org/) applications in [Scala](http://www.scala-lang.org) (via [Scala.js](http://www.scala-js.org)). To this end it provides:
+
+*  [façade traits](http://www.scala-js.org/doc/calling-javascript.html) for the Angular core API
+*  macros for defining controllers, services and directives in a more natural Scala style.
+
+There is a [complete example](https://github.com/jokade/scalajs-angulate-todomvc) implementing the TodoMVC with scalajs-angulate.
 
 How to Use
 ----------
@@ -31,9 +32,9 @@ How to Use
 ### SBT Settings
 Add the following lines to your ```sbt``` build definition:
 ```scala
-libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.2"
+libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.2.1"
 ```
-scalajs-angulate 0.2 requires Scala.js `0.6.x`.
+scalajs-angulate 0.2.1 requires Scala.js `0.6.3+`.
 
 If you want to test the latest snapshot, change the version to `0.3-SNAPSHOT` and add the Sonatype snapshots repository to your `build.sbt`:
 ```scala

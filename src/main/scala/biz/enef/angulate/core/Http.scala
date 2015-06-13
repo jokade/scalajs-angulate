@@ -13,12 +13,18 @@ import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 import scala.util.Try
 
+/**
+ * API for the Angular \$http service.
+ *
+ * @see [[https://docs.angularjs.org/api/ng/service/$http]]
+ */
 trait HttpService extends js.Object with ProvidedService {
   def get[T](url: String): HttpPromise[T] = js.native
   def get[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
   def post[T](url: String): HttpPromise[T] = js.native
   def post[T](url: String, data: js.Any): HttpPromise[T] = js.native
   def post[T](url: String, data: js.Any, config: HttpConfig): HttpPromise[T] = js.native
+  def jsonp[T](url: String): HttpPromise[T] = js.native
   def jsonp[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
   def put[T](url: String): HttpPromise[T] = js.native
   def put[T](url: String, data: js.Any): HttpPromise[T] = js.native
@@ -26,6 +32,9 @@ trait HttpService extends js.Object with ProvidedService {
   def delete[T](url: String): HttpPromise[T] = js.native
   def delete[T](url: String, data: js.Any): HttpPromise[T] = js.native
   def delete[T](url: String, data: js.Any, config: HttpConfig): HttpPromise[T] = js.native
+  def head[T](url: String): HttpPromise[T] = js.native
+  def head[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
+  def apply[T](config: HttpConfig): HttpPromise[T] = js.native
 }
 
 trait HttpConfig extends js.Object {
@@ -138,6 +147,7 @@ trait HttpDefaults extends js.Object {
   def xsrfCookieName: String = js.native
   def xsrfHeaderName: String = js.native
   def headers: js.Dynamic = js.native
+  def withCredentials: Boolean = js.native
 }
 
 trait HttpResponse extends js.Object {
