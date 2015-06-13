@@ -13,6 +13,11 @@ import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 import scala.util.Try
 
+/**
+ * API for the Angular \$http service.
+ *
+ * @see [[https://docs.angularjs.org/api/ng/service/$http]]
+ */
 trait HttpService extends js.Object with ProvidedService {
   def get[T](url: String): HttpPromise[T] = js.native
   def get[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
