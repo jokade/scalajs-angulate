@@ -1,8 +1,7 @@
-//import SonatypeKeys._
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.3-SNAPSHOT",
+  version := "0.2.1-SNAPSHOT",
   scalaVersion := "2.11.6",
   scalacOptions ++= Seq("-deprecation","-unchecked","-feature","-language:implicitConversions","-Xlint"),
   autoCompilerPlugins := true,
@@ -20,11 +19,10 @@ lazy val root = project.in(file(".")).
   enablePlugins(ScalaJSPlugin).
   settings(commonSettings: _*).
   settings(publishingSettings: _*).
-  //settings(sonatypeSettings: _*).
   settings( 
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value % "provided",
       "org.scala-js"   %%% "scalajs-dom" % "0.8.0",
       "be.doeraene" %%% "scalajs-jquery" % "0.8.0" % "provided"
     ),

@@ -101,7 +101,7 @@ protected[angulate] class ControllerMacros(val c: Context) extends MacroBase wit
           ((scope:js.Dynamic, ..$ctrlDeps) => {
             val ctrl = new $ct(..$ctrlArgs)
             $postConstruction
-            ctrl
+            scope
           }):js.ThisFunction)"""
 
     // controller registration
