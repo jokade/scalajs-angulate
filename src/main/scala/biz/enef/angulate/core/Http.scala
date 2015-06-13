@@ -147,6 +147,7 @@ trait HttpDefaults extends js.Object {
   def xsrfCookieName: String = js.native
   def xsrfHeaderName: String = js.native
   def headers: js.Dynamic = js.native
+  def withCredentials: Boolean = js.native
 }
 
 trait HttpResponse extends js.Object {
