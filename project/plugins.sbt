@@ -1,4 +1,4 @@
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.2")
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.3")
 
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "0.5.0")
 

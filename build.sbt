@@ -1,7 +1,7 @@
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.2.1-SNAPSHOT",
+  version := "0.2.1",
   scalaVersion := "2.11.6",
   scalacOptions ++= Seq("-deprecation","-unchecked","-feature","-language:implicitConversions","-Xlint"),
   autoCompilerPlugins := true,

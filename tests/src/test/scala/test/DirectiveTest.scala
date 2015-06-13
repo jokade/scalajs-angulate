@@ -136,7 +136,7 @@ object DirectiveTest extends AngulateTestSuite {
 
   class TabsDirective extends Directive {
 
-    override def restrict= "E"
+    override val restrict= "E"
     override def transclude = true
 
     override def isolateScope = js.Dictionary()
@@ -160,7 +160,7 @@ object DirectiveTest extends AngulateTestSuite {
 
   class PaneDirective extends Directive {
     override def require = "^myTabs"
-    override def restrict= "E"
+    override val restrict= "E"
     override def transclude = true
     override def isolateScope = js.Dictionary("title" -> "@")
     override type ScopeType = Pane
