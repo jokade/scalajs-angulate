@@ -48,7 +48,7 @@ protected[angulate] class HttpPromiseMacros(val c: blackbox.Context) extends Mac
     val tree = q"""{import scalajs.js
                     val fun = $f
                     $self.success( ((x:js.UndefOr[$T]) =>fun($tSuccess(x.getOrElse(null)))) ).
-                                error( (msg:Any,status:Int)=>fun($tFailure(new $tHttpError(msg.toString,status))) )
+                                error( (msg:Any,status:Int)=>fun($tFailure(new $tHttpError(if(msg==null) "" else msg.toString,status))) )
                    }"""
     if(logCode) printCode(tree)
     tree
@@ -56,7 +56,10 @@ protected[angulate] class HttpPromiseMacros(val c: blackbox.Context) extends Mac
 
   def onFailure(f: c.Tree) = {
     val self = Select(c.prefix.tree, TermName("self"))
-    val tree = q"""$self.error( (msg:Any,status:Int)=>$f(new $tHttpError(msg.toString,status)))"""
+    val tree =
+      q"""{import scalajs.js
+           $self.error( (msg:Any,status:Int)=>$f(new $tHttpError(if(msg==null) "" else msg.toString,status)))
+           }"""
 
     if(logCode) printCode(tree)
     tree
