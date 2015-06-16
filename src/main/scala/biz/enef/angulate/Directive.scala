@@ -150,5 +150,5 @@ trait Directive {
   def preLink(scope: ScopeType, element: JQLite, attrs: Attributes) : Unit = ???
   def preLink(scope: ScopeType, element: JQLite, attrs: Attributes, controller: ControllerType) : Unit = ???
 
-  def compile(tElement: js.Dynamic, tAttrs: Attributes) : js.Any = ???
+  def compile(tElement: JQLite, tAttrs: Attributes) : js.Any = ???
 }
