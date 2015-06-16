@@ -25,9 +25,11 @@ trait Compile extends js.Object with ProvidedService {
   def apply(element: JQLite, transclude: TranscludeFunction): TemplateLinkingFunction = js.native
   def apply(element: JQLite, transclude: TranscludeFunction, maxPriority: Int): TemplateLinkingFunction = js.native
 
-  def apply(element: JQuery): TemplateLinkingFunction = js.native
-  def apply(element: JQuery, transclude: TranscludeFunction): TemplateLinkingFunction = js.native
-  def apply(element: JQuery, transclude: TranscludeFunction, maxPriority: Int): TemplateLinkingFunction = js.native
+  // These signatures result in a compilation error when JQuery bindings are not in classpath,
+  // since the compiler probably checks all signatures, even if we don't use them!
+  //def apply(element: JQuery): TemplateLinkingFunction = js.native
+  //def apply(element: JQuery, transclude: TranscludeFunction): TemplateLinkingFunction = js.native
+  //def apply(element: JQuery, transclude: TranscludeFunction, maxPriority: Int): TemplateLinkingFunction = js.native
 
 }
 
@@ -64,6 +66,7 @@ trait TemplateLinkingFunction extends js.Function {
   def apply(scope: Scope): AugmentedJQLite = js.native
   def apply(scope: js.Object, cloneAttachFn: CloneAttachFunction): AugmentedJQLite = js.native
   def apply(scope: Scope, cloneAttachFn: CloneAttachFunction): AugmentedJQLite = js.native
+  def apply(scope: js.Object, cloneAttachFn: js.Function): AugmentedJQLite = js.native
 }
 
 // This corresponds to $transclude (and also the transclude function passed to link).
