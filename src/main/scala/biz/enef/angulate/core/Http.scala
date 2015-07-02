@@ -146,7 +146,7 @@ trait HttpDefaults extends js.Object {
   var cache: js.Dynamic = js.native
   var xsrfCookieName: String = js.native
   var xsrfHeaderName: String = js.native
-  var headers: js.Dynamic = js.native
+  var headers: js.Dictionary[js.Any] = js.native
   var withCredentials: Boolean = js.native
 }
 
