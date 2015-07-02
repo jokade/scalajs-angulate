@@ -8,5 +8,5 @@ import acyclic.file
 import scala.scalajs.js
 
 trait Timeout extends js.Object {
-  def apply(fn: js.Function, delay: Int = 0, invokeApply: Boolean = true) : QPromise = js.native
+  def apply(fn: js.Function, delay: Int = 0, invokeApply: Boolean = true) : QPromise[_] = js.native
 }
