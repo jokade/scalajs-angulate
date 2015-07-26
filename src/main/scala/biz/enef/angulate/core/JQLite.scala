@@ -13,7 +13,7 @@ import org.scalajs.jquery.{JQuery, JQueryStatic}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSName
 
-trait JQLite extends js.Object {
+trait JQLite extends AugmentedJQ[JQLite] {
 
   def addClass(classNames: String): JQLite = js.native
   def addClass(func: js.Function2[js.Any, js.Any, JQLite]): js.Dynamic = js.native
@@ -97,7 +97,7 @@ trait JQLite extends js.Object {
   def children(): JQLite = js.native
   def contents(): JQLite = js.native
   def eq(index: Int): JQLite = js.native
-  def find(selector: String): JQLite = js.native
+  //def find(selector: String): JQLite = js.native
   def next(): JQLite = js.native
   def parent(): JQLite = js.native
 
