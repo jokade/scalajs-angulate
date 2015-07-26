@@ -92,6 +92,7 @@ trait JQLite extends js.Object {
   def wrap(func: js.Function1[js.Any, js.Any]): JQLite = js.native
   @js.annotation.JSBracketAccess
   def apply(x: Int): dom.html.Element = js.native
+  def length: Int = js.native
   def children(selector: js.Any): JQLite = js.native
   def children(): JQLite = js.native
   def contents(): JQLite = js.native
@@ -99,6 +100,7 @@ trait JQLite extends js.Object {
   def find(selector: String): JQLite = js.native
   def next(): JQLite = js.native
   def parent(): JQLite = js.native
+
 }
 
 trait JQLiteStatic extends js.Object
