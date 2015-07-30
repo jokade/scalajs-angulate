@@ -109,9 +109,10 @@ trait Scope extends js.Object {
    * @param watchExpression Called on every `\$digest()` and should return the value that should be watched
    * @param listener Callback function which is only executed when the `watchExpression` has changed.
    *                 Called with three arguments: new value, old value, current scope
+   * @param objectEquality Compare for object equality using angular.equals instead of comparing for reference equality
    * @return de-registration function
    */
-  def $watch(watchExpression: js.Any, listener: js.Function = null) : js.Function = js.native
+  def $watch(watchExpression: js.Any, listener: js.Function = null, objectEquality: Boolean = false) : js.Function = js.native
 
   /**
    * Registers a listener callback to be executed whenever the `watchExpression` changes.
