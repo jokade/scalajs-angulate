@@ -77,7 +77,7 @@ trait Scope extends js.Object {
    * @param expression An angular expression to be executed (either a string or a `function(scope)`)
    * @param locals Local variables object, useful for overriding values in scope
    */
-  def $eval(expression: js.Object = js.native, locals: js.Object = js.native) : js.Any = js.native
+  def $eval(expression: js.Any = js.native, locals: js.Object = js.native) : js.Any = js.native
 
   /**
    * Evaluates the expression on the current scope at a later point in time.
@@ -85,7 +85,7 @@ trait Scope extends js.Object {
    * @param expression An angular expression to be executed (either a string or a `function(scope)`)
    * @param locals Local variables object, useful for overriding values in scope
    */
-  def $evalAsync(expression: js.Object = js.native, locals: js.Object = js.native) : js.Any = js.native
+  def $evalAsync(expression: js.Any = js.native, locals: js.Object = js.native) : js.Any = js.native
 
   /**
    * Creates a new child scope.
