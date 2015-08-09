@@ -119,8 +119,8 @@ trait AugmentedJQStatic[Q, AQ <: Q] extends js.Any {
   def apply(`object`: js.Any): AQ = js.native
   def apply(elementArray: js.Array[Element]): AQ = js.native
   def apply(`object`: Q): AQ = js.native
-  def apply(func: js.Function): AugmentedJQuery = js.native
-  def apply(): AugmentedJQuery = js.native
+  def apply(func: js.Function): AQ = js.native
+  def apply(): AQ = js.native
 }
 
 trait AugmentedJQLiteStatic extends JQLiteStatic with AugmentedJQStatic[JQLite, AugmentedJQLite]
