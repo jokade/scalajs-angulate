@@ -13,6 +13,7 @@ This library only provides bindings to Angular 1.x. Support for [Angular 2](http
 * [Dependency Injection](#dependency-injection)
 * [Services](#services)
 * [Directives](#directives)
+* [Filters](#filters)
 * [Other enhancements](#other-enhancements)
   * [HttpService](#httpservice)
   * [Components](#components)
@@ -315,6 +316,27 @@ class UserDirective extends Directive {
   }
 }
 ```
+
+### Filters
+
+To implement an AngularJS filter, create a module and call `filter`:
+
+```scala
+class GreetService {
+  def greet(name: String): String = s"Hello $name"
+}
+
+module.serviceOf[GreetService]
+
+module.filter("greet",(greetService: GreetService) => {
+  ((name:String) => {
+    greetService.greet(name)
+  }):js.Function
+})
+```
+
+__Note:__ In the current version you need to create two `AnnotatedFunction`'s where the inner one needs to explicitly converted to a js.Function
+
 
 ### Other enhancements
 This section gives an overview over the enhancements to AngularJS core modules provided by angulate.
