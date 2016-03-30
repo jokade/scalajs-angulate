@@ -4,7 +4,7 @@
 // Distributed under the MIT License (see included file LICENSE)
 package biz.enef.angulate.impl
 
-import scala.reflect.macros.blackbox.Context
+import scala.reflect.macros.whitebox.Context
 
 protected[angulate] class AnnotationMacros(val c: Context) extends MacroBase {
   import c.universe._

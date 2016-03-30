@@ -5,9 +5,9 @@
 package biz.enef.angulate.impl
 
 import acyclic.file
-import scala.reflect.macros.blackbox
+import scala.reflect.macros.whitebox
 
-protected [angulate] class ServiceMacros(val c: blackbox.Context) extends MacroBase {
+protected [angulate] class ServiceMacros(val c: whitebox.Context) extends MacroBase {
   import c.universe._
 
   // print generated code to console during compilation

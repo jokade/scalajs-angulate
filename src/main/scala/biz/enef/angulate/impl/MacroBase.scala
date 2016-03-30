@@ -6,12 +6,13 @@ package biz.enef.angulate.impl
 
 import acyclic.file
 import biz.enef.angulate.named
+import de.surfice.smacrotools.JsWhiteboxMacroTools
 
-import scala.reflect.macros.blackbox
+import scala.reflect.macros.whitebox
 
 
-protected[angulate] abstract class MacroBase {
-  val c: blackbox.Context
+protected[angulate] abstract class MacroBase extends JsWhiteboxMacroTools {
+  val c: whitebox.Context
   import c.universe._
 
   /* type definitions */
@@ -22,6 +23,7 @@ protected[angulate] abstract class MacroBase {
 
   /**
    * Print to console during compilation
+ *
    * @param tree
    * @param msg
    */
@@ -50,11 +52,23 @@ protected[angulate] abstract class MacroBase {
     }
   }
 
+  def getDINames(params: Iterable[Tree]): Iterable[String] =
+    if(params.isEmpty) None
+    else
+      params map {
+        case q"$mods val $name: $tpe = $e" =>
+          val t = c.typecheck(tpe,c.TYPEmode).tpe
+          t.typeSymbol.annotations.map(_.tree).collectFirst{
+            case q"new $name( ..$params )" if name.toString == "scala.scalajs.js.annotation.JSName" => params.head match {
+              case Literal(Constant(x)) => x.toString
+            }
+          }.getOrElse(t.toString)
+      }
+
   /**
    * Creates a AngularJS constructor array for the specified type.
    *
    * @note the returned tree requires `js.Array` to be in scope
-   *
    * @param ct class type
    */
   protected[this] def createDIArray(ct: Type) = {

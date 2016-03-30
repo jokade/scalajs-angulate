@@ -11,14 +11,14 @@ import biz.enef.angulate.impl.MacroBase
 import scala.Predef
 import scala.concurrent.duration.Duration
 import scala.concurrent._
-import scala.reflect.macros.blackbox
+import scala.reflect.macros.whitebox
 import scala.scalajs.js
 import scala.scalajs.js._
 import scala.scalajs.js.annotation.{JSExport, JSExportAll}
 import scala.util.{Try, Success, Failure}
 
 
-protected[angulate] class HttpPromiseMacros(val c: blackbox.Context) extends MacroBase {
+protected[angulate] class HttpPromiseMacros(val c: whitebox.Context) extends MacroBase {
   import c.universe._
 
   // print generated code to console during compilation
@@ -104,8 +104,9 @@ object HttpMacroUtils {
 
 }
 
+// TODO: use scalajs.js.Promise instead of scla.concurrent.Promise
 class HttpPromiseWrapper[T](wrapped: HttpPromise[T]) extends Future[T] {
-  private val _promise = Promise[T]()
+  private val _promise = scala.concurrent.Promise[T]()
   wrapped.success( ((t:T)=> _promise.success(t)) )
 
   override def onComplete[U](f: (Try[T]) => U)(implicit executor: ExecutionContext): Unit = future.onComplete(f)

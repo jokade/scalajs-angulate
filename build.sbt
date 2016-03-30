@@ -1,7 +1,7 @@
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.2.3-SNAPSHOT",
+  version := "0.3-SNAPSHOT",
   scalaVersion := "2.11.6",
   scalacOptions ++= Seq("-deprecation","-unchecked","-feature","-language:implicitConversions","-Xlint"),
   autoCompilerPlugins := true,
@@ -11,7 +11,8 @@ lazy val commonSettings = Seq(
         val a = baseDirectory.value.toURI.toString.replaceFirst("[^/]+/?$", "")
         val g = "https://raw.githubusercontent.com/jokade/scalajs-angulate"
         s"-P:scalajs:mapSourceURI:$a->$g/v${version.value}/"
-      }))
+      })),
+  resolvers += Resolver.sonatypeRepo("snapshots")
 )
 
 
@@ -24,9 +25,11 @@ lazy val root = project.in(file(".")).
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value % "provided",
       "org.scala-js"   %%% "scalajs-dom" % "0.8.0",
+      "de.surfice"     %%% "smacrotools-sjs"  % "0.1-SNAPSHOT",
       "be.doeraene" %%% "scalajs-jquery" % "0.8.0" % "provided"
     ),
-    resolvers += Resolver.sonatypeRepo("releases")
+    resolvers += Resolver.sonatypeRepo("releases"),
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
   )
 
 
