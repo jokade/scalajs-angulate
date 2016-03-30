@@ -11,7 +11,7 @@ import de.surfice.smacrotools.JsWhiteboxMacroTools
 import scala.reflect.macros.whitebox
 
 
-protected[angulate] abstract class MacroBase extends JsWhiteboxMacroTools {
+protected[angulate] abstract class MacroBase {
   val c: whitebox.Context
   import c.universe._
 
