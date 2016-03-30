@@ -128,6 +128,10 @@ object HttpPromise {
      */
     def future: Future[T] = macro impl.HttpPromiseMacros.future
   }
+
+  object RichHttpPromise {
+    implicit def autoUnwrap[T](r: RichHttpPromise[T]): HttpPromise[T] = r.self
+  }
 }
 
 class HttpError(msg: String, val status: Int) extends RuntimeException(msg)
