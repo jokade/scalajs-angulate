@@ -7,6 +7,7 @@ package biz.enef.angulate.core
 import acyclic.file
 import scala.scalajs.js
 
+@js.native
 trait Timeout extends js.Object {
   def apply(fn: js.Function, delay: Int = 0, invokeApply: Boolean = true) : QPromise = js.native
 }

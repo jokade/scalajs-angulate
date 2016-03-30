@@ -12,6 +12,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ng/service/\$location]]
  */
+@js.native
 trait Location extends js.Object with ProvidedService {
 
   def absUrl(): String = js.native

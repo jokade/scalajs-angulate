@@ -14,6 +14,7 @@ import scala.scalajs.js
  * @note The `ngCookies` module needs to be loaded for this service to be available.
  * @see [[https://docs.angularjs.org/api/ngCookies/service/\$cookies]]
  */
+@js.native
 trait CookiesService extends ProvidedService {
   def get(key: String) : String = js.native
   def getObject[T<:js.Object](key: String) : T = js.native

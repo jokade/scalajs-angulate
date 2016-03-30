@@ -13,6 +13,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ngResource/service/\$resource]]
  */
+@js.native
 trait ResourceService extends ProvidedService {
 
   def apply(url: String) : Resource = js.native
@@ -22,6 +23,7 @@ trait ResourceService extends ProvidedService {
 }
 
 
+@js.native
 trait Resource extends js.Object {
   def get: HttpConfig = js.native
   def save: HttpConfig = js.native

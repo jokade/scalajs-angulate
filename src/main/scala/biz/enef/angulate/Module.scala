@@ -12,6 +12,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ng/type/angular.Module]]
  */
+@js.native
 trait Module  extends js.Object {
 
   //------------------------------ ANGULAR.JS --------------------------------

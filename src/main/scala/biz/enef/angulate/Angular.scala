@@ -17,6 +17,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ng]]
  */
+@js.native
 trait Angular extends js.Object {
 
   def injector(modules: js.Any, strictDi: Boolean = false) : Injector = js.native
@@ -122,6 +123,7 @@ trait Angular extends js.Object {
 
 case class AngularConfiguration(strictDi: Boolean = false)
 
+@js.native
 trait AngularVersion extends js.Object {
   val full: String = js.native
   val major: Int = js.native
