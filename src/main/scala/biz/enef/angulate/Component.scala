@@ -41,10 +41,10 @@ object Component {
     def componentOf[T: c.WeakTypeTag] = {
       val ct = weakTypeOf[T]
       val module = Select(c.prefix.tree, TermName("self"))
-
-      val comp = TermName(ct.typeSymbol.fullName)
+      val comp = ct.typeSymbol.companion
 
       val tree = q"""$module.component($comp.selector,$comp.options)"""
+
       tree
     }
 
@@ -70,16 +70,16 @@ object Component {
       val args = paramNames(params)
       val diNames = args map ( _.toString )
 
+//      @scalajs.js.annotation.JSExport($fullName)
+//      @scalajs.js.annotation.JSExport($objName)
       val tree =
         q"""{
-             @scalajs.js.annotation.JSExport($fullName)
              @scalajs.js.annotation.ScalaJSDefined
              class $name ( ..$params ) extends ..$base { ..$body }
-             @scalajs.js.annotation.JSExport($objName)
              @scalajs.js.annotation.ScalaJSDefined
              object ${name.toTermName} extends scalajs.js.Object {
                def selector = "test"
-               def controller = js.Array(..$diNames,((..$params) => new $name(..$args)):js.Function)
+               def controller = scalajs.js.Array(..$diNames,((..$params) => new $name(..$args)):scalajs.js.Function)
                def options = scalajs.js.Dictionary( "controller" -> controller, ..$annots )
              }
             }
@@ -88,20 +88,6 @@ object Component {
       println(tree)
       c.Expr[Any](tree)
     }
-
-    // TODO: simpler, use generic function instead of local copy :)
-    def getDINames(params: Iterable[Tree]): Iterable[String] =
-      if(params.isEmpty) None
-      else
-        params map {
-          case q"$mods val $name: $tpe = $e" =>
-            val t = c.typecheck(tpe,c.TYPEmode).tpe
-            t.typeSymbol.annotations.map(_.tree).collectFirst{
-              case q"new $name( ..$params )" if name.toString == "scala.scalajs.js.annotation.JSName" => params.head match {
-                case Literal(Constant(x)) => x.toString
-              }
-            }.getOrElse(t.toString)
-        }
 
   }
 }
