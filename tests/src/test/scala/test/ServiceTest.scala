@@ -10,6 +10,7 @@ import utest._
 
 import scala.scalajs.js
 
+@js.native
 object ServiceTest extends AngulateTestSuite {
   override val tests = TestSuite {
     implicit val module = angular.createModule("test")

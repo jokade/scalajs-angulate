@@ -12,6 +12,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ngRoute/provider/\$routeProvider]]
  */
+@js.native
 trait RouteProvider extends js.Object {
 
   //------------------------------ ANGULAR.JS --------------------------------
@@ -26,6 +27,7 @@ trait RouteProvider extends js.Object {
  *
  * @see [[https://docs.angularjs.org/api/ngRoute/provider/\$routeProvider]]
  */
+@js.native
 trait Route extends js.Object {
 
   /**

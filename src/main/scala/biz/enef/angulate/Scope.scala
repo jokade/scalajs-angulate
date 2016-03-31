@@ -12,6 +12,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ng/type/\$rootScope.Scope]]
  */
+@js.native
 trait Scope extends js.Object {
 
   /**

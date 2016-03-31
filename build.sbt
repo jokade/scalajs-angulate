@@ -2,7 +2,7 @@
 lazy val commonSettings = Seq(
   organization := "biz.enef",
   version := "0.3-SNAPSHOT",
-  scalaVersion := "2.11.6",
+  scalaVersion := "2.11.8",
   scalacOptions ++= Seq("-deprecation","-unchecked","-feature","-language:implicitConversions","-Xlint"),
   autoCompilerPlugins := true,
   addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2"),

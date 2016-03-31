@@ -11,6 +11,7 @@ import org.scalajs.jquery.JQuery
 import scala.scalajs.js
 import scala.scalajs.js.RegExp
 
+@js.native
 trait Compile extends js.Object with ProvidedService {
 
   def apply(element: String): TemplateLinkingFunction = js.native
@@ -33,6 +34,7 @@ trait Compile extends js.Object with ProvidedService {
 
 }
 
+@js.native
 trait CompileProvider extends ServiceProvider {
   def directive(name: String, directiveFactory: js.Function): CompileProvider = js.native
 
@@ -48,6 +50,7 @@ trait CompileProvider extends ServiceProvider {
   def debugInfoEnabled(enabled: Boolean = ???): js.Any = js.native
 }
 
+@js.native
 trait CloneAttachFunction extends js.Function {
   // Let's hint but not force cloneAttachFn's signature
   def apply(): js.Any = js.native
@@ -60,6 +63,7 @@ trait CloneAttachFunction extends js.Function {
 }
 
 // This corresponds to the "publicLinkFn" returned by $compile.
+@js.native
 trait TemplateLinkingFunction extends js.Function {
   def apply(): AugmentedJQLite = js.native
   def apply(scope: js.Object): AugmentedJQLite = js.native
@@ -70,6 +74,7 @@ trait TemplateLinkingFunction extends js.Function {
 }
 
 // This corresponds to $transclude (and also the transclude function passed to link).
+@js.native
 trait TranscludeFunction extends js.Function {
   // If the scope is provided, then the cloneAttachFn must be as well.
   def apply(scope: js.Object, cloneAttachFn: CloneAttachFunction): AugmentedJQLite = js.native

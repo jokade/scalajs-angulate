@@ -18,7 +18,9 @@ import scala.scalajs.js
 @compileTimeOnly("enable macro paradise to expand macro annotations")
 class Component(selector: String,
                 template: String = "",
+                templateFn: js.Function0[String] = null,
                 templateUrl: String = "",
+                templateUrlFn: js.Function0[String] = null,
                 controllerAs: String = "$ctrl",
                 bindings: js.Dictionary[String] = null) extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro Component.Macro.impl
@@ -33,7 +35,9 @@ object Component {
     val annotationParamNames = Seq(
       "selector",
       "template",
+      "templateFn",
       "templateUrl",
+      "templateUrlFn",
       "controllerAs",
       "bindings"
     )
@@ -61,9 +65,15 @@ object Component {
 
       val objName = fullName + "_"
 
-      val annots = extractAnnotationParameters(c.prefix.tree,annotationParamNames) collect {
+      val annots = extractAnnotationParameters(c.prefix.tree,annotationParamNames)
+      val options = annots collect {
+        case ("templateFn",Some(v)) => q""" "template" -> $v """
+        case ("templateUrlFn",Some(v)) => q""" "templateUrl" -> $v """
         case (p,Some(v)) if p != "selector" => q""" ${p.toString} -> $v"""
       }
+      val selector = (annots collect {
+        case ("selector",Some(v)) => v
+      }).head
 
       val base = getJSBaseClass(parents)
 
@@ -78,9 +88,9 @@ object Component {
              class $name ( ..$params ) extends ..$base { ..$body }
              @scalajs.js.annotation.ScalaJSDefined
              object ${name.toTermName} extends scalajs.js.Object {
-               def selector = "test"
+               def selector = $selector
                def controller = scalajs.js.Array(..$diNames,((..$params) => new $name(..$args)):scalajs.js.Function)
-               def options = scalajs.js.Dictionary( "controller" -> controller, ..$annots )
+               def options = scalajs.js.Dictionary( "controller" -> controller, ..$options )
              }
             }
        """

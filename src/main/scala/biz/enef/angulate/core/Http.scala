@@ -18,6 +18,7 @@ import scala.util.Try
  *
  * @see [[https://docs.angularjs.org/api/ng/service/$http]]
  */
+@js.native
 trait HttpService extends js.Object with ProvidedService {
   def get[T](url: String): HttpPromise[T] = js.native
   def get[T](url: String, config: HttpConfig): HttpPromise[T] = js.native
@@ -37,6 +38,7 @@ trait HttpService extends js.Object with ProvidedService {
   def apply[T](config: HttpConfig): HttpPromise[T] = js.native
 }
 
+@js.native
 trait HttpConfig extends js.Object {
   var method: String = js.native
   var url: String = js.native
@@ -80,6 +82,7 @@ object HttpConfig {
 
 }
 
+@js.native
 trait HttpPromise[T] extends js.Object {
   def success(callback: js.Function): HttpPromise[T] = js.native
 
@@ -128,11 +131,16 @@ object HttpPromise {
      */
     def future: Future[T] = macro impl.HttpPromiseMacros.future
   }
+
+  object RichHttpPromise {
+    implicit def autoUnwrap[T](r: RichHttpPromise[T]): HttpPromise[T] = r.self
+  }
 }
 
 class HttpError(msg: String, val status: Int) extends RuntimeException(msg)
 
 
+@js.native
 trait HttpProvider extends Provider {
   def useApplyAsync() : HttpProvider = js.native
   def useApplyAsync(async: Boolean) : HttpProvider = js.native
@@ -142,6 +150,7 @@ trait HttpProvider extends Provider {
   def interceptors: js.Array[js.Any] = js.native
 }
 
+@js.native
 trait HttpDefaults extends js.Object {
   var cache: js.Dynamic = js.native
   var xsrfCookieName: String = js.native
@@ -150,6 +159,7 @@ trait HttpDefaults extends js.Object {
   var withCredentials: Boolean = js.native
 }
 
+@js.native
 trait HttpResponse extends js.Object {
   def status: Int = js.native
   def statusText: String = js.native

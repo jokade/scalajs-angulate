@@ -9,6 +9,7 @@ import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 import scala.scalajs.js.annotation.JSBracketAccess
 
+@js.native
 trait Attributes extends js.Object {
 
   @JSBracketAccess

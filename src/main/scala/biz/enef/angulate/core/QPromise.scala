@@ -7,6 +7,7 @@ package biz.enef.angulate.core
 import acyclic.file
 import scala.scalajs.js
 
+@js.native
 trait QPromise extends js.Object {
 
   def `then`(successCallback: js.Function1[js.Any,_]) : QPromise = js.native
@@ -29,6 +30,7 @@ object QPromise {
   }
 }
 
+@js.native
 trait QService extends ProvidedService {
   def reject(reason: js.Any) : QPromise = js.native
   def defer() : js.Dynamic = js.native

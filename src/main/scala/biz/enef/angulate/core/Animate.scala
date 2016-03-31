@@ -13,6 +13,7 @@ import scala.scalajs.js
  *
  * @see [[https://docs.angularjs.org/api/ng/service/\$animate]]
  */
+@js.native
 trait AnimateService  extends ProvidedService {
 
   def enter(element: Element, parent: Element, after: Element) : QPromise = js.native

@@ -13,6 +13,7 @@ import org.scalajs.jquery.{JQuery, JQueryStatic}
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSName
 
+@js.native
 trait JQLite extends AugmentedJQ[JQLite] {
 
   def addClass(classNames: String): JQLite = js.native
@@ -103,6 +104,7 @@ trait JQLite extends AugmentedJQ[JQLite] {
 
 }
 
+@js.native
 trait JQLiteStatic extends js.Object
 
 /**
@@ -111,6 +113,7 @@ trait JQLiteStatic extends js.Object
  * augmented with additional methods like e.g. scope.
  * see: http://docs.angularjs.org/api/angular.element
  */
+@js.native
 trait AugmentedJQStatic[Q, AQ <: Q] extends js.Any {
 
   def apply(selector: String, context: js.Any): AQ = js.native
@@ -123,8 +126,10 @@ trait AugmentedJQStatic[Q, AQ <: Q] extends js.Any {
   def apply(): AQ = js.native
 }
 
+@js.native
 trait AugmentedJQLiteStatic extends JQLiteStatic with AugmentedJQStatic[JQLite, AugmentedJQLite]
 
+@js.native
 trait AugmentedJQueryStatic extends JQueryStatic with AugmentedJQStatic[JQuery, AugmentedJQuery] {
   override def apply(selector: String, context: js.Any): AugmentedJQuery = js.native
   override def apply(selector: String): AugmentedJQuery = js.native
@@ -137,6 +142,7 @@ trait AugmentedJQueryStatic extends JQueryStatic with AugmentedJQStatic[JQuery, 
 
 }
 
+@js.native
 trait AugmentedJQ[Q] extends js.Any {
   def find(selector: String): AugmentedJQ[Q] = js.native
   def find(element: js.Any): AugmentedJQ[Q] = js.native
@@ -152,6 +158,7 @@ trait AugmentedJQ[Q] extends js.Any {
   def inheritedData(): js.Any = js.native
 }
 
+@js.native
 trait AugmentedJQLite extends JQLite with AugmentedJQ[JQLite] {
   override def find(selector: String): AugmentedJQLite = js.native
   override def find(element: js.Any): AugmentedJQLite = js.native
@@ -167,6 +174,7 @@ trait AugmentedJQLite extends JQLite with AugmentedJQ[JQLite] {
   override def inheritedData(): js.Any = js.native
 }
 
+@js.native
 trait AugmentedJQuery extends JQuery with AugmentedJQ[JQuery] {
   override def find(selector: String): AugmentedJQuery = js.native
   override def find(element: js.Any): AugmentedJQuery = js.native

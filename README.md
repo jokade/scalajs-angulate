@@ -1,7 +1,8 @@
 Scala.js Bindings for AngularJS
 ===============================
+[![Scala.js](https://www.scala-js.org/assets/badges/scalajs-0.6.8.svg)](https://www.scala-js.org)
 
-**News**: angulate 0.2.2 has been released! Please consult the [release notes](https://github.com/jokade/scalajs-angulate/wiki/Release-Notes#version-022-030815) for a list of changes since version 0.1.
+**News (30.03.16)**: scalajs-angulate 0.2.4 has been released! Please consult the [release notes](https://github.com/jokade/scalajs-angulate/wiki/Release-Notes) for a list of changes since version 0.1.
 There is also a page with [currently known problems & limitations](https://github.com/jokade/scalajs-angulate/wiki/Known-Problems).
 
 This library only provides bindings to Angular 1.x. Support for [Angular 2](https://angular.io) is provided by [angulate2](https://github.com/jokade/angulate2).
@@ -33,9 +34,9 @@ How to Use
 ### SBT Settings
 Add the following lines to your ```sbt``` build definition:
 ```scala
-libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.2.2"
+libraryDependencies += "biz.enef" %%% "scalajs-angulate" % "0.2.4"
 ```
-scalajs-angulate 0.2.2 requires Scala.js `0.6.3+`.
+scalajs-angulate 0.2.4 requires Scala.js `0.6.8+`. The last version compatible with Scala.js `0.6.3` is `0.2.3`.
 
 If you want to test the latest snapshot, change the version to `0.3-SNAPSHOT` and add the Sonatype snapshots repository to your `build.sbt`:
 ```scala

@@ -7,6 +7,7 @@ package biz.enef.angulate.core
 import acyclic.file
 import scala.scalajs.js
 
+@js.native
 trait LocationProvider extends Provider {
   def hashPrefix() : String = js.native
   def hashPrefix(prefix: String) : LocationProvider = js.native
