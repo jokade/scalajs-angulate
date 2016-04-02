@@ -6,13 +6,12 @@ package biz.enef.angulate.impl
 
 import acyclic.file
 import biz.enef.angulate.named
-import de.surfice.smacrotools.JsWhiteboxMacroTools
 
-import scala.reflect.macros.whitebox
+import scala.reflect.macros.blackbox
 
 
 protected[angulate] abstract class MacroBase {
-  val c: whitebox.Context
+  val c: blackbox.Context
   import c.universe._
 
   /* type definitions */

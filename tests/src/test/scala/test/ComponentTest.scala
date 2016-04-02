@@ -11,6 +11,7 @@ import biz.enef.angulate._
 
 import scala.scalajs.js.annotation.JSExport
 
+/*
 object ComponentTest extends AngulateTestSuite {
   override val tests = TestSuite {
     implicit val module = angular.createModule("test", Nil)
@@ -57,3 +58,4 @@ object ComponentTest extends AngulateTestSuite {
     val foo = "bar"
   }
 }
+*/

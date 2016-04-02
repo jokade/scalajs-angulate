@@ -12,6 +12,9 @@ lazy val commonSettings = Seq(
         val g = "https://raw.githubusercontent.com/jokade/scalajs-angulate"
         s"-P:scalajs:mapSourceURI:$a->$g/v${version.value}/"
       })),
+  scalacOptions ++= Seq(
+    //"-Xmacro-settings:de.surfice.smacrotools.debug"
+  ),
   resolvers += Resolver.sonatypeRepo("snapshots")
 )
 

@@ -47,7 +47,7 @@ object Component {
       val module = Select(c.prefix.tree, TermName("self"))
       val comp = ct.typeSymbol.companion
 
-      val tree = q"""$module.component($comp.selector,$comp.options)"""
+      val tree = q"""$module.component($comp.__selector,$comp.__options)"""
 
       tree
     }
@@ -65,6 +65,10 @@ object Component {
 
       val objName = fullName + "_"
 
+      val routeConfig = modifiers.annotations.collectFirst{
+        case q"new RouteConfig(..$args)" => args
+      }.map( args => q""" "$$routeConfig" -> scalajs.js.Array(..$args) """ ).toSeq
+
       val annots = extractAnnotationParameters(c.prefix.tree,annotationParamNames)
       val options = annots collect {
         case ("templateFn",Some(v)) => q""" "template" -> $v """
@@ -74,6 +78,7 @@ object Component {
       val selector = (annots collect {
         case ("selector",Some(v)) => v
       }).head
+
 
       val base = getJSBaseClass(parents)
 
@@ -88,9 +93,9 @@ object Component {
              class $name ( ..$params ) extends ..$base { ..$body }
              @scalajs.js.annotation.ScalaJSDefined
              object ${name.toTermName} extends scalajs.js.Object {
-               def selector = $selector
-               def controller = scalajs.js.Array(..$diNames,((..$params) => new $name(..$args)):scalajs.js.Function)
-               def options = scalajs.js.Dictionary( "controller" -> controller, ..$options )
+               def __selector = $selector
+               def __controller = scalajs.js.Array(..$diNames,((..$params) => new $name(..$args)):scalajs.js.Function)
+               def __options = scalajs.js.Dictionary( "controller" -> __controller, ..$options, ..$routeConfig )
              }
             }
        """

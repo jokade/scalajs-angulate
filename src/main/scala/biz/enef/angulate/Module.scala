@@ -130,6 +130,15 @@ trait Module  extends js.Object {
    */
   def service(name: String, constructor: js.Array[Any]): Module = js.native
 
+  /**
+   * Register a constant value.
+   *
+   * @param name The name of the instance
+   * @param value The value.
+   * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#value]]
+   */
+  def value(name: String, value: js.Any): Module = js.native
+
 }
 
 object Module {
@@ -160,7 +169,17 @@ object Module {
      * @param configFn This function is executed on module load
      * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#config]]
      */
+    @deprecated("use configFn() instead","0.3")
     @inline def config(configFn: AnnotatedFunction): Module = self.config(configFn.inlineArrayAnnotatedFn)
+
+    /**
+     * Use this method to register work which needs to be performed on module loading.
+     *
+     * @param configFn This function is executed on module load
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#config]]
+     */
+    @inline def configFn(configFn: AnnotatedFunction): Module = self.config(configFn.inlineArrayAnnotatedFn)
+
 
     /**
      * Registers a controller.
@@ -286,6 +305,8 @@ object Module {
      * @tparam T
      */
     @inline def componentOf[T] : Module = macro Component.Macro.componentOf[T]
+
+    @inline def rootComponent(name: String): Module = self.value("$routerRootComponent",name)
 
   }
 

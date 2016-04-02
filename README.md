@@ -199,14 +199,14 @@ class UserCtrl(@named("$http") httpService: HttpService) extends Controller {
 
 DI is also supported for functions passed to methods such as `Module.config()` and `Module.run()`:
 ```scala
-module.config( ($routeProvider: RouteProvider) => {
+module.configFn( ($routeProvider: RouteProvider) => {
   /* ... */
 })
 
 // -- or --
 def routing($routeProvider: RouteProvider) = $routeProvider.when( /* ... */ )
 
-module.config( routing _ )
+module.configFn( routing _ )
 ```
 However, the `@named` annotation is not supported for function DI, i.e. the _parameter names must match the services_ to be injected for this to work.
 
