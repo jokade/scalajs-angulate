@@ -24,15 +24,15 @@ case class named(name: String) extends StaticAnnotation
  * @param templateUrl
  * @param bind
  */
-case class ComponentDef(selector: String,
-                        template: String = null,
-                        templateUrl: String = null,
-                        bind: js.Dictionary[String] = null)
-
-/**
- *
- * @param cd
- */
-case class Component(cd: ComponentDef) extends StaticAnnotation
+//case class ComponentDef(selector: String,
+//                        template: String = null,
+//                        templateUrl: String = null,
+//                        bind: js.Dictionary[String] = null)
+//
+///**
+// *
+// * @param cd
+// */
+//case class Component(cd: ComponentDef) extends StaticAnnotation
 
 

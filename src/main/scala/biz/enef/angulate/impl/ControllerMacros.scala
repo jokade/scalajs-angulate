@@ -8,7 +8,7 @@ import acyclic.file
 import biz.enef.angulate._
 
 import scala.language.experimental.macros
-import scala.reflect.macros.blackbox.Context
+import scala.reflect.macros.whitebox.Context
 
 // TODO: understand Scala macros and clean up this hacked mess ...
 protected[angulate] class ControllerMacros(val c: Context) extends MacroBase with ControllerMacroUtils {

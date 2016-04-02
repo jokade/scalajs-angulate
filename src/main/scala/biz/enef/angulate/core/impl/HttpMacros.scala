@@ -104,7 +104,7 @@ object HttpMacroUtils {
 
 }
 
-// TODO: use scalajs.js.Promise instead of scala.concurrent.Promise
+// TODO: use scalajs.js.Promise instead of scla.concurrent.Promise
 class HttpPromiseWrapper[T](wrapped: HttpPromise[T]) extends Future[T] {
   private val _promise = scala.concurrent.Promise[T]()
   wrapped.success( ((t:T)=> _promise.success(t)) )
