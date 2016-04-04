@@ -32,6 +32,11 @@ object Component {
   private [angulate] class Macro(val c: whitebox.Context) extends JsWhiteboxMacroTools {
     import c.universe._
 
+    private lazy val logCode = c.settings.exists( _ == "biz.enef.angulate.Component.debug" )
+
+    /* type definitions */
+    val namedAnnotation = typeOf[named]
+
     val annotationParamNames = Seq(
       "selector",
       "template",
@@ -83,10 +88,9 @@ object Component {
       val base = getJSBaseClass(parents)
 
       val args = paramNames(params)
-      val diNames = args map ( _.toString )
 
-//      @scalajs.js.annotation.JSExport($fullName)
-//      @scalajs.js.annotation.JSExport($objName)
+      val diNames = getDINames(params)
+
       val tree =
         q"""{
              @scalajs.js.annotation.ScalaJSDefined
@@ -100,9 +104,19 @@ object Component {
             }
        """
 
-      println(tree)
+      if(logCode) println(tree)
+
       c.Expr[Any](tree)
     }
+
+    def getDINames(args: Iterable[Tree]): Iterable[String] =
+      args map {
+        case q"$mods val $name: $_ = $_" => (mods:Modifiers).annotations.collectFirst{
+          case q"new named(..$args)" =>
+            val name = args.head.toString
+            name.substring(1,name.length-1)
+        } getOrElse name.toString
+      }
 
   }
 }
