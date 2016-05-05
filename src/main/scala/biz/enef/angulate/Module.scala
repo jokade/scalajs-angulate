@@ -232,7 +232,16 @@ object Module {
      * @param initializationFn This function is executed on module fully loaded
      * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#run]]
      */
+    @deprecated("use runFn() instead","0.3")
     @inline def run(initializationFn: AnnotatedFunction): Module = self.run(initializationFn.inlineArrayAnnotatedFn)
+
+    /**
+     * Use this method to register work which should be performed when the injector is done loading all modules.
+     *
+     * @param initializationFn This function is executed on module fully loaded
+     * @see [[https://docs.angularjs.org/api/ng/type/angular.Module#run]]
+     */
+    @inline def runFn(initializationFn: AnnotatedFunction): Module = self.run(initializationFn.inlineArrayAnnotatedFn)
 
     /**
      * Register a service constructor which will be invoked with `new` to create the service instance.
