@@ -16,6 +16,7 @@ import de.surfice.smacrotools.JSOptionsObject
 
 import scala.annotation.StaticAnnotation
 import scala.scalajs.js
+import scala.scalajs.js.Promise
 import scala.scalajs.js.annotation.{JSName, ScalaJSDefined}
 
 class RouteConfig(defs: RDef*) extends StaticAnnotation
@@ -37,4 +38,17 @@ trait RouterOnActivate extends js.Object {
 @js.native
 trait ComponentInstruction extends js.Object {
   def params: js.Dictionary[js.Any]
+}
+
+@js.native
+trait Router extends js.Object {
+  def navigate(changes: js.Array[js.Any]): Promise[js.Any] = js.native
+  def navigateByUrl(url: String): Promise[js.Any] = js.native
+}
+
+object Router {
+  implicit final class RichRouter(val router: Router) extends AnyVal {
+    def navigateTo(name: String) = router.navigate(js.Array(name))
+    def navigateTo(name: String, params: (String,js.Any)*) = router.navigate(js.Array(name,js.Dictionary(params:_*)))
+  }
 }
