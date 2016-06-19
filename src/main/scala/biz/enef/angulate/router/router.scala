@@ -4,6 +4,11 @@
 // Distributed under the MIT License (see included file LICENSE)
 
 // -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
+// Description:
+//
+// Distributed under the MIT License (see included file LICENSE)
+
+// -   Project: scalajs-angulate (https://github.com/jokade/scalajs-angulate)
 // Description: Façade traits for the Angular 1.5 component router
 //
 // Distributed under the MIT License (see included file LICENSE)
@@ -22,6 +27,7 @@ import scala.scalajs.js.annotation.{JSName, ScalaJSDefined}
 class RouteConfig(defs: RDef*) extends StaticAnnotation
 
 @JSOptionsObject
+@deprecated("The Angular ComponentRouter is deprecated","0.3.0")
 case class RDef(path: String,
                 name: String,
                 component: js.UndefOr[String] = js.undefined,
@@ -30,22 +36,26 @@ case class RDef(path: String,
                 data: js.UndefOr[js.Object] = js.undefined)
 
 @ScalaJSDefined
+@deprecated("The Angular ComponentRouter is deprecated","0.3.0")
 trait RouterOnActivate extends js.Object {
   //@JSName("$routerOnActivate")
   def $routerOnActivate(next: ComponentInstruction) : Unit
 }
 
 @js.native
+@deprecated("The Angular ComponentRouter is deprecated","0.3.0")
 trait ComponentInstruction extends js.Object {
   def params: js.Dictionary[js.Any]
 }
 
 @js.native
+@deprecated("The Angular ComponentRouter is deprecated","0.3.0")
 trait Router extends js.Object {
   def navigate(changes: js.Array[js.Any]): Promise[js.Any] = js.native
   def navigateByUrl(url: String): Promise[js.Any] = js.native
 }
 
+@deprecated("The Angular ComponentRouter is deprecated","0.3.0")
 object Router {
   implicit final class RichRouter(val router: Router) extends AnyVal {
     def navigateTo(name: String) = router.navigate(js.Array(name))
