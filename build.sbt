@@ -1,17 +1,18 @@
 
 lazy val commonSettings = Seq(
   organization := "biz.enef",
-  version := "0.2.4",
-  scalaVersion := "2.11.8",
+  version := "0.2.5-SNAPSHOT",
+  scalaVersion := "2.12.5",
   scalacOptions ++= Seq("-deprecation","-unchecked","-feature","-language:implicitConversions","-Xlint"),
   autoCompilerPlugins := true,
-  addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.2"),
-  libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.2" % "provided",
+  addCompilerPlugin("com.lihaoyi" %% "acyclic" % "0.1.7"),
+  libraryDependencies += "com.lihaoyi" %% "acyclic" % "0.1.7" % "provided",
   scalacOptions ++= (if (isSnapshot.value) Seq.empty else Seq({
         val a = baseDirectory.value.toURI.toString.replaceFirst("[^/]+/?$", "")
         val g = "https://raw.githubusercontent.com/jokade/scalajs-angulate"
         s"-P:scalajs:mapSourceURI:$a->$g/v${version.value}/"
-      }))
+      })),
+  resolvers += Resolver.sonatypeRepo("snapshots")
 )
 
 
@@ -23,10 +24,12 @@ lazy val root = project.in(file(".")).
     name := "scalajs-angulate",
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value % "provided",
-      "org.scala-js"   %%% "scalajs-dom" % "0.8.0",
-      "be.doeraene" %%% "scalajs-jquery" % "0.8.0" % "provided"
+      "org.scala-js"   %%% "scalajs-dom" % "0.9.5",
+      "de.surfice"     %%% "smacrotools-sjs"  % "0.0.8",
+      "be.doeraene" %%% "scalajs-jquery" % "0.9.3" % "provided"
     ),
-    resolvers += Resolver.sonatypeRepo("releases")
+    resolvers += Resolver.sonatypeRepo("releases"),
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
   )
 
 
@@ -40,8 +43,8 @@ lazy val tests = project.
     scalaJSStage in Test := FastOptStage,
     testFrameworks += new TestFramework("utest.runner.Framework"),
     requiresDOM := true,
-    libraryDependencies ++= Seq("com.lihaoyi" %%% "utest" % "0.3.0" % "test",
-      "be.doeraene" %%% "scalajs-jquery" % "0.8.0"),
+    libraryDependencies ++= Seq("com.lihaoyi" %%% "utest" % "0.4.4" % "test",
+      "be.doeraene" %%% "scalajs-jquery" % "0.9.1"),
     jsDependencies += RuntimeDOM,
     jsDependencies += "org.webjars" % "angularjs" % "1.3.8" / "angular.min.js" % "test",
     jsDependencies += ("org.webjars" % "angularjs" % "1.3.8" / "angular-mocks.js" dependsOn "angular.min.js") % "test"

@@ -120,6 +120,10 @@ class HttpPromiseWrapper[T](wrapped: HttpPromise[T]) extends Future[T] {
   override def result(atMost: Duration)(implicit permit: CanAwait): T = future.result(atMost)
 
   override def ready(atMost: Duration)(implicit permit: CanAwait): this.type = {future.ready(atMost);this}
+
+  def transform[S](f: Try[T] => Try[S])(implicit executor: ExecutionContext): Future[S] = future.transform(f)
+
+  def transformWith[S](f: Try[T] => Future[S])(implicit executor: ExecutionContext): Future[S] = future.transformWith(f)
 }
 
 @JSExportAll
